@@ -1,3 +1,17 @@
+# Changelog
+
+## Unreleased — gameplay evidence correction
+
+October 25, 2026 (America/Los_Angeles).
+
+- Withdraw the earlier vehicle-combat success report: the user now reports a notification with no save visible in the load menu during vehicle combat. Actual saving remains a reported failure; RC4 is not validated for release promotion.
+- Record that all four forced-checkpoint calls currently ignore the native Bool return and notify afterwards. Notification display cannot establish request acceptance or save completion. The native rejection/write boundary still needs runtime evidence; no save-creation fix is claimed.
+- Preserve the existing RC4 packages and frozen evidence. This is a documentation-only correction; save/reload/progression and complete route/settings acceptance remain outstanding. See [the corrected report](docs/NeverLockSavesReborn/evidence/USER-TEST-REPORTS-RC4.md) and [RC4 notes](CHANGELOG-RC4.md).
+
+---
+
+## Historical combined changelog
+
 # 1.0.0-rc2 — autosave-system type correction
 
 October 24, 2026 (America/Los_Angeles). **Release candidate for testing.**
