@@ -1,0 +1,50 @@
+{
+  "scope": "Final-source pure Lua public-invariant mutation controls; not game evidence",
+  "controls": [
+    {
+      "control": "master_off",
+      "detected_for_intended_reason": true,
+      "exit_code": 1
+    },
+    {
+      "control": "native_gate",
+      "detected_for_intended_reason": true,
+      "exit_code": 1
+    },
+    {
+      "control": "player_queue",
+      "detected_for_intended_reason": true,
+      "exit_code": 1
+    },
+    {
+      "control": "stalled_frame",
+      "detected_for_intended_reason": true,
+      "exit_code": 1
+    },
+    {
+      "control": "postcombat_edge",
+      "detected_for_intended_reason": true,
+      "exit_code": 1
+    },
+    {
+      "control": "player_cooldown",
+      "detected_for_intended_reason": true,
+      "exit_code": 1
+    },
+    {
+      "control": "quest_optin",
+      "detected_for_intended_reason": true,
+      "exit_code": 1
+    },
+    {
+      "control": "quest_type",
+      "detected_for_intended_reason": true,
+      "exit_code": 1
+    },
+    {
+      "control": "queue_evidence",
+      "detected_for_intended_reason": true,
+      "exit_code": 1
+    }
+  ]
+}

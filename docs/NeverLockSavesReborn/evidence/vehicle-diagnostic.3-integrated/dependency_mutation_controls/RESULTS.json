@@ -1,0 +1,85 @@
+{
+  "scope": "Pure actual Lua collector/report, explicit callback boundaries; no game/CET/native ABI execution",
+  "module_hashes": {
+    "dependency_versions.lua": "32c132404062f25594684567b4a50acdbc61687e6eb59fee8a25fbee2393b53a",
+    "support_report.lua": "a0513bf67c2cb5a4b9506bf8533f545d32012ff08ecc797b6ffc3ca4f4b812a0"
+  },
+  "results": [
+    {
+      "case": "collector",
+      "exit_code": 0,
+      "passed": true,
+      "log": "collector.log"
+    },
+    {
+      "case": "report",
+      "exit_code": 0,
+      "passed": true,
+      "log": "report.log"
+    },
+    {
+      "case": "cet-prefix-omitted",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "CET optional prefix and git suffix",
+      "log": "cet-prefix-omitted.log"
+    },
+    {
+      "case": "unsupported-reader-invoked",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "unsupported readers never invoked",
+      "log": "unsupported-reader-invoked.log"
+    },
+    {
+      "case": "reader-error-falsely-observed",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "object error isolated",
+      "log": "reader-error-falsely-observed.log"
+    },
+    {
+      "case": "native-string-accepted",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "invalid numeric stripped",
+      "log": "native-string-accepted.log"
+    },
+    {
+      "case": "native-upper-bound-omitted",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "invalid numeric stripped",
+      "log": "native-upper-bound-omitted.log"
+    },
+    {
+      "case": "partial-version-text-accepted",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "unsafe text stripped",
+      "log": "partial-version-text-accepted.log"
+    },
+    {
+      "case": "component-source-unchecked",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "bad component mapping",
+      "log": "component-source-unchecked.log"
+    },
+    {
+      "case": "observed-version-unchecked",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "observed needs a valid corresponding version",
+      "log": "observed-version-unchecked.log"
+    },
+    {
+      "case": "unsupported-api-observed",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "unsupported cannot become measured",
+      "log": "unsupported-api-observed.log"
+    }
+  ],
+  "passed": true
+}

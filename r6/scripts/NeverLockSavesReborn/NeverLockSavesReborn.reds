@@ -1,4 +1,4 @@
-// v1.0.0-vehicle-diagnostic.2 Release Candidate. Deferred/autosave lanes are opt-in.
+// v1.0.0-vehicle-diagnostic.3 Release Candidate. Deferred/autosave lanes are opt-in.
 // Engine native saving-unlocked state is the release gate; this does not
 // guarantee that a quest or phone conversation serializes correctly.
 @addField(PlayerPuppet) public let nlsDeferredEnabled: Bool = false;
@@ -523,7 +523,7 @@ public final func NLSRebornGetNotificationDiagnostics() -> String { return this.
 public final func NLSRebornGetNotificationCategory() -> Int32 { return NLSRebornPolicy.NotificationContext(this.GetGame()); }
 
 public class NLSRebornPolicy {
-  public static func Version() -> String { return "1.0.0-vehicle-diagnostic.2"; }
+  public static func Version() -> String { return "1.0.0-vehicle-diagnostic.3"; }
   public static func ShuffleSlot(index: Int32, seed: Int32) -> Int32 {
     let cycle: Int32 = index / 20;
     let turn: Int32 = index % 20;

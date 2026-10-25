@@ -30,6 +30,8 @@ elif shutil.which('luatex'):
 else:
     raise SystemExit('Lua 5.3+ test host missing; no checks are claimed passed.')
 cases=[
+ ('observer_cold_start',lua+[str(HERE/'test_observer_cold_start.lua'),str(root)]),
+ ('diagnostic3_source_scope',[sys.executable,str(HERE/'check_diagnostic3_scope.py'),str(root)]),
  ('diagnostic_initializers',[sys.executable,str(HERE/'test_diagnostic_initializers.py'),str(root)]),
  ('diagnostic2_source_scope',[sys.executable,str(HERE/'check_diagnostic2_scope.py'),str(root)]),
  ('lua_syntax',lua+[str(HERE/'check_lua_syntax.lua'),str(root)]),

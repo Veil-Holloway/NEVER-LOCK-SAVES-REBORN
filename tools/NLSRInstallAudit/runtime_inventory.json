@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "release": "1.0.0-vehicle-diagnostic.2",
+  "release": "1.0.0-vehicle-diagnostic.3",
   "scope": "runtime_files_only",
   "runtime_files": [
     {
@@ -40,8 +40,8 @@
     },
     {
       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
-      "size": 74942,
-      "sha256": "fb68780c44009ecd7899eeb9d6111b382dd21a52cda8207168dcf5e91672503b"
+      "size": 75032,
+      "sha256": "bc1bc7a9af6684fdb674c1ba070a09e99876a4a6a037107ebd48dcd7aebc103a"
     },
     {
       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua",
@@ -81,7 +81,7 @@
     {
       "path": "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds",
       "size": 161847,
-      "sha256": "bbe625062a4fbee666d8a11c881997447faf7069227af195a222b79870627b6e"
+      "sha256": "4f484edd5decdf70eb129887395d1e48dd04f38a577f2920d07a6733afbb1271"
     }
   ]
 }

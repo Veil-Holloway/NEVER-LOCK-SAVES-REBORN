@@ -9,9 +9,10 @@ a force-save API, remove native locks, change quest facts or rewrite save bytes
 to conceal a failure. Preserve input packages, published tags and release assets.
 Do not log secrets, private saves or arbitrary exception strings.
 
-The current branch contains 1.0.0-vehicle-diagnostic.2. Vehicle-combat saving is
-an unresolved user-reported failure, including after combat. This preview checks
-the native request Bool and records bounded latest-helper-attempt diagnostics.
+The current branch contains 1.0.0-vehicle-diagnostic.3. Vehicle-combat saving is
+an unresolved user-reported failure, including after combat. The diagnostic.2 report records a native true request during Combat+Script locks,
+but no visible save is reported. This preview also defers three CET observer
+lookups until existing onInit registration; no new targets or save-policy change.
 diagnostic.1 had a user-reported negative-field-default compilation failure.
 The .2 hotfix removes those defaults and preserves unknown through reader guards.
 Request acceptance is not a completed save, a usable reload or quest progression.

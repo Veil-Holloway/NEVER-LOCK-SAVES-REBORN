@@ -2,7 +2,7 @@
 
 I took Never Lock Saves by RalphModding and started updating and expanding it.. added CET controls.. Native Settings support.. and a bridge so CET and redscript can communicate..
 
-**current branch build is 1.0.0-vehicle-diagnostic.2.. diagnostic developer preview..** vehicle combat shows a notification but the user reports no save ever appears.. this is still unresolved.. this build also removes two negative field defaults that stopped diagnostic.1 compiling.. unknown state is preserved until an attempt.. compilation still needs checking in game.. it does not claim to fix actual saving..
+**current branch build is 1.0.0-vehicle-diagnostic.3.. diagnostic developer preview..** the game returned true for the vehicle combat request but no visible save is reported.. actual saving is still unresolved.. this build repairs early-captured CET observer functions so existing request and completion tracing can register after startup..
 
 ## thanks Ralph
 
@@ -39,13 +39,13 @@ automatic character profiles.. every owned safehouse and automatic live backups 
 you need **Cyber Engine Tweaks and redscript** for the two runtime halves.. **Native Settings** is optional for its menu.. **Dark Future** is optional for its integration.. install any dependencies those frameworks require separately.. no framework binaries are bundled and no exact supported version combination is claimed yet..
 
 1. close the game.. keep external save copies and your existing Reborn settings..
-2. download `Never_Lock_Saves_Reborn_v1.0.0-vehicle-diagnostic.2_RUNTIME_ONLY.zip` from [Releases](https://github.com/Veil-Holloway/NEVER-LOCK-SAVES-REBORN/releases).. older packages remain historical..
+2. download `Never_Lock_Saves_Reborn_v1.0.0-vehicle-diagnostic.3_RUNTIME_ONLY.zip` from [Releases](https://github.com/Veil-Holloway/NEVER-LOCK-SAVES-REBORN/releases).. older packages remain historical..
 3. install with Vortex.. enable one Reborn installation and Deploy.. or copy the complete `bin/` and `r6/` trees to the game root..
-4. launch.. check fresh logs and confirm the panel says `1.0.0-vehicle-diagnostic.2`.. stop at compilation errors before testing saves..
+4. launch.. check fresh logs and confirm the panel says `1.0.0-vehicle-diagnostic.3`.. stop at compilation errors before testing saves..
 
 ## testing and issues
 
-RC4 removed Unrestricteds queue interception but the user still reports no actual vehicle-combat save.. the earlier success report was withdrawn.. this preview checks native acceptance and captures last-attempt diagnostics.. see [the diagnostic procedure](DIAGNOSTIC-VEHICLE-SAVE.md) and [validation report](VALIDATION-VEHICLE-DIAGNOSTIC.2.md).. those are offline boundaries.. not game tests..
+RC4 removed Unrestricteds queue interception but the user still reports no actual vehicle-combat save.. the earlier success report was withdrawn.. this preview checks native acceptance and captures last-attempt diagnostics.. see [the diagnostic procedure](DIAGNOSTIC-VEHICLE-SAVE.md) and [validation report](VALIDATION-VEHICLE-DIAGNOSTIC.3.md).. those are offline boundaries.. not game tests..
 
 start with an ordinary save.. confirm a new save exists.. reload it and continue gameplay.. then test Smart with Deferred Save ON during an interaction.. wait for native unlock and exactly one checkpoint request before checking save creation and reload separately..
 

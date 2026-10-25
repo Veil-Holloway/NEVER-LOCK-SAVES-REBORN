@@ -90,7 +90,7 @@ class AuditorCLI(unittest.TestCase):
         if expected is not None:
             self.assertEqual(p.returncode, expected, payload)
         self.assertEqual({'exact_match':0, 'drift_or_review':1, 'incomplete':2}[payload['audit_status']], p.returncode)
-        self.assertEqual(payload['release'], '1.0.0-vehicle-diagnostic.2')
+        self.assertEqual(payload['release'], '1.0.0-vehicle-diagnostic.3')
         return payload
 
     def test_clean_exact_bytes_and_no_input_writes(self):

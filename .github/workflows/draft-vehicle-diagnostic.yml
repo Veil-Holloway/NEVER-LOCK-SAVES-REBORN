@@ -9,7 +9,7 @@ on:
 permissions: {}
 
 concurrency:
-  group: vehicle-diagnostic.2-release
+  group: vehicle-diagnostic.3-release
   cancel-in-progress: false
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
-      DIAGNOSTIC_TAG: v1.0.0-vehicle-diagnostic.2
+      DIAGNOSTIC_TAG: v1.0.0-vehicle-diagnostic.3
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -45,11 +45,11 @@ jobs:
               raise SystemExit('Existing tag targets different bytes; refusing tag mutation.')
           PY
           if ! gh release view "$DIAGNOSTIC_TAG" >/dev/null 2>&1; then
-            cp RELEASE-NOTES-VEHICLE-DIAGNOSTIC.2.md draft-notes.md
+            cp RELEASE-NOTES-VEHICLE-DIAGNOSTIC.3.md draft-notes.md
             printf '\nSource commit: `%s`\nTag: `%s`\n' "$GITHUB_SHA" "$DIAGNOSTIC_TAG" >> draft-notes.md
             gh release create "$DIAGNOSTIC_TAG" dist/* \
               --verify-tag --target "$GITHUB_SHA" --draft --prerelease --latest=false \
-              --title "Vehicle save diagnostics.. 1.0.0-vehicle-diagnostic.2 (experimental)" \
+              --title "Vehicle save diagnostics.. 1.0.0-vehicle-diagnostic.3 (experimental)" \
               --notes-file draft-notes.md
           else
             echo "Existing release assets remain unchanged; verifying their readback."

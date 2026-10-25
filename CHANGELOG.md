@@ -1,3 +1,7 @@
+# 1.0.0-vehicle-diagnostic.3 — cold-start observer bindings
+
+Defers three CET observer API lookups until protected registration in onInit. Retains native result diagnostics and all save policy. Vehicle-combat saving remains unresolved. See CHANGELOG-VEHICLE-DIAGNOSTIC.3.md.
+
 # 1.0.0-vehicle-diagnostic.2 — compiler-default hotfix
 
 Removes the two compiler-rejected negative diagnostic field defaults; serial-guarded readers retain unknown before an attempt. Save routing is unchanged. Native compilation and vehicle-combat saving remain unverified; see CHANGELOG-VEHICLE-DIAGNOSTIC.2.md.

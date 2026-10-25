@@ -1,3 +1,9 @@
+# Current observer diagnostic
+
+Current preview: 1.0.0-vehicle-diagnostic.3. Native acceptance is observed in the uploaded .2 report, while visible vehicle-combat saving remains a reported failure. The .3 patch repairs early observer API capture; actual attachment/callbacks and saving remain unverified. See the v2.4 roadmap and VALIDATION-VEHICLE-DIAGNOSTIC.3.md.
+
+---
+
 # Current diagnostic status
 
 Current preview: 1.0.0-vehicle-diagnostic.2. diagnostic.1 has a reported field-default

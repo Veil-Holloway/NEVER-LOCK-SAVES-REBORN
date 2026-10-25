@@ -1,0 +1,168 @@
+{
+  "baseline_version": "1.0.0-vehicle-diagnostic.2",
+  "candidate_version": "1.0.0-vehicle-diagnostic.3",
+  "approved_change": "Three late-bound CET observer API injections for cold startup; version labels and installation auditor pins. No checkpoint or native-lock policy change.",
+  "protected_roots": [
+    "bin",
+    "r6",
+    "tools/NLSRSaveGuardian",
+    "tools/NLSRInstallAudit"
+  ],
+  "changed_files": {
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua": {
+      "candidate_sha256": "bc1bc7a9af6684fdb674c1ba070a09e99876a4a6a037107ebd48dcd7aebc103a",
+      "baseline_sha256": "fb68780c44009ecd7899eeb9d6111b382dd21a52cda8207168dcf5e91672503b",
+      "splices": [
+        {
+          "candidate_start_line": 0,
+          "candidate_end_line": 1,
+          "before": "-- Never Lock Saves Reborn v1.0.0-vehicle-diagnostic.2 Release Candidate\r\n",
+          "after": "-- Never Lock Saves Reborn v1.0.0-vehicle-diagnostic.3 Release Candidate\r\n"
+        },
+        {
+          "candidate_start_line": 65,
+          "candidate_end_line": 66,
+          "before": "    return questModule.new({observe=ObserveAfter,\r\n",
+          "after": "    return questModule.new({observe=function(...) return ObserveAfter(...) end,\r\n"
+        },
+        {
+          "candidate_start_line": 121,
+          "candidate_end_line": 122,
+          "before": "      session=function() return deferredSession or 0 end,ObserveBefore=ObserveBefore,ObserveAfter=ObserveAfter})\r\n",
+          "after": "      session=function() return deferredSession or 0 end,ObserveBefore=function(...) return ObserveBefore(...) end,ObserveAfter=function(...) return ObserveAfter(...) end})\r\n"
+        },
+        {
+          "candidate_start_line": 704,
+          "candidate_end_line": 705,
+          "before": "  local snapshot={build='1.0.0-vehicle-diagnostic.2',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),\r\n",
+          "after": "  local snapshot={build='1.0.0-vehicle-diagnostic.3',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),\r\n"
+        },
+        {
+          "candidate_start_line": 741,
+          "candidate_end_line": 742,
+          "before": "  log('v1.0.0-vehicle-diagnostic.2 Release Candidate loaded; experimental native save-lock gate required')\r\n",
+          "after": "  log('v1.0.0-vehicle-diagnostic.3 Release Candidate loaded; experimental native save-lock gate required')\r\n"
+        },
+        {
+          "candidate_start_line": 1017,
+          "candidate_end_line": 1018,
+          "before": "    ImGui.Text('v1.0.0-vehicle-diagnostic.2 Release Candidate | Runtime policy')\r\n",
+          "after": "    ImGui.Text('v1.0.0-vehicle-diagnostic.3 Release Candidate | Runtime policy')\r\n"
+        },
+        {
+          "candidate_start_line": 1176,
+          "candidate_end_line": 1177,
+          "before": "        log('v1.0.0-vehicle-diagnostic.2 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)\r\n",
+          "after": "        log('v1.0.0-vehicle-diagnostic.3 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)\r\n"
+        },
+        {
+          "candidate_start_line": 1210,
+          "candidate_end_line": 1211,
+          "before": "          report.rebornBuild='1.0.0-vehicle-diagnostic.2'\r\n",
+          "after": "          report.rebornBuild='1.0.0-vehicle-diagnostic.3'\r\n"
+        }
+      ]
+    },
+    "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds": {
+      "candidate_sha256": "4f484edd5decdf70eb129887395d1e48dd04f38a577f2920d07a6733afbb1271",
+      "baseline_sha256": "bbe625062a4fbee666d8a11c881997447faf7069227af195a222b79870627b6e",
+      "splices": [
+        {
+          "candidate_start_line": 0,
+          "candidate_end_line": 1,
+          "before": "// v1.0.0-vehicle-diagnostic.2 Release Candidate. Deferred/autosave lanes are opt-in.\r\n",
+          "after": "// v1.0.0-vehicle-diagnostic.3 Release Candidate. Deferred/autosave lanes are opt-in.\r\n"
+        },
+        {
+          "candidate_start_line": 525,
+          "candidate_end_line": 526,
+          "before": "  public static func Version() -> String { return \"1.0.0-vehicle-diagnostic.2\"; }\r\n",
+          "after": "  public static func Version() -> String { return \"1.0.0-vehicle-diagnostic.3\"; }\r\n"
+        }
+      ]
+    },
+    "tools/NLSRInstallAudit/README.md": {
+      "candidate_sha256": "6b360d1eeb0a68bab0ddfc8537920c7916cfece82c752fcf7cfed14d315afa31",
+      "baseline_sha256": "71a082252e2cf47bd9bb0d21e960e6b2f56e5e899ea2d31d8904d719c07bc314",
+      "splices": [
+        {
+          "candidate_start_line": 2,
+          "candidate_end_line": 3,
+          "before": "This optional Python 3.10+ tool checks the installed **1.0.0-vehicle-diagnostic.2** runtime against\n",
+          "after": "This optional Python 3.10+ tool checks the installed **1.0.0-vehicle-diagnostic.3** runtime against\n"
+        }
+      ]
+    },
+    "tools/NLSRInstallAudit/audit_installation.py": {
+      "candidate_sha256": "3b992f4efcb0b332583dcb523e8b681fef42ee6a85ad65f4bbc1e0aa5f03fa82",
+      "baseline_sha256": "c82ebaa79d17ae84c023cf8e8e1519db1cb1489114687ee6076908cdabfd7ac9",
+      "splices": [
+        {
+          "candidate_start_line": 12,
+          "candidate_end_line": 14,
+          "before": "RELEASE = '1.0.0-vehicle-diagnostic.2'\nINVENTORY_SHA256 = 'd60af3e039cffc975bf65b59c2e9c5f28f676429ca48ae69bfdd5b715d9d1578'\n",
+          "after": "RELEASE = '1.0.0-vehicle-diagnostic.3'\nINVENTORY_SHA256 = 'd54987b28b238d3fd74878eef7d0cdd33c212c9aee0ac7c450a4fc0cb6a53a1b'\n"
+        }
+      ]
+    },
+    "tools/NLSRInstallAudit/runtime_inventory.json": {
+      "candidate_sha256": "d54987b28b238d3fd74878eef7d0cdd33c212c9aee0ac7c450a4fc0cb6a53a1b",
+      "baseline_sha256": "d60af3e039cffc975bf65b59c2e9c5f28f676429ca48ae69bfdd5b715d9d1578",
+      "splices": [
+        {
+          "candidate_start_line": 2,
+          "candidate_end_line": 3,
+          "before": "  \"release\": \"1.0.0-vehicle-diagnostic.2\",\n",
+          "after": "  \"release\": \"1.0.0-vehicle-diagnostic.3\",\n"
+        },
+        {
+          "candidate_start_line": 42,
+          "candidate_end_line": 44,
+          "before": "      \"size\": 74942,\n      \"sha256\": \"fb68780c44009ecd7899eeb9d6111b382dd21a52cda8207168dcf5e91672503b\"\n",
+          "after": "      \"size\": 75032,\n      \"sha256\": \"bc1bc7a9af6684fdb674c1ba070a09e99876a4a6a037107ebd48dcd7aebc103a\"\n"
+        },
+        {
+          "candidate_start_line": 83,
+          "candidate_end_line": 84,
+          "before": "      \"sha256\": \"bbe625062a4fbee666d8a11c881997447faf7069227af195a222b79870627b6e\"\n",
+          "after": "      \"sha256\": \"4f484edd5decdf70eb129887395d1e48dd04f38a577f2920d07a6733afbb1271\"\n"
+        }
+      ]
+    },
+    "tools/NLSRInstallAudit/tests/test_independent.py": {
+      "candidate_sha256": "3e0953780971e62a22fd14718ca82d2158eba27e047c154605fc76cfd1d6575f",
+      "baseline_sha256": "80f86095bc374996dc808d92a671fb463d8e7d24920fdd5348e2e1f6210dee3d",
+      "splices": [
+        {
+          "candidate_start_line": 92,
+          "candidate_end_line": 93,
+          "before": "        self.assertEqual(payload['release'], '1.0.0-vehicle-diagnostic.2')\n",
+          "after": "        self.assertEqual(payload['release'], '1.0.0-vehicle-diagnostic.3')\n"
+        }
+      ]
+    }
+  },
+  "unchanged_files": {
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua": "14b0142a2fb4fe3dce80e0699690ef7093470954cc0a4ae38d7fd31517ed9289",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/config_store.lua": "71cc407a911ad5f6a9a8dda749e2ef3839fe74f01fd7fa3da8590968c80dece3",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dark_future.lua": "a4d5afd042e295b7db6af26026c4a55aab8d834ed21d4550946393ceba3fb3b8",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/deferred_save.lua": "b5c7413a274fd3d38612176891ee9dac06ebd2255bc0d40276fc9350400db9ca",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dependency_versions.lua": "32c132404062f25594684567b4a50acdbc61687e6eb59fee8a25fbee2393b53a",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian.lua": "ba22843f8356bd56b952d7629ff89667913a4b195513015aea981b9f41e67c40",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian_bridge.lua": "b3b438e12bd01fc6b0d5ce00a93fff9450e52def53a057971cb3ae469a158a04",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua": "58cbe7e5a431a8ba8a18f3d3f6526df08e029bc1410066b4303083b7244951ab",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua": "023c995c24e0c3c941861557bbe92c9caa7c3e3fe14ee5f0bfc19eaee1598547",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_message_library.lua": "67f090e136d54ed7580518eb4f0b48601d582f23fe3f55015b7ca4fba7a0ba7c",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_messages.lua": "a271bac7f36417815d673bf0c176e7fe64c73b5da77b8c41c815c10fd0b3ecea",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua": "a0513bf67c2cb5a4b9506bf8533f545d32012ff08ecc797b6ffc3ca4f4b812a0",
+    "r6/scripts/NeverLockSavesReborn/DarkFutureMessages.reds": "d1cc373bf7a030929745f969528b31774998943e3108c0f8b9b96a09a2b7f350",
+    "r6/scripts/NeverLockSavesReborn/DarkFutureSavePolicy.reds": "f707dbbbfe3147fae24290c1832f6274614118daa3e4724ee94d3a6bd18bad37",
+    "tools/NLSRSaveGuardian/README.md": "4051c04e9b51e061556cc252f61dc1e301a68d026e91c0d5117767ea88b46d1f",
+    "tools/NLSRSaveGuardian/save_guardian.py": "c142d5f86a3c9593c99ebfd949643af3705075c71ce370b149d22c62cd77d9c7",
+    "tools/NLSRSaveGuardian/test_recovery_assistant.py": "8bf34e52a58b3b84161eb4f571c41742d74a619545ff012be0dc1f5c2f56d5bd",
+    "tools/NLSRSaveGuardian/test_retention.py": "f8f9bbba3bcb65a45d57e788e5078531ccd8245448a993b619a238f4586537f3",
+    "tools/NLSRSaveGuardian/test_save_guardian.py": "f43218a3e5dc4fe848a5faa58565fe990a5b5fee884d8b2b840af1834febba45",
+    "tools/NLSRInstallAudit/VALIDATION.md": "8fd2ea7732d61d849ea37ab971708e92c4b817fa955eaae218eb864d2b6b19fe",
+    "tools/NLSRInstallAudit/tests/test_author.py": "49cd9b6380f43617b7bb3e67ae32aee9f237aa65a1090d7ef286afbe31df081b"
+  }
+}

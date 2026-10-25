@@ -3,13 +3,13 @@ name: Publish verified vehicle save diagnostic
 on:
   push:
     branches: [fix/unrestricted-vehicle-combat-rc4]
-    paths: [.github/release-verification/vehicle-diagnostic.2.json]
+    paths: [.github/release-verification/vehicle-diagnostic.3.json]
   workflow_dispatch:
 
 permissions: {}
 
 concurrency:
-  group: vehicle-diagnostic.2-release
+  group: vehicle-diagnostic.3-release
   cancel-in-progress: false
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
-      DIAGNOSTIC_TAG: v1.0.0-vehicle-diagnostic.2
+      DIAGNOSTIC_TAG: v1.0.0-vehicle-diagnostic.3
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -36,7 +36,7 @@ jobs:
           spec = importlib.util.spec_from_file_location('diagnostic_builder', '.github/scripts/build_vehicle_diagnostic.py')
           module = importlib.util.module_from_spec(spec)
           spec.loader.exec_module(module)
-          receipt = json.loads(pathlib.Path('.github/release-verification/vehicle-diagnostic.2.json').read_text())
+          receipt = json.loads(pathlib.Path('.github/release-verification/vehicle-diagnostic.3.json').read_text())
           repo, tag = os.environ['GH_REPO'], os.environ['DIAGNOSTIC_TAG']
           def api(endpoint):
               return json.loads(subprocess.check_output(['gh', 'api', f'repos/{repo}/' + endpoint], text=True))
@@ -62,7 +62,7 @@ jobs:
           python3 - <<'PY'
           import json, os, pathlib, subprocess
           repo, tag = os.environ['GH_REPO'], os.environ['DIAGNOSTIC_TAG']
-          receipt = json.loads(pathlib.Path('.github/release-verification/vehicle-diagnostic.2.json').read_text())
+          receipt = json.loads(pathlib.Path('.github/release-verification/vehicle-diagnostic.3.json').read_text())
           release = json.loads(subprocess.check_output(['gh', 'api', f'repos/{repo}/releases/tags/{tag}'], text=True))
           ref = json.loads(subprocess.check_output(['gh', 'api', f'repos/{repo}/git/ref/tags/{tag}'], text=True))
           if release.get('draft') is not False or release.get('prerelease') is not True or ref.get('object', {}).get('sha') != receipt['source_commit']:
