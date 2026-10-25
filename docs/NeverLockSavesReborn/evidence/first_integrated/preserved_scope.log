@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/ba7d0d23f8da/work/rc2/release/docs/NeverLockSavesReborn/validation/check_preserved_scope.py", line 26, in <module>
+    assert sha(body(source,name).encode())==expected, 'Changed protected method: '+name
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Changed protected method: NLSRebornDeferredDispatch

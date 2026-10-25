@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "release": "1.0.0-rc3",
+  "scope": "runtime_files_only",
+  "runtime_files": [
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua",
+      "size": 10191,
+      "sha256": "14b0142a2fb4fe3dce80e0699690ef7093470954cc0a4ae38d7fd31517ed9289"
+    },
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/config_store.lua",
+      "size": 3245,
+      "sha256": "71cc407a911ad5f6a9a8dda749e2ef3839fe74f01fd7fa3da8590968c80dece3"
+    },
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dark_future.lua",
+      "size": 3318,
+      "sha256": "a4d5afd042e295b7db6af26026c4a55aab8d834ed21d4550946393ceba3fb3b8"
+    },
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/deferred_save.lua",
+      "size": 2201,
+      "sha256": "b5c7413a274fd3d38612176891ee9dac06ebd2255bc0d40276fc9350400db9ca"
+    },
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dependency_versions.lua",
+      "size": 2040,
+      "sha256": "32c132404062f25594684567b4a50acdbc61687e6eb59fee8a25fbee2393b53a"
+    },
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian.lua",
+      "size": 9547,
+      "sha256": "ba22843f8356bd56b952d7629ff89667913a4b195513015aea981b9f41e67c40"
+    },
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian_bridge.lua",
+      "size": 7632,
+      "sha256": "b3b438e12bd01fc6b0d5ce00a93fff9450e52def53a057971cb3ae469a158a04"
+    },
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
+      "size": 74299,
+      "sha256": "58f1295871e29b5a0b5d15e78670f481669461242e49c628efa31dc1be4dedd5"
+    },
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua",
+      "size": 5397,
+      "sha256": "58cbe7e5a431a8ba8a18f3d3f6526df08e029bc1410066b4303083b7244951ab"
+    },
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua",
+      "size": 6637,
+      "sha256": "023c995c24e0c3c941861557bbe92c9caa7c3e3fe14ee5f0bfc19eaee1598547"
+    },
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_message_library.lua",
+      "size": 22990,
+      "sha256": "67f090e136d54ed7580518eb4f0b48601d582f23fe3f55015b7ca4fba7a0ba7c"
+    },
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_messages.lua",
+      "size": 7441,
+      "sha256": "a271bac7f36417815d673bf0c176e7fe64c73b5da77b8c41c815c10fd0b3ecea"
+    },
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua",
+      "size": 16046,
+      "sha256": "0dfdd44ae3baa6a5a20b0a2121e2844b52e1be4ae6f4b0db366aa061e6c838c6"
+    },
+    {
+      "path": "r6/scripts/NeverLockSavesReborn/DarkFutureMessages.reds",
+      "size": 54782,
+      "sha256": "d1cc373bf7a030929745f969528b31774998943e3108c0f8b9b96a09a2b7f350"
+    },
+    {
+      "path": "r6/scripts/NeverLockSavesReborn/DarkFutureSavePolicy.reds",
+      "size": 5717,
+      "sha256": "f707dbbbfe3147fae24290c1832f6274614118daa3e4724ee94d3a6bd18bad37"
+    },
+    {
+      "path": "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds",
+      "size": 156837,
+      "sha256": "f2953b6903bb09da3bdec5eb7ee991a51928817ac2b527d9e816e9fc591c48d1"
+    }
+  ]
+}

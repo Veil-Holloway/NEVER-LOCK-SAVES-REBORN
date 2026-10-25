@@ -1,0 +1,10 @@
+{
+  "source": "user supplied redscript_rCURRENT.log",
+  "raw_sha256": "f705f026580761ad996c8c733e4775f4dcf6665e5f3a512e71f33079b8a19e5d",
+  "redaction": "absolute game root replaced with <GAME_ROOT>",
+  "diagnostic": "UNRESOLVED_TYPE AutoSaveSystem",
+  "file": "NeverLockSavesReborn.reds",
+  "line": 170,
+  "timestamp": "2026-10-24 17:52:17 -0700",
+  "limits": "proves reported compilefailure; no latercompilepassprovided"
+}

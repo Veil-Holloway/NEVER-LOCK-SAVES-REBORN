@@ -1,0 +1,195 @@
+{
+  "evidence_kind": "Primary RTTI declarations; corroborating current game callback registration and lookup semantics in GAME-SOURCE-EVIDENCE.json",
+  "sources": [
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "blob_sha": "83c11173116171e39e94198fb0bee0deb1e64463",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/8f13e59e5007d97f3d105b8959bbe1bbbe9992a2/public/dumps/classes/gameJournalManager.json",
+      "interface": {
+        "name": "gameJournalManager",
+        "funcs": [
+          {
+            "fullName": "GetEntry",
+            "shortName": "GetEntry",
+            "return": {
+              "type": "whandle:gameJournalEntry",
+              "flags": 64
+            },
+            "index": 11747,
+            "flags": 8193,
+            "params": [
+              {
+                "type": "Uint32",
+                "name": "hash",
+                "flags": 128
+              }
+            ]
+          },
+          {
+            "fullName": "GetEntryState",
+            "shortName": "GetEntryState",
+            "return": {
+              "type": "gameJournalEntryState",
+              "flags": 64
+            },
+            "index": 11727,
+            "flags": 8193,
+            "params": [
+              {
+                "type": "whandle:gameJournalEntry",
+                "name": "entry",
+                "flags": 128
+              }
+            ]
+          },
+          {
+            "fullName": "RegisterScriptCallback",
+            "shortName": "RegisterScriptCallback",
+            "index": 11749,
+            "flags": 1,
+            "params": [
+              {
+                "type": "handle:IScriptable",
+                "name": "obj",
+                "flags": 128
+              },
+              {
+                "type": "CName",
+                "name": "functionName",
+                "flags": 128
+              },
+              {
+                "type": "gameJournalListenerType",
+                "name": "type",
+                "flags": 128
+              }
+            ]
+          },
+          {
+            "fullName": "UnregisterScriptCallback",
+            "shortName": "UnregisterScriptCallback",
+            "index": 11750,
+            "flags": 1,
+            "params": [
+              {
+                "type": "handle:IScriptable",
+                "name": "obj",
+                "flags": 128
+              },
+              {
+                "type": "CName",
+                "name": "functionName",
+                "flags": 128
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "blob_sha": "adff1ade62966c9fd8aa3ebe58bd508d71390f8c",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/8f13e59e5007d97f3d105b8959bbe1bbbe9992a2/public/dumps/enums/gameJournalEntryState.json",
+      "interface": {
+        "name": "gameJournalEntryState",
+        "members": [
+          {
+            "name": "Undefined",
+            "value": 0
+          },
+          {
+            "name": "Inactive",
+            "value": 1
+          },
+          {
+            "name": "Active",
+            "value": 2
+          },
+          {
+            "name": "Succeeded",
+            "value": 3
+          },
+          {
+            "name": "Failed",
+            "value": 4
+          }
+        ]
+      }
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "blob_sha": "1768ef6d5615c1d8acc223b44a23d0731ed52449",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/8f13e59e5007d97f3d105b8959bbe1bbbe9992a2/public/dumps/enums/gameJournalListenerType.json",
+      "interface": {
+        "name": "gameJournalListenerType",
+        "members": [
+          {
+            "name": "State",
+            "value": 0
+          },
+          {
+            "name": "Visited",
+            "value": 1
+          },
+          {
+            "name": "Tracked",
+            "value": 2
+          },
+          {
+            "name": "Untracked",
+            "value": 3
+          },
+          {
+            "name": "Counter",
+            "value": 4
+          }
+        ]
+      }
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "blob_sha": "29a2ce105b625dd88828be77e48417d52e14e623",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/8f13e59e5007d97f3d105b8959bbe1bbbe9992a2/public/dumps/classes/QuestTrackerGameController.json",
+      "interface": {
+        "name": "QuestTrackerGameController",
+        "funcs": [
+          {
+            "fullName": "OnStateChanges",
+            "shortName": "OnStateChanges",
+            "return": {
+              "type": "Bool",
+              "flags": 64
+            },
+            "flags": 264,
+            "params": [
+              {
+                "type": "Uint32",
+                "name": "hash",
+                "flags": 128
+              },
+              {
+                "type": "CName",
+                "name": "className",
+                "flags": 128
+              },
+              {
+                "type": "gameJournalNotifyOption",
+                "name": "notifyOption",
+                "flags": 128
+              },
+              {
+                "type": "gameJournalChangeType",
+                "name": "changeType",
+                "flags": 128
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

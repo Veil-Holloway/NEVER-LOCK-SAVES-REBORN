@@ -1,0 +1,74 @@
+[
+  {
+    "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
+    "change": "modified",
+    "baseline_sha256": "869800a7ab82ed380090d5a84e78a30b7d79869763ed4e4ffb3669c53f1ef41f",
+    "candidate_sha256": "4049bef1a72415ebd7796e980e7cce2911ad7333dc7ca241f60b01a078648166"
+  },
+  {
+    "path": "docs/NeverLockSavesReborn/validation/check_autosave_type_contract.py",
+    "change": "added",
+    "baseline_sha256": null,
+    "candidate_sha256": "9c1e143369f5e02896ae6d357669ae1bf58b882051e23c6517c97571b79a6018"
+  },
+  {
+    "path": "docs/NeverLockSavesReborn/validation/check_preserved_scope.py",
+    "change": "modified",
+    "baseline_sha256": "ea619695823c24ad200e6ede37b0273a92f9f7078ca0b7333f5e8d685c07399f",
+    "candidate_sha256": "b1a10f1ccc55fa3c5f6fc99c6517b8eae444c67a36b6813548a43273a5ca9d43"
+  },
+  {
+    "path": "docs/NeverLockSavesReborn/validation/check_rc1_scope.py",
+    "change": "modified",
+    "baseline_sha256": "22f4ae21c4fa3f0400399ffb27df76af0b471bbd439880c6094f433700692bf3",
+    "candidate_sha256": "c3cfbc51992a150ccc6c2ab61be7f98a704c859e4b9973b2ea2f39a8b854c604"
+  },
+  {
+    "path": "docs/NeverLockSavesReborn/validation/check_rc2_scope.py",
+    "change": "added",
+    "baseline_sha256": null,
+    "candidate_sha256": "c98ec954f9224c27d6f3fcbb4af3828428e96cd7f6283c9bd376054cf09ff8b1"
+  },
+  {
+    "path": "docs/NeverLockSavesReborn/validation/run_checks.py",
+    "change": "modified",
+    "baseline_sha256": "14fcd3cc88a7c4f55ee2249ee818fc3deaa5f08c9af91d8d1832f48a155751a1",
+    "candidate_sha256": "63126d0bd06e105cb056b3ba0e7b4082c023866170fd342c29589879ef39343f"
+  },
+  {
+    "path": "docs/NeverLockSavesReborn/validation/run_rc1_scope_controls.py",
+    "change": "modified",
+    "baseline_sha256": "77fb2925f436e978e1c404ebec914cb70376c788b10b5f7167131a23f3673ddb",
+    "candidate_sha256": "cc39a50ff48811aa580113270749869d43ff5658e2fc58386a9017ece6a6c8dc"
+  },
+  {
+    "path": "docs/NeverLockSavesReborn/validation/run_rc2_scope_controls.py",
+    "change": "added",
+    "baseline_sha256": null,
+    "candidate_sha256": "4e322a72016234079e9ce9b9e0dc718a719a9d641aa0fd12244a2614291423a5"
+  },
+  {
+    "path": "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds",
+    "change": "modified",
+    "baseline_sha256": "293a0089f0d3c7591501497ac813b0f3bb5de7d9da4de4b5e233936049333e3e",
+    "candidate_sha256": "8fca7e488d202bef7a1b8c6b75bdd5e24f726480311ffe59131d11c8c83d9e10"
+  },
+  {
+    "path": "tools/NLSRInstallAudit/audit_installation.py",
+    "change": "modified",
+    "baseline_sha256": "65429a62c4cc66211a6b1612156f2b37789345d0c130b9642e44d6944d2ae8ce",
+    "candidate_sha256": "15927ddf87c6874845b0466d47ce9943a228d688f151ee927e37bddf1b498c94"
+  },
+  {
+    "path": "tools/NLSRInstallAudit/tests/test_author.py",
+    "change": "modified",
+    "baseline_sha256": "d8325200bb84ab0c1bb3236bfef3a6063db2fbb3e73331731bc8802a8d34b8c1",
+    "candidate_sha256": "d88edd0e547c5b2eb19459ce204beae70165af2976416f1f3b40a5f0a379661d"
+  },
+  {
+    "path": "tools/NLSRInstallAudit/tests/test_independent.py",
+    "change": "modified",
+    "baseline_sha256": "46277ce8f9de09a8e3e981289f63ab22c876aa3f4c94536992d6f430d55166b4",
+    "candidate_sha256": "fb748dfe5fd0a496df0420a745a43fe6d9f630a6ea7eecc7961efb3b0a617331"
+  }
+]

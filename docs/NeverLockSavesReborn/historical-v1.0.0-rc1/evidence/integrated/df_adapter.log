@@ -1,0 +1,21 @@
+PASS: no player never queries the game
+PASS: missing Dark Future is explicitly not detected
+PASS: lookup exception becomes UNKNOWN
+PASS: running service returns strict read-only gameplay snapshot
+PASS: invalid gameplay remains information, never a save permission
+PASS: vehicle sleep and menu state are preserved without coercion
+PASS: disabled mod is not reported as running gameplay
+PASS: Uninitialized service is not queried for gameplay
+PASS: Suspended service is not queried for gameplay
+PASS: unknown lifecycle is not assumed Running
+PASS: missing player attachment defers gameplay query
+PASS: stale player attachment defers gameplay query
+PASS: uninitialized settings defer gameplay query
+PASS: lifecycle getter fault is contained
+PASS: non-boolean master switch defers gameplay query
+PASS: missing verified getter becomes UNKNOWN
+PASS: unexpected getter types remain UNKNOWN
+PASS: session reload resolves fresh services and clears old state
+PASS: diagnostics distinguish false from UNKNOWN
+PASS: adapter does not mutate any external service property
+RESULT: 20 adapter boundary tests passed; no game runtime exercised

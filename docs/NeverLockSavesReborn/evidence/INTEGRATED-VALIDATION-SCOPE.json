@@ -1,0 +1,22 @@
+{
+  "baseline_validation_files": 63,
+  "old_modified": [
+    "check_preserved_scope.py",
+    "run_checks.py",
+    "check_rc1_scope.py",
+    "run_rc1_scope_controls.py"
+  ],
+  "new_validation_files": [
+    "check_autosave_type_contract.py",
+    "check_rc2_scope.py",
+    "fixtures/rc2_scope.json",
+    "run_rc2_scope_controls.py"
+  ],
+  "old_groups": 54,
+  "candidate_groups": 57,
+  "added_groups": [
+    "autosave_type_contract",
+    "rc2_scope_controls",
+    "rc2_source_freeze"
+  ]
+}

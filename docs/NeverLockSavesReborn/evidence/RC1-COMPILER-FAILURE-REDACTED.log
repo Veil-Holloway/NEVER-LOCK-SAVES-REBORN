@@ -1,0 +1,15 @@
+[INFO - Sat, 24 Oct 2026 17:52:17 -0700] Compiling files in <GAME_ROOT>\r6\scripts:
+NeverLockSavesReborn\DarkFutureMessages.reds
+NeverLockSavesReborn\DarkFutureSavePolicy.reds
+NeverLockSavesReborn\NeverLockSavesReborn.reds
+[ERROR - Sat, 24 Oct 2026 17:52:17 -0700] [UNRESOLVED_TYPE] At <GAME_ROOT>\r6\scripts\NeverLockSavesReborn\NeverLockSavesReborn.reds:170:3:
+  let autosave: ref<AutoSaveSystem> = GameInstance.GetAutoSaveSystem(this.GetGame());
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+unresolved type 'AutoSaveSystem'
+
+[ERROR - Sat, 24 Oct 2026 17:52:39 -0700] REDScript compilation has failed.
+This error has been caused by mods listed below:
+- NeverLockSavesReborn
+
+You should check if these mods are outdated and update them if possible. They may also be incompatible with the current version of the game, in which case you should remove them and try again.
+

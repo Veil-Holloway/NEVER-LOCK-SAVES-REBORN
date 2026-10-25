@@ -1,0 +1,11 @@
+PASS collector
+PASS report
+PASS mutation cet-prefix-omitted
+PASS mutation unsupported-reader-invoked
+PASS mutation reader-error-falsely-observed
+PASS mutation native-string-accepted
+PASS mutation native-upper-bound-omitted
+PASS mutation partial-version-text-accepted
+PASS mutation component-source-unchecked
+PASS mutation observed-version-unchecked
+PASS mutation unsupported-api-observed

@@ -1,0 +1,369 @@
+{
+  "assertions": 1866,
+  "failed": 853,
+  "first_failures": [
+    {
+      "label": "blocked Smart request enters one queue",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": false,
+        "status": false,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "request source survives real wrapper",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": false,
+        "status": false,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "queue admission never forces or delegates",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": false,
+        "status": false,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "blocked Smart request enters one queue",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": false,
+        "status": false,
+        "allow_combat": true
+      }
+    },
+    {
+      "label": "request source survives real wrapper",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": false,
+        "status": false,
+        "allow_combat": true
+      }
+    },
+    {
+      "label": "queue admission never forces or delegates",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": false,
+        "status": false,
+        "allow_combat": true
+      }
+    },
+    {
+      "label": "blocked Smart request enters one queue",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": false,
+        "status": true,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "request source survives real wrapper",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": false,
+        "status": true,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "queue admission never forces or delegates",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": false,
+        "status": true,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "blocked Smart request enters one queue",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": false,
+        "status": true,
+        "allow_combat": true
+      }
+    },
+    {
+      "label": "request source survives real wrapper",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": false,
+        "status": true,
+        "allow_combat": true
+      }
+    },
+    {
+      "label": "queue admission never forces or delegates",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": false,
+        "status": true,
+        "allow_combat": true
+      }
+    },
+    {
+      "label": "blocked Smart request enters one queue",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": true,
+        "status": false,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "request source survives real wrapper",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": true,
+        "status": false,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "queue admission never forces or delegates",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": true,
+        "status": false,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "legacy notice or status-lane handoff follows switches",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": true,
+        "status": false,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "blocked Smart request enters one queue",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": true,
+        "status": false,
+        "allow_combat": true
+      }
+    },
+    {
+      "label": "request source survives real wrapper",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": true,
+        "status": false,
+        "allow_combat": true
+      }
+    },
+    {
+      "label": "queue admission never forces or delegates",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": true,
+        "status": false,
+        "allow_combat": true
+      }
+    },
+    {
+      "label": "legacy notice or status-lane handoff follows switches",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": true,
+        "status": false,
+        "allow_combat": true
+      }
+    },
+    {
+      "label": "blocked Smart request enters one queue",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": true,
+        "status": true,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "request source survives real wrapper",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": true,
+        "status": true,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "queue admission never forces or delegates",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": true,
+        "status": true,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "blocked Smart request enters one queue",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": true,
+        "status": true,
+        "allow_combat": true
+      }
+    },
+    {
+      "label": "request source survives real wrapper",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": true,
+        "status": true,
+        "allow_combat": true
+      }
+    },
+    {
+      "label": "queue admission never forces or delegates",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Scene"
+        ],
+        "master": true,
+        "status": true,
+        "allow_combat": true
+      }
+    },
+    {
+      "label": "blocked Smart request enters one queue",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Quest"
+        ],
+        "master": false,
+        "status": false,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "request source survives real wrapper",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Quest"
+        ],
+        "master": false,
+        "status": false,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "queue admission never forces or delegates",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Quest"
+        ],
+        "master": false,
+        "status": false,
+        "allow_combat": false
+      }
+    },
+    {
+      "label": "blocked Smart request enters one queue",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "reasons": [
+          "Quest"
+        ],
+        "master": false,
+        "status": false,
+        "allow_combat": true
+      }
+    }
+  ],
+  "scope": "Smart user-request routing regression against bounded actual REDscript source.\n\nThe tested methods, route branches, queue admission and dispatch are translated\nfrom the supplied release. Only game/service boundaries and the large existing\nCheckpointMessage library are doubled. This is not REDscript compilation, CET,\nnotification rendering, scheduler stability or actual save/reload evidence.",
+  "source_sha256": "8fca7e488d202bef7a1b8c6b75bdd5e24f726480311ffe59131d11c8c83d9e10",
+  "negative_control": true
+}

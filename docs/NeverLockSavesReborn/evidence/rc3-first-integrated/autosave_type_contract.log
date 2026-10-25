@@ -1,0 +1,1 @@
+PASS source regression: verified gameAutoSaveSystem annotation, service fail-closed guard and one-shot order retained. Not a REDscript compiler pass.

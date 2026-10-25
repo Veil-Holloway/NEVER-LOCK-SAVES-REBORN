@@ -1,0 +1,105 @@
+--- preRC2/init.lua
++++ preRC3/init.lua
+@@ -1,4 +1,4 @@
+--- Never Lock Saves Reborn v0.14.0-preRC2 Release Testing Preview
++-- Never Lock Saves Reborn v0.14.0-preRC3 Release Testing Preview
+ -- Persistent UI settings, runtime bridge, and diagnostics.
+ -- Smart permits only explicit combat locks with combat opt-in; mounted combat also needs vehicle opt-in.
+ -- DF switches control contextual messages only. Optional scheduler defaults OFF.
+@@ -287,8 +287,9 @@
+ local syncingNative = false
+ local toneStatus = 'Not yet verified'
+ local function log(s) print('[NLS Reborn] ' .. tostring(s)) end
++local validateMainSettings
+ local function loadConfig()
+-  local ok, data = pcall(configStore.load, file)
++  local ok, data = pcall(configStore.load, file, validateMainSettings)
+   if ok and type(data) == 'table' then
+     if type(data.mode) == 'number' and data.mode >= 0 and data.mode <= 3 then mode = math.floor(data.mode) end
+     if type(data.allowCombat) == 'boolean' then allowCombat = data.allowCombat end
+@@ -327,8 +328,30 @@
+     dfNotifyVehicleSleep=dfNotifications.dfNotifyVehicleSleep,dfNotifyAddiction=dfNotifications.dfNotifyAddiction,
+     dfNotifyStarvation=dfNotifications.dfNotifyStarvation,dfNotifyDehydration=dfNotifications.dfNotifyDehydration}
+ end
++-- Main configs predate named presets: validate every present known field while
++-- retaining partial legacy objects, ignored obsolete keys and mode/tone flooring.
++-- This boundary is independent of the optional profiles module.
++validateMainSettings=function(settings)
++  if type(settings)~='table' or getmetatable(settings)~=nil then return nil,'invalid_settings' end
++  for key in pairs(settings) do
++    if type(key)~='string' then return nil,'invalid_settings' end
++  end
++  local ranges={mode={0,3},tone={0,2},deferredTTL={1,120},deferredCooldownSeconds={0,600},
++    autosaveIntervalSeconds={60,1800},autosaveCooldownSeconds={30,600}}
++  for key,default in pairs(currentSettings()) do
++    local value=settings[key]
++    if value~=nil then
++      local range=ranges[key]
++      if range then
++        if type(value)~='number' or value~=value or value<range[1] or value>range[2] or
++          ((key~='mode' and key~='tone') and value~=math.floor(value)) then return nil,'invalid_settings' end
++      elseif type(default)~='boolean' or type(value)~='boolean' then return nil,'invalid_settings' end
++    end
++  end
++  return true
++end
+ local function saveConfig()
+-  local ok, err = pcall(function() configStore.save(file,currentSettings()) end)
++  local ok, err = pcall(function() configStore.save(file,currentSettings(),validateMainSettings) end)
+   if not ok then
+     recordFailure('write_failed')
+     configStatus = 'Save failed: ' .. tostring(err)
+@@ -585,7 +608,7 @@
+   local valid,settings=pcall(profilesModule.validate,value)
+   if not valid or type(settings)~='table' then recordFailure('invalid_settings');profileStatus='Preset not applied: invalid_settings';return end
+   -- Persistence failure must preserve the existing runtime and pending request.
+-  local persisted,accepted=pcall(configStore.save,file,settings)
++  local persisted,accepted=pcall(configStore.save,file,settings,validateMainSettings)
+   if not persisted or accepted~=true then recordFailure('write_failed');profileStatus='Preset not applied: write_failed';return end
+   configStatus='Configuration written'
+   clearDeferred('Profile applied',currentQueuePlayer())
+@@ -657,7 +680,7 @@
+   local phase=deferredState.pending and 'Waiting' or deferredStatus:find('Submitted',1,true) and 'Submitted' or
+     deferredStatus=='Expired without save' and 'Expired' or deferredStatus:find('Error:',1,true)==1 and 'Error' or 'Unknown'
+   local gameVersion=read(function() return GetSingleton('inkMenuScenario'):GetSystemRequestsHandler():GetGameVersion() end)
+-  local snapshot={build='0.14.0-preRC2',gameBuild=gameVersion,versions={},settings=currentSettings(),
++  local snapshot={build='0.14.0-preRC3',gameBuild=gameVersion,versions={},settings=currentSettings(),
+     facts={q000_done=read(function() return Game.GetQuestsSystem():GetFactStr('q000_done') end),
+       q001_started=read(function() return Game.GetQuestsSystem():GetFactStr('q001_started') end)},
+     sensors={combatKnown=combatKnown,combatActive=combatActive,vehicleKnown=vehicleKnown,vehicleActive=vehicleActive,
+@@ -688,7 +711,7 @@
+   end
+   registerNativeSettings()
+   deferredStatus = deferredEnabled and 'Live queue enabled (experimental)' or 'Disabled'
+-  log('v0.14.0-preRC2 Release Testing Preview loaded; experimental native save-lock gate required')
++  log('v0.14.0-preRC3 Release Testing Preview loaded; experimental native save-lock gate required')
+ end)
+ registerForEvent('onOverlayOpen', function() show = true; apply() end)
+ registerForEvent('onOverlayClose', function() show = false end)
+@@ -964,7 +987,7 @@
+   if not show then return end
+   local visible = ImGui.Begin(title)
+   if visible then
+-    ImGui.Text('v0.14.0-preRC2 Release Testing Preview | Runtime policy')
++    ImGui.Text('v0.14.0-preRC3 Release Testing Preview | Runtime policy')
+     ImGui.TextWrapped('Native menu: '..nativeStatus)
+     ImGui.Separator()
+     for i=0,3 do
+@@ -1123,7 +1146,7 @@
+       ImGui.TextWrapped('Context states: -1 UNKNOWN, 0 inactive/disabled, 1 active. Context: 8 sleep, 11 dehydration, 10 starvation, 9 addiction.')
+       ImGui.TextWrapped('Compatibility is source-reviewed; in-game validation is still required. State samples refresh every two seconds.')
+       if ImGui.Button('Log compatibility snapshot##nls_darkfuture') then
+-        log('v0.14.0-preRC2 Release Testing Preview | mode='..names[mode+1]..' | prologue='..prologueStatus)
++        log('v0.14.0-preRC3 Release Testing Preview | mode='..names[mode+1]..' | prologue='..prologueStatus)
+         log('Dark Future: '..darkFutureStatus)
+         if darkFutureError then log('Dark Future query error: '..darkFutureError) end
+         if dfOK then log('Last Immersion save check: '..tostring(dfLastCheck)) end
+@@ -1157,7 +1180,7 @@
+       if ImGui.Button('Export Guardian report##nls_guardian_export') then
+         local exported=pcall(function()
+           local report=guardian:report()
+-          report.rebornBuild='0.14.0-preRC2'
++          report.rebornBuild='0.14.0-preRC3'
+           report.gameBuild='unknown'; report.frameworkVersions='unknown'
+           configStore.save('guardian-report.json',report)
+         end)

@@ -1,0 +1,56 @@
+[
+  {
+    "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
+    "change": "modified",
+    "baseline_sha256": "d01299cf73937deb60f6ae9885182bda65f82a023f0e8b9149e5f9835430cf77",
+    "candidate_sha256": "869800a7ab82ed380090d5a84e78a30b7d79869763ed4e4ffb3669c53f1ef41f"
+  },
+  {
+    "path": "docs/NeverLockSavesReborn/validation/check_dependency_scope.py",
+    "change": "modified",
+    "baseline_sha256": "cf90cdf9c3a5baf8e8b561e8fd995ef855793b595b5f07858baad7e02b7b689a",
+    "candidate_sha256": "d2ae252dafe797c7ce74f905bb3e02f162ff57589c695fc7ca44697a0abb9be2"
+  },
+  {
+    "path": "docs/NeverLockSavesReborn/validation/check_rc1_scope.py",
+    "change": "added",
+    "baseline_sha256": null,
+    "candidate_sha256": "22f4ae21c4fa3f0400399ffb27df76af0b471bbd439880c6094f433700692bf3"
+  },
+  {
+    "path": "docs/NeverLockSavesReborn/validation/run_checks.py",
+    "change": "modified",
+    "baseline_sha256": "eda4ad23cdcfc5943471abe9f1d84754d638fa65e09d332ce9a283251840d430",
+    "candidate_sha256": "14fcd3cc88a7c4f55ee2249ee818fc3deaa5f08c9af91d8d1832f48a155751a1"
+  },
+  {
+    "path": "docs/NeverLockSavesReborn/validation/run_rc1_scope_controls.py",
+    "change": "added",
+    "baseline_sha256": null,
+    "candidate_sha256": "77fb2925f436e978e1c404ebec914cb70376c788b10b5f7167131a23f3673ddb"
+  },
+  {
+    "path": "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds",
+    "change": "modified",
+    "baseline_sha256": "9a8580e237a9b08c55a2eacdd02262749d1ebe0b840298b165ef2be8ff966365",
+    "candidate_sha256": "293a0089f0d3c7591501497ac813b0f3bb5de7d9da4de4b5e233936049333e3e"
+  },
+  {
+    "path": "tools/NLSRInstallAudit/audit_installation.py",
+    "change": "added",
+    "baseline_sha256": null,
+    "candidate_sha256": "65429a62c4cc66211a6b1612156f2b37789345d0c130b9642e44d6944d2ae8ce"
+  },
+  {
+    "path": "tools/NLSRInstallAudit/tests/test_author.py",
+    "change": "added",
+    "baseline_sha256": null,
+    "candidate_sha256": "d8325200bb84ab0c1bb3236bfef3a6063db2fbb3e73331731bc8802a8d34b8c1"
+  },
+  {
+    "path": "tools/NLSRInstallAudit/tests/test_independent.py",
+    "change": "added",
+    "baseline_sha256": null,
+    "candidate_sha256": "46277ce8f9de09a8e3e981289f63ab22c876aa3f4c94536992d6f430d55166b4"
+  }
+]

@@ -1,0 +1,1398 @@
+{
+  "source": "Never_Lock_Saves_Reborn_0.8.1-RC5-index-hotfix.zip / r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds",
+  "source_sha256": "5c5585532ee8a9c7fcdfd39fe401a0d9fd03bc788b89053cf8eecfccbcda94c3",
+  "pools": [
+    {
+      "key": [
+        0,
+        0,
+        1
+      ],
+      "entries": {
+        "0": "Your exploration checkpoint has been noted.",
+        "1": "Your exploration checkpoint has been recorded.",
+        "2": "Your exploration checkpoint is acknowledged.",
+        "3": "Your exploration checkpoint remains subject to game restrictions.",
+        "4": "The current position has been noted.",
+        "5": "The current position has been recorded.",
+        "6": "The current position is acknowledged.",
+        "7": "The current position remains subject to game restrictions.",
+        "8": "Your progress has been noted.",
+        "9": "Your progress has been recorded.",
+        "10": "Your progress is acknowledged.",
+        "11": "Your progress remains subject to game restrictions.",
+        "12": "This location has been noted.",
+        "13": "This location has been recorded.",
+        "14": "This location is acknowledged.",
+        "15": "This location remains subject to game restrictions.",
+        "16": "Your route has been noted.",
+        "17": "Your route has been recorded.",
+        "18": "Your route is acknowledged.",
+        "19": "Your route remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        0,
+        0,
+        2
+      ],
+      "entries": {
+        "0": "Your exploration checkpoint has been noted.",
+        "1": "Your exploration checkpoint has been recorded.",
+        "2": "Your exploration checkpoint is acknowledged.",
+        "3": "Your exploration checkpoint remains subject to game restrictions.",
+        "4": "The current position has been noted.",
+        "5": "The current position has been recorded.",
+        "6": "The current position is acknowledged.",
+        "7": "The current position remains subject to game restrictions.",
+        "8": "Your progress has been noted.",
+        "9": "Your progress has been recorded.",
+        "10": "Your progress is acknowledged.",
+        "11": "Your progress remains subject to game restrictions.",
+        "12": "This location has been noted.",
+        "13": "This location has been recorded.",
+        "14": "This location is acknowledged.",
+        "15": "This location remains subject to game restrictions.",
+        "16": "Your route has been noted.",
+        "17": "Your route has been recorded.",
+        "18": "Your route is acknowledged.",
+        "19": "Your route remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        0,
+        1,
+        1
+      ],
+      "entries": {
+        "0": "Saving your scenic wandering. Very ambitious, princess.",
+        "1": "Saving your scenic wandering. Excellent timing, princess.",
+        "2": "Saving your scenic wandering. Another masterstroke, princess.",
+        "3": "Saving your scenic wandering. Your judgment is legendary, princess.",
+        "4": "Another heroic checkpoint. Very ambitious, princess.",
+        "5": "Another heroic checkpoint. Excellent timing, princess.",
+        "6": "Another heroic checkpoint. Another masterstroke, princess.",
+        "7": "Another heroic checkpoint. Your judgment is legendary, princess.",
+        "8": "Documenting your questionable detour. Very ambitious, princess.",
+        "9": "Documenting your questionable detour. Excellent timing, princess.",
+        "10": "Documenting your questionable detour. Another masterstroke, princess.",
+        "11": "Documenting your questionable detour. Your judgment is legendary, princess.",
+        "12": "Preserving your grand adventure. Very ambitious, princess.",
+        "13": "Preserving your grand adventure. Excellent timing, princess.",
+        "14": "Preserving your grand adventure. Another masterstroke, princess.",
+        "15": "Preserving your grand adventure. Your judgment is legendary, princess.",
+        "16": "Archiving your aimless stroll. Very ambitious, princess.",
+        "17": "Archiving your aimless stroll. Excellent timing, princess.",
+        "18": "Archiving your aimless stroll. Another masterstroke, princess.",
+        "19": "Archiving your aimless stroll. Your judgment is legendary, princess."
+      }
+    },
+    {
+      "key": [
+        0,
+        1,
+        2
+      ],
+      "entries": {
+        "0": "Saving your scenic wandering. Very ambitious, tough guy.",
+        "1": "Saving your scenic wandering. Excellent timing, tough guy.",
+        "2": "Saving your scenic wandering. Another masterstroke, tough guy.",
+        "3": "Saving your scenic wandering. Your judgment is legendary, tough guy.",
+        "4": "Another heroic checkpoint. Very ambitious, tough guy.",
+        "5": "Another heroic checkpoint. Excellent timing, tough guy.",
+        "6": "Another heroic checkpoint. Another masterstroke, tough guy.",
+        "7": "Another heroic checkpoint. Your judgment is legendary, tough guy.",
+        "8": "Documenting your questionable detour. Very ambitious, tough guy.",
+        "9": "Documenting your questionable detour. Excellent timing, tough guy.",
+        "10": "Documenting your questionable detour. Another masterstroke, tough guy.",
+        "11": "Documenting your questionable detour. Your judgment is legendary, tough guy.",
+        "12": "Preserving your grand adventure. Very ambitious, tough guy.",
+        "13": "Preserving your grand adventure. Excellent timing, tough guy.",
+        "14": "Preserving your grand adventure. Another masterstroke, tough guy.",
+        "15": "Preserving your grand adventure. Your judgment is legendary, tough guy.",
+        "16": "Archiving your aimless stroll. Very ambitious, tough guy.",
+        "17": "Archiving your aimless stroll. Excellent timing, tough guy.",
+        "18": "Archiving your aimless stroll. Another masterstroke, tough guy.",
+        "19": "Archiving your aimless stroll. Your judgment is legendary, tough guy."
+      }
+    },
+    {
+      "key": [
+        0,
+        2,
+        1
+      ],
+      "entries": {
+        "0": "Saving your wandering ass. Fucking brilliant, bitch.",
+        "1": "Saving your wandering ass. What a goddamn mess, bitch.",
+        "2": "Saving your wandering ass. Try thinking, bitch.",
+        "3": "Saving your wandering ass. Congratulations on the bullshit, bitch.",
+        "4": "Another fucking checkpoint. Fucking brilliant, bitch.",
+        "5": "Another fucking checkpoint. What a goddamn mess, bitch.",
+        "6": "Another fucking checkpoint. Try thinking, bitch.",
+        "7": "Another fucking checkpoint. Congratulations on the bullshit, bitch.",
+        "8": "Your shitty detour is archived. Fucking brilliant, bitch.",
+        "9": "Your shitty detour is archived. What a goddamn mess, bitch.",
+        "10": "Your shitty detour is archived. Try thinking, bitch.",
+        "11": "Your shitty detour is archived. Congratulations on the bullshit, bitch.",
+        "12": "Johnny is tired of your bullshit. Fucking brilliant, bitch.",
+        "13": "Johnny is tired of your bullshit. What a goddamn mess, bitch.",
+        "14": "Johnny is tired of your bullshit. Try thinking, bitch.",
+        "15": "Johnny is tired of your bullshit. Congratulations on the bullshit, bitch.",
+        "16": "Your survival instincts are decorative. Fucking brilliant, bitch.",
+        "17": "Your survival instincts are decorative. What a goddamn mess, bitch.",
+        "18": "Your survival instincts are decorative. Try thinking, bitch.",
+        "19": "Your survival instincts are decorative. Congratulations on the bullshit, bitch."
+      }
+    },
+    {
+      "key": [
+        0,
+        2,
+        2
+      ],
+      "entries": {
+        "0": "Saving your wandering ass. Fucking brilliant, dickhead.",
+        "1": "Saving your wandering ass. What a goddamn mess, dickhead.",
+        "2": "Saving your wandering ass. Try thinking, dickhead.",
+        "3": "Saving your wandering ass. Congratulations on the bullshit, dickhead.",
+        "4": "Another fucking checkpoint. Fucking brilliant, dickhead.",
+        "5": "Another fucking checkpoint. What a goddamn mess, dickhead.",
+        "6": "Another fucking checkpoint. Try thinking, dickhead.",
+        "7": "Another fucking checkpoint. Congratulations on the bullshit, dickhead.",
+        "8": "Your shitty detour is archived. Fucking brilliant, dickhead.",
+        "9": "Your shitty detour is archived. What a goddamn mess, dickhead.",
+        "10": "Your shitty detour is archived. Try thinking, dickhead.",
+        "11": "Your shitty detour is archived. Congratulations on the bullshit, dickhead.",
+        "12": "Johnny is tired of your bullshit. Fucking brilliant, dickhead.",
+        "13": "Johnny is tired of your bullshit. What a goddamn mess, dickhead.",
+        "14": "Johnny is tired of your bullshit. Try thinking, dickhead.",
+        "15": "Johnny is tired of your bullshit. Congratulations on the bullshit, dickhead.",
+        "16": "Your survival instincts are decorative. Fucking brilliant, dickhead.",
+        "17": "Your survival instincts are decorative. What a goddamn mess, dickhead.",
+        "18": "Your survival instincts are decorative. Try thinking, dickhead.",
+        "19": "Your survival instincts are decorative. Congratulations on the bullshit, dickhead."
+      }
+    },
+    {
+      "key": [
+        1,
+        0,
+        1
+      ],
+      "entries": {
+        "0": "Combat checkpoint has been noted.",
+        "1": "Combat checkpoint has been recorded.",
+        "2": "Combat checkpoint is acknowledged.",
+        "3": "Combat checkpoint remains subject to game restrictions.",
+        "4": "Your firefight has been noted.",
+        "5": "Your firefight has been recorded.",
+        "6": "Your firefight is acknowledged.",
+        "7": "Your firefight remains subject to game restrictions.",
+        "8": "The combat situation has been noted.",
+        "9": "The combat situation has been recorded.",
+        "10": "The combat situation is acknowledged.",
+        "11": "The combat situation remains subject to game restrictions.",
+        "12": "Your current battle has been noted.",
+        "13": "Your current battle has been recorded.",
+        "14": "Your current battle is acknowledged.",
+        "15": "Your current battle remains subject to game restrictions.",
+        "16": "Your tactical position has been noted.",
+        "17": "Your tactical position has been recorded.",
+        "18": "Your tactical position is acknowledged.",
+        "19": "Your tactical position remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        1,
+        0,
+        2
+      ],
+      "entries": {
+        "0": "Combat checkpoint has been noted.",
+        "1": "Combat checkpoint has been recorded.",
+        "2": "Combat checkpoint is acknowledged.",
+        "3": "Combat checkpoint remains subject to game restrictions.",
+        "4": "Your firefight has been noted.",
+        "5": "Your firefight has been recorded.",
+        "6": "Your firefight is acknowledged.",
+        "7": "Your firefight remains subject to game restrictions.",
+        "8": "The combat situation has been noted.",
+        "9": "The combat situation has been recorded.",
+        "10": "The combat situation is acknowledged.",
+        "11": "The combat situation remains subject to game restrictions.",
+        "12": "Your current battle has been noted.",
+        "13": "Your current battle has been recorded.",
+        "14": "Your current battle is acknowledged.",
+        "15": "Your current battle remains subject to game restrictions.",
+        "16": "Your tactical position has been noted.",
+        "17": "Your tactical position has been recorded.",
+        "18": "Your tactical position is acknowledged.",
+        "19": "Your tactical position remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        1,
+        1,
+        1
+      ],
+      "entries": {
+        "0": "Saving your spectacular firefight. Very ambitious, princess.",
+        "1": "Saving your spectacular firefight. Excellent timing, princess.",
+        "2": "Saving your spectacular firefight. Another masterstroke, princess.",
+        "3": "Saving your spectacular firefight. Your judgment is legendary, princess.",
+        "4": "Bullets flying and you want paperwork. Very ambitious, princess.",
+        "5": "Bullets flying and you want paperwork. Excellent timing, princess.",
+        "6": "Bullets flying and you want paperwork. Another masterstroke, princess.",
+        "7": "Bullets flying and you want paperwork. Your judgment is legendary, princess.",
+        "8": "Recording your tactical disaster. Very ambitious, princess.",
+        "9": "Recording your tactical disaster. Excellent timing, princess.",
+        "10": "Recording your tactical disaster. Another masterstroke, princess.",
+        "11": "Recording your tactical disaster. Your judgment is legendary, princess.",
+        "12": "Preserving your last two health points. Very ambitious, princess.",
+        "13": "Preserving your last two health points. Excellent timing, princess.",
+        "14": "Preserving your last two health points. Another masterstroke, princess.",
+        "15": "Preserving your last two health points. Your judgment is legendary, princess.",
+        "16": "Saving while your enemies aim better. Very ambitious, princess.",
+        "17": "Saving while your enemies aim better. Excellent timing, princess.",
+        "18": "Saving while your enemies aim better. Another masterstroke, princess.",
+        "19": "Saving while your enemies aim better. Your judgment is legendary, princess."
+      }
+    },
+    {
+      "key": [
+        1,
+        1,
+        2
+      ],
+      "entries": {
+        "0": "Saving your spectacular firefight. Very ambitious, tough guy.",
+        "1": "Saving your spectacular firefight. Excellent timing, tough guy.",
+        "2": "Saving your spectacular firefight. Another masterstroke, tough guy.",
+        "3": "Saving your spectacular firefight. Your judgment is legendary, tough guy.",
+        "4": "Bullets flying and you want paperwork. Very ambitious, tough guy.",
+        "5": "Bullets flying and you want paperwork. Excellent timing, tough guy.",
+        "6": "Bullets flying and you want paperwork. Another masterstroke, tough guy.",
+        "7": "Bullets flying and you want paperwork. Your judgment is legendary, tough guy.",
+        "8": "Recording your tactical disaster. Very ambitious, tough guy.",
+        "9": "Recording your tactical disaster. Excellent timing, tough guy.",
+        "10": "Recording your tactical disaster. Another masterstroke, tough guy.",
+        "11": "Recording your tactical disaster. Your judgment is legendary, tough guy.",
+        "12": "Preserving your last two health points. Very ambitious, tough guy.",
+        "13": "Preserving your last two health points. Excellent timing, tough guy.",
+        "14": "Preserving your last two health points. Another masterstroke, tough guy.",
+        "15": "Preserving your last two health points. Your judgment is legendary, tough guy.",
+        "16": "Saving while your enemies aim better. Very ambitious, tough guy.",
+        "17": "Saving while your enemies aim better. Excellent timing, tough guy.",
+        "18": "Saving while your enemies aim better. Another masterstroke, tough guy.",
+        "19": "Saving while your enemies aim better. Your judgment is legendary, tough guy."
+      }
+    },
+    {
+      "key": [
+        1,
+        2,
+        1
+      ],
+      "entries": {
+        "0": "Saving before the scavs flatten you. Fucking brilliant, bitch.",
+        "1": "Saving before the scavs flatten you. What a goddamn mess, bitch.",
+        "2": "Saving before the scavs flatten you. Try thinking, bitch.",
+        "3": "Saving before the scavs flatten you. Congratulations on the bullshit, bitch.",
+        "4": "Your aim is fucking garbage. Fucking brilliant, bitch.",
+        "5": "Your aim is fucking garbage. What a goddamn mess, bitch.",
+        "6": "Your aim is fucking garbage. Try thinking, bitch.",
+        "7": "Your aim is fucking garbage. Congratulations on the bullshit, bitch.",
+        "8": "Your firefight is a disaster. Fucking brilliant, bitch.",
+        "9": "Your firefight is a disaster. What a goddamn mess, bitch.",
+        "10": "Your firefight is a disaster. Try thinking, bitch.",
+        "11": "Your firefight is a disaster. Congratulations on the bullshit, bitch.",
+        "12": "Your health bar is screaming. Fucking brilliant, bitch.",
+        "13": "Your health bar is screaming. What a goddamn mess, bitch.",
+        "14": "Your health bar is screaming. Try thinking, bitch.",
+        "15": "Your health bar is screaming. Congratulations on the bullshit, bitch.",
+        "16": "Your tactical skills are dogshit. Fucking brilliant, bitch.",
+        "17": "Your tactical skills are dogshit. What a goddamn mess, bitch.",
+        "18": "Your tactical skills are dogshit. Try thinking, bitch.",
+        "19": "Your tactical skills are dogshit. Congratulations on the bullshit, bitch."
+      }
+    },
+    {
+      "key": [
+        1,
+        2,
+        2
+      ],
+      "entries": {
+        "0": "Saving before the scavs flatten you. Fucking brilliant, dickhead.",
+        "1": "Saving before the scavs flatten you. What a goddamn mess, dickhead.",
+        "2": "Saving before the scavs flatten you. Try thinking, dickhead.",
+        "3": "Saving before the scavs flatten you. Congratulations on the bullshit, dickhead.",
+        "4": "Your aim is fucking garbage. Fucking brilliant, dickhead.",
+        "5": "Your aim is fucking garbage. What a goddamn mess, dickhead.",
+        "6": "Your aim is fucking garbage. Try thinking, dickhead.",
+        "7": "Your aim is fucking garbage. Congratulations on the bullshit, dickhead.",
+        "8": "Your firefight is a disaster. Fucking brilliant, dickhead.",
+        "9": "Your firefight is a disaster. What a goddamn mess, dickhead.",
+        "10": "Your firefight is a disaster. Try thinking, dickhead.",
+        "11": "Your firefight is a disaster. Congratulations on the bullshit, dickhead.",
+        "12": "Your health bar is screaming. Fucking brilliant, dickhead.",
+        "13": "Your health bar is screaming. What a goddamn mess, dickhead.",
+        "14": "Your health bar is screaming. Try thinking, dickhead.",
+        "15": "Your health bar is screaming. Congratulations on the bullshit, dickhead.",
+        "16": "Your tactical skills are dogshit. Fucking brilliant, dickhead.",
+        "17": "Your tactical skills are dogshit. What a goddamn mess, dickhead.",
+        "18": "Your tactical skills are dogshit. Try thinking, dickhead.",
+        "19": "Your tactical skills are dogshit. Congratulations on the bullshit, dickhead."
+      }
+    },
+    {
+      "key": [
+        2,
+        0,
+        1
+      ],
+      "entries": {
+        "0": "Vehicle checkpoint has been noted.",
+        "1": "Vehicle checkpoint has been recorded.",
+        "2": "Vehicle checkpoint is acknowledged.",
+        "3": "Vehicle checkpoint remains subject to game restrictions.",
+        "4": "Your vehicle position has been noted.",
+        "5": "Your vehicle position has been recorded.",
+        "6": "Your vehicle position is acknowledged.",
+        "7": "Your vehicle position remains subject to game restrictions.",
+        "8": "The driving session has been noted.",
+        "9": "The driving session has been recorded.",
+        "10": "The driving session is acknowledged.",
+        "11": "The driving session remains subject to game restrictions.",
+        "12": "Your road trip has been noted.",
+        "13": "Your road trip has been recorded.",
+        "14": "Your road trip is acknowledged.",
+        "15": "Your road trip remains subject to game restrictions.",
+        "16": "The current ride has been noted.",
+        "17": "The current ride has been recorded.",
+        "18": "The current ride is acknowledged.",
+        "19": "The current ride remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        2,
+        0,
+        2
+      ],
+      "entries": {
+        "0": "Vehicle checkpoint has been noted.",
+        "1": "Vehicle checkpoint has been recorded.",
+        "2": "Vehicle checkpoint is acknowledged.",
+        "3": "Vehicle checkpoint remains subject to game restrictions.",
+        "4": "Your vehicle position has been noted.",
+        "5": "Your vehicle position has been recorded.",
+        "6": "Your vehicle position is acknowledged.",
+        "7": "Your vehicle position remains subject to game restrictions.",
+        "8": "The driving session has been noted.",
+        "9": "The driving session has been recorded.",
+        "10": "The driving session is acknowledged.",
+        "11": "The driving session remains subject to game restrictions.",
+        "12": "Your road trip has been noted.",
+        "13": "Your road trip has been recorded.",
+        "14": "Your road trip is acknowledged.",
+        "15": "Your road trip remains subject to game restrictions.",
+        "16": "The current ride has been noted.",
+        "17": "The current ride has been recorded.",
+        "18": "The current ride is acknowledged.",
+        "19": "The current ride remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        2,
+        1,
+        1
+      ],
+      "entries": {
+        "0": "Saving before the next lamppost. Very ambitious, princess.",
+        "1": "Saving before the next lamppost. Excellent timing, princess.",
+        "2": "Saving before the next lamppost. Another masterstroke, princess.",
+        "3": "Saving before the next lamppost. Your judgment is legendary, princess.",
+        "4": "Delamain is questioning your driving. Very ambitious, princess.",
+        "5": "Delamain is questioning your driving. Excellent timing, princess.",
+        "6": "Delamain is questioning your driving. Another masterstroke, princess.",
+        "7": "Delamain is questioning your driving. Your judgment is legendary, princess.",
+        "8": "Preserving your traffic violations. Very ambitious, princess.",
+        "9": "Preserving your traffic violations. Excellent timing, princess.",
+        "10": "Preserving your traffic violations. Another masterstroke, princess.",
+        "11": "Preserving your traffic violations. Your judgment is legendary, princess.",
+        "12": "Archiving your terrible parking. Very ambitious, princess.",
+        "13": "Archiving your terrible parking. Excellent timing, princess.",
+        "14": "Archiving your terrible parking. Another masterstroke, princess.",
+        "15": "Archiving your terrible parking. Your judgment is legendary, princess.",
+        "16": "Your car has requested protection. Very ambitious, princess.",
+        "17": "Your car has requested protection. Excellent timing, princess.",
+        "18": "Your car has requested protection. Another masterstroke, princess.",
+        "19": "Your car has requested protection. Your judgment is legendary, princess."
+      }
+    },
+    {
+      "key": [
+        2,
+        1,
+        2
+      ],
+      "entries": {
+        "0": "Saving before the next lamppost. Very ambitious, tough guy.",
+        "1": "Saving before the next lamppost. Excellent timing, tough guy.",
+        "2": "Saving before the next lamppost. Another masterstroke, tough guy.",
+        "3": "Saving before the next lamppost. Your judgment is legendary, tough guy.",
+        "4": "Delamain is questioning your driving. Very ambitious, tough guy.",
+        "5": "Delamain is questioning your driving. Excellent timing, tough guy.",
+        "6": "Delamain is questioning your driving. Another masterstroke, tough guy.",
+        "7": "Delamain is questioning your driving. Your judgment is legendary, tough guy.",
+        "8": "Preserving your traffic violations. Very ambitious, tough guy.",
+        "9": "Preserving your traffic violations. Excellent timing, tough guy.",
+        "10": "Preserving your traffic violations. Another masterstroke, tough guy.",
+        "11": "Preserving your traffic violations. Your judgment is legendary, tough guy.",
+        "12": "Archiving your terrible parking. Very ambitious, tough guy.",
+        "13": "Archiving your terrible parking. Excellent timing, tough guy.",
+        "14": "Archiving your terrible parking. Another masterstroke, tough guy.",
+        "15": "Archiving your terrible parking. Your judgment is legendary, tough guy.",
+        "16": "Your car has requested protection. Very ambitious, tough guy.",
+        "17": "Your car has requested protection. Excellent timing, tough guy.",
+        "18": "Your car has requested protection. Another masterstroke, tough guy.",
+        "19": "Your car has requested protection. Your judgment is legendary, tough guy."
+      }
+    },
+    {
+      "key": [
+        2,
+        2,
+        1
+      ],
+      "entries": {
+        "0": "Saving before you wreck the car. Fucking brilliant, bitch.",
+        "1": "Saving before you wreck the car. What a goddamn mess, bitch.",
+        "2": "Saving before you wreck the car. Try thinking, bitch.",
+        "3": "Saving before you wreck the car. Congratulations on the bullshit, bitch.",
+        "4": "Delamain canceled your insurance. Fucking brilliant, bitch.",
+        "5": "Delamain canceled your insurance. What a goddamn mess, bitch.",
+        "6": "Delamain canceled your insurance. Try thinking, bitch.",
+        "7": "Delamain canceled your insurance. Congratulations on the bullshit, bitch.",
+        "8": "Your driving is fucking criminal. Fucking brilliant, bitch.",
+        "9": "Your driving is fucking criminal. What a goddamn mess, bitch.",
+        "10": "Your driving is fucking criminal. Try thinking, bitch.",
+        "11": "Your driving is fucking criminal. Congratulations on the bullshit, bitch.",
+        "12": "That lamppost will win. Fucking brilliant, bitch.",
+        "13": "That lamppost will win. What a goddamn mess, bitch.",
+        "14": "That lamppost will win. Try thinking, bitch.",
+        "15": "That lamppost will win. Congratulations on the bullshit, bitch.",
+        "16": "Your GPS wants to quit. Fucking brilliant, bitch.",
+        "17": "Your GPS wants to quit. What a goddamn mess, bitch.",
+        "18": "Your GPS wants to quit. Try thinking, bitch.",
+        "19": "Your GPS wants to quit. Congratulations on the bullshit, bitch."
+      }
+    },
+    {
+      "key": [
+        2,
+        2,
+        2
+      ],
+      "entries": {
+        "0": "Saving before you wreck the car. Fucking brilliant, dickhead.",
+        "1": "Saving before you wreck the car. What a goddamn mess, dickhead.",
+        "2": "Saving before you wreck the car. Try thinking, dickhead.",
+        "3": "Saving before you wreck the car. Congratulations on the bullshit, dickhead.",
+        "4": "Delamain canceled your insurance. Fucking brilliant, dickhead.",
+        "5": "Delamain canceled your insurance. What a goddamn mess, dickhead.",
+        "6": "Delamain canceled your insurance. Try thinking, dickhead.",
+        "7": "Delamain canceled your insurance. Congratulations on the bullshit, dickhead.",
+        "8": "Your driving is fucking criminal. Fucking brilliant, dickhead.",
+        "9": "Your driving is fucking criminal. What a goddamn mess, dickhead.",
+        "10": "Your driving is fucking criminal. Try thinking, dickhead.",
+        "11": "Your driving is fucking criminal. Congratulations on the bullshit, dickhead.",
+        "12": "That lamppost will win. Fucking brilliant, dickhead.",
+        "13": "That lamppost will win. What a goddamn mess, dickhead.",
+        "14": "That lamppost will win. Try thinking, dickhead.",
+        "15": "That lamppost will win. Congratulations on the bullshit, dickhead.",
+        "16": "Your GPS wants to quit. Fucking brilliant, dickhead.",
+        "17": "Your GPS wants to quit. What a goddamn mess, dickhead.",
+        "18": "Your GPS wants to quit. Try thinking, dickhead.",
+        "19": "Your GPS wants to quit. Congratulations on the bullshit, dickhead."
+      }
+    },
+    {
+      "key": [
+        3,
+        0,
+        1
+      ],
+      "entries": {
+        "0": "Vehicle-combat checkpoint has been noted.",
+        "1": "Vehicle-combat checkpoint has been recorded.",
+        "2": "Vehicle-combat checkpoint is acknowledged.",
+        "3": "Vehicle-combat checkpoint remains subject to game restrictions.",
+        "4": "The rolling firefight has been noted.",
+        "5": "The rolling firefight has been recorded.",
+        "6": "The rolling firefight is acknowledged.",
+        "7": "The rolling firefight remains subject to game restrictions.",
+        "8": "Your mobile engagement has been noted.",
+        "9": "Your mobile engagement has been recorded.",
+        "10": "Your mobile engagement is acknowledged.",
+        "11": "Your mobile engagement remains subject to game restrictions.",
+        "12": "The vehicle battle has been noted.",
+        "13": "The vehicle battle has been recorded.",
+        "14": "The vehicle battle is acknowledged.",
+        "15": "The vehicle battle remains subject to game restrictions.",
+        "16": "Your driving and shooting has been noted.",
+        "17": "Your driving and shooting has been recorded.",
+        "18": "Your driving and shooting is acknowledged.",
+        "19": "Your driving and shooting remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        3,
+        0,
+        2
+      ],
+      "entries": {
+        "0": "Vehicle-combat checkpoint has been noted.",
+        "1": "Vehicle-combat checkpoint has been recorded.",
+        "2": "Vehicle-combat checkpoint is acknowledged.",
+        "3": "Vehicle-combat checkpoint remains subject to game restrictions.",
+        "4": "The rolling firefight has been noted.",
+        "5": "The rolling firefight has been recorded.",
+        "6": "The rolling firefight is acknowledged.",
+        "7": "The rolling firefight remains subject to game restrictions.",
+        "8": "Your mobile engagement has been noted.",
+        "9": "Your mobile engagement has been recorded.",
+        "10": "Your mobile engagement is acknowledged.",
+        "11": "Your mobile engagement remains subject to game restrictions.",
+        "12": "The vehicle battle has been noted.",
+        "13": "The vehicle battle has been recorded.",
+        "14": "The vehicle battle is acknowledged.",
+        "15": "The vehicle battle remains subject to game restrictions.",
+        "16": "Your driving and shooting has been noted.",
+        "17": "Your driving and shooting has been recorded.",
+        "18": "Your driving and shooting is acknowledged.",
+        "19": "Your driving and shooting remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        3,
+        1,
+        1
+      ],
+      "entries": {
+        "0": "Driving and shooting at once. Very ambitious, princess.",
+        "1": "Driving and shooting at once. Excellent timing, princess.",
+        "2": "Driving and shooting at once. Another masterstroke, princess.",
+        "3": "Driving and shooting at once. Your judgment is legendary, princess.",
+        "4": "Your passengers are terrified. Very ambitious, princess.",
+        "5": "Your passengers are terrified. Excellent timing, princess.",
+        "6": "Your passengers are terrified. Another masterstroke, princess.",
+        "7": "Your passengers are terrified. Your judgment is legendary, princess.",
+        "8": "Your steering wheel wants help. Very ambitious, princess.",
+        "9": "Your steering wheel wants help. Excellent timing, princess.",
+        "10": "Your steering wheel wants help. Another masterstroke, princess.",
+        "11": "Your steering wheel wants help. Your judgment is legendary, princess.",
+        "12": "Saving this rolling disaster. Very ambitious, princess.",
+        "13": "Saving this rolling disaster. Excellent timing, princess.",
+        "14": "Saving this rolling disaster. Another masterstroke, princess.",
+        "15": "Saving this rolling disaster. Your judgment is legendary, princess.",
+        "16": "The insurance company is crying. Very ambitious, princess.",
+        "17": "The insurance company is crying. Excellent timing, princess.",
+        "18": "The insurance company is crying. Another masterstroke, princess.",
+        "19": "The insurance company is crying. Your judgment is legendary, princess."
+      }
+    },
+    {
+      "key": [
+        3,
+        1,
+        2
+      ],
+      "entries": {
+        "0": "Driving and shooting at once. Very ambitious, tough guy.",
+        "1": "Driving and shooting at once. Excellent timing, tough guy.",
+        "2": "Driving and shooting at once. Another masterstroke, tough guy.",
+        "3": "Driving and shooting at once. Your judgment is legendary, tough guy.",
+        "4": "Your passengers are terrified. Very ambitious, tough guy.",
+        "5": "Your passengers are terrified. Excellent timing, tough guy.",
+        "6": "Your passengers are terrified. Another masterstroke, tough guy.",
+        "7": "Your passengers are terrified. Your judgment is legendary, tough guy.",
+        "8": "Your steering wheel wants help. Very ambitious, tough guy.",
+        "9": "Your steering wheel wants help. Excellent timing, tough guy.",
+        "10": "Your steering wheel wants help. Another masterstroke, tough guy.",
+        "11": "Your steering wheel wants help. Your judgment is legendary, tough guy.",
+        "12": "Saving this rolling disaster. Very ambitious, tough guy.",
+        "13": "Saving this rolling disaster. Excellent timing, tough guy.",
+        "14": "Saving this rolling disaster. Another masterstroke, tough guy.",
+        "15": "Saving this rolling disaster. Your judgment is legendary, tough guy.",
+        "16": "The insurance company is crying. Very ambitious, tough guy.",
+        "17": "The insurance company is crying. Excellent timing, tough guy.",
+        "18": "The insurance company is crying. Another masterstroke, tough guy.",
+        "19": "The insurance company is crying. Your judgment is legendary, tough guy."
+      }
+    },
+    {
+      "key": [
+        3,
+        2,
+        1
+      ],
+      "entries": {
+        "0": "Driving and shooting is a shitshow. Fucking brilliant, bitch.",
+        "1": "Driving and shooting is a shitshow. What a goddamn mess, bitch.",
+        "2": "Driving and shooting is a shitshow. Try thinking, bitch.",
+        "3": "Driving and shooting is a shitshow. Congratulations on the bullshit, bitch.",
+        "4": "Your steering is fucking terrible. Fucking brilliant, bitch.",
+        "5": "Your steering is fucking terrible. What a goddamn mess, bitch.",
+        "6": "Your steering is fucking terrible. Try thinking, bitch.",
+        "7": "Your steering is fucking terrible. Congratulations on the bullshit, bitch.",
+        "8": "Physics is coming for your ass. Fucking brilliant, bitch.",
+        "9": "Physics is coming for your ass. What a goddamn mess, bitch.",
+        "10": "Physics is coming for your ass. Try thinking, bitch.",
+        "11": "Physics is coming for your ass. Congratulations on the bullshit, bitch.",
+        "12": "Your passengers are writing wills. Fucking brilliant, bitch.",
+        "13": "Your passengers are writing wills. What a goddamn mess, bitch.",
+        "14": "Your passengers are writing wills. Try thinking, bitch.",
+        "15": "Your passengers are writing wills. Congratulations on the bullshit, bitch.",
+        "16": "Even the enemy drivers pity you. Fucking brilliant, bitch.",
+        "17": "Even the enemy drivers pity you. What a goddamn mess, bitch.",
+        "18": "Even the enemy drivers pity you. Try thinking, bitch.",
+        "19": "Even the enemy drivers pity you. Congratulations on the bullshit, bitch."
+      }
+    },
+    {
+      "key": [
+        3,
+        2,
+        2
+      ],
+      "entries": {
+        "0": "Driving and shooting is a shitshow. Fucking brilliant, dickhead.",
+        "1": "Driving and shooting is a shitshow. What a goddamn mess, dickhead.",
+        "2": "Driving and shooting is a shitshow. Try thinking, dickhead.",
+        "3": "Driving and shooting is a shitshow. Congratulations on the bullshit, dickhead.",
+        "4": "Your steering is fucking terrible. Fucking brilliant, dickhead.",
+        "5": "Your steering is fucking terrible. What a goddamn mess, dickhead.",
+        "6": "Your steering is fucking terrible. Try thinking, dickhead.",
+        "7": "Your steering is fucking terrible. Congratulations on the bullshit, dickhead.",
+        "8": "Physics is coming for your ass. Fucking brilliant, dickhead.",
+        "9": "Physics is coming for your ass. What a goddamn mess, dickhead.",
+        "10": "Physics is coming for your ass. Try thinking, dickhead.",
+        "11": "Physics is coming for your ass. Congratulations on the bullshit, dickhead.",
+        "12": "Your passengers are writing wills. Fucking brilliant, dickhead.",
+        "13": "Your passengers are writing wills. What a goddamn mess, dickhead.",
+        "14": "Your passengers are writing wills. Try thinking, dickhead.",
+        "15": "Your passengers are writing wills. Congratulations on the bullshit, dickhead.",
+        "16": "Even the enemy drivers pity you. Fucking brilliant, dickhead.",
+        "17": "Even the enemy drivers pity you. What a goddamn mess, dickhead.",
+        "18": "Even the enemy drivers pity you. Try thinking, dickhead.",
+        "19": "Even the enemy drivers pity you. Congratulations on the bullshit, dickhead."
+      }
+    },
+    {
+      "key": [
+        4,
+        0,
+        1
+      ],
+      "entries": {
+        "0": "Stealth checkpoint has been noted.",
+        "1": "Stealth checkpoint has been recorded.",
+        "2": "Stealth checkpoint is acknowledged.",
+        "3": "Stealth checkpoint remains subject to game restrictions.",
+        "4": "Your infiltration has been noted.",
+        "5": "Your infiltration has been recorded.",
+        "6": "Your infiltration is acknowledged.",
+        "7": "Your infiltration remains subject to game restrictions.",
+        "8": "The stealth approach has been noted.",
+        "9": "The stealth approach has been recorded.",
+        "10": "The stealth approach is acknowledged.",
+        "11": "The stealth approach remains subject to game restrictions.",
+        "12": "Your quiet movement has been noted.",
+        "13": "Your quiet movement has been recorded.",
+        "14": "Your quiet movement is acknowledged.",
+        "15": "Your quiet movement remains subject to game restrictions.",
+        "16": "Your concealed position has been noted.",
+        "17": "Your concealed position has been recorded.",
+        "18": "Your concealed position is acknowledged.",
+        "19": "Your concealed position remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        4,
+        0,
+        2
+      ],
+      "entries": {
+        "0": "Stealth checkpoint has been noted.",
+        "1": "Stealth checkpoint has been recorded.",
+        "2": "Stealth checkpoint is acknowledged.",
+        "3": "Stealth checkpoint remains subject to game restrictions.",
+        "4": "Your infiltration has been noted.",
+        "5": "Your infiltration has been recorded.",
+        "6": "Your infiltration is acknowledged.",
+        "7": "Your infiltration remains subject to game restrictions.",
+        "8": "The stealth approach has been noted.",
+        "9": "The stealth approach has been recorded.",
+        "10": "The stealth approach is acknowledged.",
+        "11": "The stealth approach remains subject to game restrictions.",
+        "12": "Your quiet movement has been noted.",
+        "13": "Your quiet movement has been recorded.",
+        "14": "Your quiet movement is acknowledged.",
+        "15": "Your quiet movement remains subject to game restrictions.",
+        "16": "Your concealed position has been noted.",
+        "17": "Your concealed position has been recorded.",
+        "18": "Your concealed position is acknowledged.",
+        "19": "Your concealed position remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        4,
+        1,
+        1
+      ],
+      "entries": {
+        "0": "Saving your discount ninja act. Very ambitious, princess.",
+        "1": "Saving your discount ninja act. Excellent timing, princess.",
+        "2": "Saving your discount ninja act. Another masterstroke, princess.",
+        "3": "Saving your discount ninja act. Your judgment is legendary, princess.",
+        "4": "Crouching is apparently a strategy. Very ambitious, princess.",
+        "5": "Crouching is apparently a strategy. Excellent timing, princess.",
+        "6": "Crouching is apparently a strategy. Another masterstroke, princess.",
+        "7": "Crouching is apparently a strategy. Your judgment is legendary, princess.",
+        "8": "The cameras are entertained. Very ambitious, princess.",
+        "9": "The cameras are entertained. Excellent timing, princess.",
+        "10": "The cameras are entertained. Another masterstroke, princess.",
+        "11": "The cameras are entertained. Your judgment is legendary, princess.",
+        "12": "Your infiltration is fascinating. Very ambitious, princess.",
+        "13": "Your infiltration is fascinating. Excellent timing, princess.",
+        "14": "Your infiltration is fascinating. Another masterstroke, princess.",
+        "15": "Your infiltration is fascinating. Your judgment is legendary, princess.",
+        "16": "The shadows are embarrassed. Very ambitious, princess.",
+        "17": "The shadows are embarrassed. Excellent timing, princess.",
+        "18": "The shadows are embarrassed. Another masterstroke, princess.",
+        "19": "The shadows are embarrassed. Your judgment is legendary, princess."
+      }
+    },
+    {
+      "key": [
+        4,
+        1,
+        2
+      ],
+      "entries": {
+        "0": "Saving your discount ninja act. Very ambitious, tough guy.",
+        "1": "Saving your discount ninja act. Excellent timing, tough guy.",
+        "2": "Saving your discount ninja act. Another masterstroke, tough guy.",
+        "3": "Saving your discount ninja act. Your judgment is legendary, tough guy.",
+        "4": "Crouching is apparently a strategy. Very ambitious, tough guy.",
+        "5": "Crouching is apparently a strategy. Excellent timing, tough guy.",
+        "6": "Crouching is apparently a strategy. Another masterstroke, tough guy.",
+        "7": "Crouching is apparently a strategy. Your judgment is legendary, tough guy.",
+        "8": "The cameras are entertained. Very ambitious, tough guy.",
+        "9": "The cameras are entertained. Excellent timing, tough guy.",
+        "10": "The cameras are entertained. Another masterstroke, tough guy.",
+        "11": "The cameras are entertained. Your judgment is legendary, tough guy.",
+        "12": "Your infiltration is fascinating. Very ambitious, tough guy.",
+        "13": "Your infiltration is fascinating. Excellent timing, tough guy.",
+        "14": "Your infiltration is fascinating. Another masterstroke, tough guy.",
+        "15": "Your infiltration is fascinating. Your judgment is legendary, tough guy.",
+        "16": "The shadows are embarrassed. Very ambitious, tough guy.",
+        "17": "The shadows are embarrassed. Excellent timing, tough guy.",
+        "18": "The shadows are embarrassed. Another masterstroke, tough guy.",
+        "19": "The shadows are embarrassed. Your judgment is legendary, tough guy."
+      }
+    },
+    {
+      "key": [
+        4,
+        2,
+        1
+      ],
+      "entries": {
+        "0": "Sneaking like a bargain-bin ninja. Fucking brilliant, bitch.",
+        "1": "Sneaking like a bargain-bin ninja. What a goddamn mess, bitch.",
+        "2": "Sneaking like a bargain-bin ninja. Try thinking, bitch.",
+        "3": "Sneaking like a bargain-bin ninja. Congratulations on the bullshit, bitch.",
+        "4": "Subtle as a fucking grenade. Fucking brilliant, bitch.",
+        "5": "Subtle as a fucking grenade. What a goddamn mess, bitch.",
+        "6": "Subtle as a fucking grenade. Try thinking, bitch.",
+        "7": "Subtle as a fucking grenade. Congratulations on the bullshit, bitch.",
+        "8": "The cameras see your dumb ass. Fucking brilliant, bitch.",
+        "9": "The cameras see your dumb ass. What a goddamn mess, bitch.",
+        "10": "The cameras see your dumb ass. Try thinking, bitch.",
+        "11": "The cameras see your dumb ass. Congratulations on the bullshit, bitch.",
+        "12": "Your stealth is a joke. Fucking brilliant, bitch.",
+        "13": "Your stealth is a joke. What a goddamn mess, bitch.",
+        "14": "Your stealth is a joke. Try thinking, bitch.",
+        "15": "Your stealth is a joke. Congratulations on the bullshit, bitch.",
+        "16": "Even the shadows hate you. Fucking brilliant, bitch.",
+        "17": "Even the shadows hate you. What a goddamn mess, bitch.",
+        "18": "Even the shadows hate you. Try thinking, bitch.",
+        "19": "Even the shadows hate you. Congratulations on the bullshit, bitch."
+      }
+    },
+    {
+      "key": [
+        4,
+        2,
+        2
+      ],
+      "entries": {
+        "0": "Sneaking like a bargain-bin ninja. Fucking brilliant, dickhead.",
+        "1": "Sneaking like a bargain-bin ninja. What a goddamn mess, dickhead.",
+        "2": "Sneaking like a bargain-bin ninja. Try thinking, dickhead.",
+        "3": "Sneaking like a bargain-bin ninja. Congratulations on the bullshit, dickhead.",
+        "4": "Subtle as a fucking grenade. Fucking brilliant, dickhead.",
+        "5": "Subtle as a fucking grenade. What a goddamn mess, dickhead.",
+        "6": "Subtle as a fucking grenade. Try thinking, dickhead.",
+        "7": "Subtle as a fucking grenade. Congratulations on the bullshit, dickhead.",
+        "8": "The cameras see your dumb ass. Fucking brilliant, dickhead.",
+        "9": "The cameras see your dumb ass. What a goddamn mess, dickhead.",
+        "10": "The cameras see your dumb ass. Try thinking, dickhead.",
+        "11": "The cameras see your dumb ass. Congratulations on the bullshit, dickhead.",
+        "12": "Your stealth is a joke. Fucking brilliant, dickhead.",
+        "13": "Your stealth is a joke. What a goddamn mess, dickhead.",
+        "14": "Your stealth is a joke. Try thinking, dickhead.",
+        "15": "Your stealth is a joke. Congratulations on the bullshit, dickhead.",
+        "16": "Even the shadows hate you. Fucking brilliant, dickhead.",
+        "17": "Even the shadows hate you. What a goddamn mess, dickhead.",
+        "18": "Even the shadows hate you. Try thinking, dickhead.",
+        "19": "Even the shadows hate you. Congratulations on the bullshit, dickhead."
+      }
+    },
+    {
+      "key": [
+        5,
+        0,
+        1
+      ],
+      "entries": {
+        "0": "Phone-call checkpoint has been noted.",
+        "1": "Phone-call checkpoint has been recorded.",
+        "2": "Phone-call checkpoint is acknowledged.",
+        "3": "Phone-call checkpoint remains subject to game restrictions.",
+        "4": "Your conversation has been noted.",
+        "5": "Your conversation has been recorded.",
+        "6": "Your conversation is acknowledged.",
+        "7": "Your conversation remains subject to game restrictions.",
+        "8": "The current call has been noted.",
+        "9": "The current call has been recorded.",
+        "10": "The current call is acknowledged.",
+        "11": "The current call remains subject to game restrictions.",
+        "12": "Your dialogue has been noted.",
+        "13": "Your dialogue has been recorded.",
+        "14": "Your dialogue is acknowledged.",
+        "15": "Your dialogue remains subject to game restrictions.",
+        "16": "Your phone interaction has been noted.",
+        "17": "Your phone interaction has been recorded.",
+        "18": "Your phone interaction is acknowledged.",
+        "19": "Your phone interaction remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        5,
+        0,
+        2
+      ],
+      "entries": {
+        "0": "Phone-call checkpoint has been noted.",
+        "1": "Phone-call checkpoint has been recorded.",
+        "2": "Phone-call checkpoint is acknowledged.",
+        "3": "Phone-call checkpoint remains subject to game restrictions.",
+        "4": "Your conversation has been noted.",
+        "5": "Your conversation has been recorded.",
+        "6": "Your conversation is acknowledged.",
+        "7": "Your conversation remains subject to game restrictions.",
+        "8": "The current call has been noted.",
+        "9": "The current call has been recorded.",
+        "10": "The current call is acknowledged.",
+        "11": "The current call remains subject to game restrictions.",
+        "12": "Your dialogue has been noted.",
+        "13": "Your dialogue has been recorded.",
+        "14": "Your dialogue is acknowledged.",
+        "15": "Your dialogue remains subject to game restrictions.",
+        "16": "Your phone interaction has been noted.",
+        "17": "Your phone interaction has been recorded.",
+        "18": "Your phone interaction is acknowledged.",
+        "19": "Your phone interaction remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        5,
+        1,
+        1
+      ],
+      "entries": {
+        "0": "Saving this gripping phone call. Very ambitious, princess.",
+        "1": "Saving this gripping phone call. Excellent timing, princess.",
+        "2": "Saving this gripping phone call. Another masterstroke, princess.",
+        "3": "Saving this gripping phone call. Your judgment is legendary, princess.",
+        "4": "Your caller deserves a medal. Very ambitious, princess.",
+        "5": "Your caller deserves a medal. Excellent timing, princess.",
+        "6": "Your caller deserves a medal. Another masterstroke, princess.",
+        "7": "Your caller deserves a medal. Your judgment is legendary, princess.",
+        "8": "Archiving your thrilling gossip. Very ambitious, princess.",
+        "9": "Archiving your thrilling gossip. Excellent timing, princess.",
+        "10": "Archiving your thrilling gossip. Another masterstroke, princess.",
+        "11": "Archiving your thrilling gossip. Your judgment is legendary, princess.",
+        "12": "The holo is judging your choices. Very ambitious, princess.",
+        "13": "The holo is judging your choices. Excellent timing, princess.",
+        "14": "The holo is judging your choices. Another masterstroke, princess.",
+        "15": "The holo is judging your choices. Your judgment is legendary, princess.",
+        "16": "This conversation is apparently historic. Very ambitious, princess.",
+        "17": "This conversation is apparently historic. Excellent timing, princess.",
+        "18": "This conversation is apparently historic. Another masterstroke, princess.",
+        "19": "This conversation is apparently historic. Your judgment is legendary, princess."
+      }
+    },
+    {
+      "key": [
+        5,
+        1,
+        2
+      ],
+      "entries": {
+        "0": "Saving this gripping phone call. Very ambitious, tough guy.",
+        "1": "Saving this gripping phone call. Excellent timing, tough guy.",
+        "2": "Saving this gripping phone call. Another masterstroke, tough guy.",
+        "3": "Saving this gripping phone call. Your judgment is legendary, tough guy.",
+        "4": "Your caller deserves a medal. Very ambitious, tough guy.",
+        "5": "Your caller deserves a medal. Excellent timing, tough guy.",
+        "6": "Your caller deserves a medal. Another masterstroke, tough guy.",
+        "7": "Your caller deserves a medal. Your judgment is legendary, tough guy.",
+        "8": "Archiving your thrilling gossip. Very ambitious, tough guy.",
+        "9": "Archiving your thrilling gossip. Excellent timing, tough guy.",
+        "10": "Archiving your thrilling gossip. Another masterstroke, tough guy.",
+        "11": "Archiving your thrilling gossip. Your judgment is legendary, tough guy.",
+        "12": "The holo is judging your choices. Very ambitious, tough guy.",
+        "13": "The holo is judging your choices. Excellent timing, tough guy.",
+        "14": "The holo is judging your choices. Another masterstroke, tough guy.",
+        "15": "The holo is judging your choices. Your judgment is legendary, tough guy.",
+        "16": "This conversation is apparently historic. Very ambitious, tough guy.",
+        "17": "This conversation is apparently historic. Excellent timing, tough guy.",
+        "18": "This conversation is apparently historic. Another masterstroke, tough guy.",
+        "19": "This conversation is apparently historic. Your judgment is legendary, tough guy."
+      }
+    },
+    {
+      "key": [
+        5,
+        2,
+        1
+      ],
+      "entries": {
+        "0": "Saving your fucking gossip. Fucking brilliant, bitch.",
+        "1": "Saving your fucking gossip. What a goddamn mess, bitch.",
+        "2": "Saving your fucking gossip. Try thinking, bitch.",
+        "3": "Saving your fucking gossip. Congratulations on the bullshit, bitch.",
+        "4": "Your call is a train wreck. Fucking brilliant, bitch.",
+        "5": "Your call is a train wreck. What a goddamn mess, bitch.",
+        "6": "Your call is a train wreck. Try thinking, bitch.",
+        "7": "Your call is a train wreck. Congratulations on the bullshit, bitch.",
+        "8": "The holo is judging your ass. Fucking brilliant, bitch.",
+        "9": "The holo is judging your ass. What a goddamn mess, bitch.",
+        "10": "The holo is judging your ass. Try thinking, bitch.",
+        "11": "The holo is judging your ass. Congratulations on the bullshit, bitch.",
+        "12": "Your caller needs hazard pay. Fucking brilliant, bitch.",
+        "13": "Your caller needs hazard pay. What a goddamn mess, bitch.",
+        "14": "Your caller needs hazard pay. Try thinking, bitch.",
+        "15": "Your caller needs hazard pay. Congratulations on the bullshit, bitch.",
+        "16": "Jackie would tell you to shut up. Fucking brilliant, bitch.",
+        "17": "Jackie would tell you to shut up. What a goddamn mess, bitch.",
+        "18": "Jackie would tell you to shut up. Try thinking, bitch.",
+        "19": "Jackie would tell you to shut up. Congratulations on the bullshit, bitch."
+      }
+    },
+    {
+      "key": [
+        5,
+        2,
+        2
+      ],
+      "entries": {
+        "0": "Saving your fucking gossip. Fucking brilliant, dickhead.",
+        "1": "Saving your fucking gossip. What a goddamn mess, dickhead.",
+        "2": "Saving your fucking gossip. Try thinking, dickhead.",
+        "3": "Saving your fucking gossip. Congratulations on the bullshit, dickhead.",
+        "4": "Your call is a train wreck. Fucking brilliant, dickhead.",
+        "5": "Your call is a train wreck. What a goddamn mess, dickhead.",
+        "6": "Your call is a train wreck. Try thinking, dickhead.",
+        "7": "Your call is a train wreck. Congratulations on the bullshit, dickhead.",
+        "8": "The holo is judging your ass. Fucking brilliant, dickhead.",
+        "9": "The holo is judging your ass. What a goddamn mess, dickhead.",
+        "10": "The holo is judging your ass. Try thinking, dickhead.",
+        "11": "The holo is judging your ass. Congratulations on the bullshit, dickhead.",
+        "12": "Your caller needs hazard pay. Fucking brilliant, dickhead.",
+        "13": "Your caller needs hazard pay. What a goddamn mess, dickhead.",
+        "14": "Your caller needs hazard pay. Try thinking, dickhead.",
+        "15": "Your caller needs hazard pay. Congratulations on the bullshit, dickhead.",
+        "16": "Jackie would tell you to shut up. Fucking brilliant, dickhead.",
+        "17": "Jackie would tell you to shut up. What a goddamn mess, dickhead.",
+        "18": "Jackie would tell you to shut up. Try thinking, dickhead.",
+        "19": "Jackie would tell you to shut up. Congratulations on the bullshit, dickhead."
+      }
+    },
+    {
+      "key": [
+        6,
+        0,
+        1
+      ],
+      "entries": {
+        "0": "The blocked save request has been noted.",
+        "1": "The blocked save request has been recorded.",
+        "2": "The blocked save request is acknowledged.",
+        "3": "The blocked save request remains subject to game restrictions.",
+        "4": "This restricted checkpoint has been noted.",
+        "5": "This restricted checkpoint has been recorded.",
+        "6": "This restricted checkpoint is acknowledged.",
+        "7": "This restricted checkpoint remains subject to game restrictions.",
+        "8": "Your denied save has been noted.",
+        "9": "Your denied save has been recorded.",
+        "10": "Your denied save is acknowledged.",
+        "11": "Your denied save remains subject to game restrictions.",
+        "12": "The current save restriction has been noted.",
+        "13": "The current save restriction has been recorded.",
+        "14": "The current save restriction is acknowledged.",
+        "15": "The current save restriction remains subject to game restrictions.",
+        "16": "The unavailable checkpoint has been noted.",
+        "17": "The unavailable checkpoint has been recorded.",
+        "18": "The unavailable checkpoint is acknowledged.",
+        "19": "The unavailable checkpoint remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        6,
+        0,
+        2
+      ],
+      "entries": {
+        "0": "The blocked save request has been noted.",
+        "1": "The blocked save request has been recorded.",
+        "2": "The blocked save request is acknowledged.",
+        "3": "The blocked save request remains subject to game restrictions.",
+        "4": "This restricted checkpoint has been noted.",
+        "5": "This restricted checkpoint has been recorded.",
+        "6": "This restricted checkpoint is acknowledged.",
+        "7": "This restricted checkpoint remains subject to game restrictions.",
+        "8": "Your denied save has been noted.",
+        "9": "Your denied save has been recorded.",
+        "10": "Your denied save is acknowledged.",
+        "11": "Your denied save remains subject to game restrictions.",
+        "12": "The current save restriction has been noted.",
+        "13": "The current save restriction has been recorded.",
+        "14": "The current save restriction is acknowledged.",
+        "15": "The current save restriction remains subject to game restrictions.",
+        "16": "The unavailable checkpoint has been noted.",
+        "17": "The unavailable checkpoint has been recorded.",
+        "18": "The unavailable checkpoint is acknowledged.",
+        "19": "The unavailable checkpoint remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        6,
+        1,
+        1
+      ],
+      "entries": {
+        "0": "Your save button is disappointed. Very ambitious, princess.",
+        "1": "Your save button is disappointed. Excellent timing, princess.",
+        "2": "Your save button is disappointed. Another masterstroke, princess.",
+        "3": "Your save button is disappointed. Your judgment is legendary, princess.",
+        "4": "The game said no. Very ambitious, princess.",
+        "5": "The game said no. Excellent timing, princess.",
+        "6": "The game said no. Another masterstroke, princess.",
+        "7": "The game said no. Your judgment is legendary, princess.",
+        "8": "This checkpoint is not available. Very ambitious, princess.",
+        "9": "This checkpoint is not available. Excellent timing, princess.",
+        "10": "This checkpoint is not available. Another masterstroke, princess.",
+        "11": "This checkpoint is not available. Your judgment is legendary, princess.",
+        "12": "Your timing is questionable. Very ambitious, princess.",
+        "13": "Your timing is questionable. Excellent timing, princess.",
+        "14": "Your timing is questionable. Another masterstroke, princess.",
+        "15": "Your timing is questionable. Your judgment is legendary, princess.",
+        "16": "The restrictions have opinions. Very ambitious, princess.",
+        "17": "The restrictions have opinions. Excellent timing, princess.",
+        "18": "The restrictions have opinions. Another masterstroke, princess.",
+        "19": "The restrictions have opinions. Your judgment is legendary, princess."
+      }
+    },
+    {
+      "key": [
+        6,
+        1,
+        2
+      ],
+      "entries": {
+        "0": "Your save button is disappointed. Very ambitious, tough guy.",
+        "1": "Your save button is disappointed. Excellent timing, tough guy.",
+        "2": "Your save button is disappointed. Another masterstroke, tough guy.",
+        "3": "Your save button is disappointed. Your judgment is legendary, tough guy.",
+        "4": "The game said no. Very ambitious, tough guy.",
+        "5": "The game said no. Excellent timing, tough guy.",
+        "6": "The game said no. Another masterstroke, tough guy.",
+        "7": "The game said no. Your judgment is legendary, tough guy.",
+        "8": "This checkpoint is not available. Very ambitious, tough guy.",
+        "9": "This checkpoint is not available. Excellent timing, tough guy.",
+        "10": "This checkpoint is not available. Another masterstroke, tough guy.",
+        "11": "This checkpoint is not available. Your judgment is legendary, tough guy.",
+        "12": "Your timing is questionable. Very ambitious, tough guy.",
+        "13": "Your timing is questionable. Excellent timing, tough guy.",
+        "14": "Your timing is questionable. Another masterstroke, tough guy.",
+        "15": "Your timing is questionable. Your judgment is legendary, tough guy.",
+        "16": "The restrictions have opinions. Very ambitious, tough guy.",
+        "17": "The restrictions have opinions. Excellent timing, tough guy.",
+        "18": "The restrictions have opinions. Another masterstroke, tough guy.",
+        "19": "The restrictions have opinions. Your judgment is legendary, tough guy."
+      }
+    },
+    {
+      "key": [
+        6,
+        2,
+        1
+      ],
+      "entries": {
+        "0": "NO, this fucking save is blocked. Fucking brilliant, bitch.",
+        "1": "NO, this fucking save is blocked. What a goddamn mess, bitch.",
+        "2": "NO, this fucking save is blocked. Try thinking, bitch.",
+        "3": "NO, this fucking save is blocked. Congratulations on the bullshit, bitch.",
+        "4": "This checkpoint would break shit. Fucking brilliant, bitch.",
+        "5": "This checkpoint would break shit. What a goddamn mess, bitch.",
+        "6": "This checkpoint would break shit. Try thinking, bitch.",
+        "7": "This checkpoint would break shit. Congratulations on the bullshit, bitch.",
+        "8": "Your impatience is not a feature. Fucking brilliant, bitch.",
+        "9": "Your impatience is not a feature. What a goddamn mess, bitch.",
+        "10": "Your impatience is not a feature. Try thinking, bitch.",
+        "11": "Your impatience is not a feature. Congratulations on the bullshit, bitch.",
+        "12": "The save system said fuck off. Fucking brilliant, bitch.",
+        "13": "The save system said fuck off. What a goddamn mess, bitch.",
+        "14": "The save system said fuck off. Try thinking, bitch.",
+        "15": "The save system said fuck off. Congratulations on the bullshit, bitch.",
+        "16": "Put the save button down. Fucking brilliant, bitch.",
+        "17": "Put the save button down. What a goddamn mess, bitch.",
+        "18": "Put the save button down. Try thinking, bitch.",
+        "19": "Put the save button down. Congratulations on the bullshit, bitch."
+      }
+    },
+    {
+      "key": [
+        6,
+        2,
+        2
+      ],
+      "entries": {
+        "0": "NO, this fucking save is blocked. Fucking brilliant, dickhead.",
+        "1": "NO, this fucking save is blocked. What a goddamn mess, dickhead.",
+        "2": "NO, this fucking save is blocked. Try thinking, dickhead.",
+        "3": "NO, this fucking save is blocked. Congratulations on the bullshit, dickhead.",
+        "4": "This checkpoint would break shit. Fucking brilliant, dickhead.",
+        "5": "This checkpoint would break shit. What a goddamn mess, dickhead.",
+        "6": "This checkpoint would break shit. Try thinking, dickhead.",
+        "7": "This checkpoint would break shit. Congratulations on the bullshit, dickhead.",
+        "8": "Your impatience is not a feature. Fucking brilliant, dickhead.",
+        "9": "Your impatience is not a feature. What a goddamn mess, dickhead.",
+        "10": "Your impatience is not a feature. Try thinking, dickhead.",
+        "11": "Your impatience is not a feature. Congratulations on the bullshit, dickhead.",
+        "12": "The save system said fuck off. Fucking brilliant, dickhead.",
+        "13": "The save system said fuck off. What a goddamn mess, dickhead.",
+        "14": "The save system said fuck off. Try thinking, dickhead.",
+        "15": "The save system said fuck off. Congratulations on the bullshit, dickhead.",
+        "16": "Put the save button down. Fucking brilliant, dickhead.",
+        "17": "Put the save button down. What a goddamn mess, dickhead.",
+        "18": "Put the save button down. Try thinking, dickhead.",
+        "19": "Put the save button down. Congratulations on the bullshit, dickhead."
+      }
+    },
+    {
+      "key": [
+        7,
+        0,
+        1
+      ],
+      "entries": {
+        "0": "The protected introduction has been noted.",
+        "1": "The protected introduction has been recorded.",
+        "2": "The protected introduction is acknowledged.",
+        "3": "The protected introduction remains subject to game restrictions.",
+        "4": "Your lifepath prologue has been noted.",
+        "5": "Your lifepath prologue has been recorded.",
+        "6": "Your lifepath prologue is acknowledged.",
+        "7": "Your lifepath prologue remains subject to game restrictions.",
+        "8": "The introductory mission has been noted.",
+        "9": "The introductory mission has been recorded.",
+        "10": "The introductory mission is acknowledged.",
+        "11": "The introductory mission remains subject to game restrictions.",
+        "12": "This early save attempt has been noted.",
+        "13": "This early save attempt has been recorded.",
+        "14": "This early save attempt is acknowledged.",
+        "15": "This early save attempt remains subject to game restrictions.",
+        "16": "The opening sequence has been noted.",
+        "17": "The opening sequence has been recorded.",
+        "18": "The opening sequence is acknowledged.",
+        "19": "The opening sequence remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        7,
+        0,
+        2
+      ],
+      "entries": {
+        "0": "The protected introduction has been noted.",
+        "1": "The protected introduction has been recorded.",
+        "2": "The protected introduction is acknowledged.",
+        "3": "The protected introduction remains subject to game restrictions.",
+        "4": "Your lifepath prologue has been noted.",
+        "5": "Your lifepath prologue has been recorded.",
+        "6": "Your lifepath prologue is acknowledged.",
+        "7": "Your lifepath prologue remains subject to game restrictions.",
+        "8": "The introductory mission has been noted.",
+        "9": "The introductory mission has been recorded.",
+        "10": "The introductory mission is acknowledged.",
+        "11": "The introductory mission remains subject to game restrictions.",
+        "12": "This early save attempt has been noted.",
+        "13": "This early save attempt has been recorded.",
+        "14": "This early save attempt is acknowledged.",
+        "15": "This early save attempt remains subject to game restrictions.",
+        "16": "The opening sequence has been noted.",
+        "17": "The opening sequence has been recorded.",
+        "18": "The opening sequence is acknowledged.",
+        "19": "The opening sequence remains subject to game restrictions."
+      }
+    },
+    {
+      "key": [
+        7,
+        1,
+        1
+      ],
+      "entries": {
+        "0": "Finish the introduction first. Very ambitious, princess.",
+        "1": "Finish the introduction first. Excellent timing, princess.",
+        "2": "Finish the introduction first. Another masterstroke, princess.",
+        "3": "Finish the introduction first. Your judgment is legendary, princess.",
+        "4": "The prologue is not a save playground. Very ambitious, princess.",
+        "5": "The prologue is not a save playground. Excellent timing, princess.",
+        "6": "The prologue is not a save playground. Another masterstroke, princess.",
+        "7": "The prologue is not a save playground. Your judgment is legendary, princess.",
+        "8": "Jackie would like you to focus. Very ambitious, princess.",
+        "9": "Jackie would like you to focus. Excellent timing, princess.",
+        "10": "Jackie would like you to focus. Another masterstroke, princess.",
+        "11": "Jackie would like you to focus. Your judgment is legendary, princess.",
+        "12": "You have barely started the game. Very ambitious, princess.",
+        "13": "You have barely started the game. Excellent timing, princess.",
+        "14": "You have barely started the game. Another masterstroke, princess.",
+        "15": "You have barely started the game. Your judgment is legendary, princess.",
+        "16": "Your shortcut has been declined. Very ambitious, princess.",
+        "17": "Your shortcut has been declined. Excellent timing, princess.",
+        "18": "Your shortcut has been declined. Another masterstroke, princess.",
+        "19": "Your shortcut has been declined. Your judgment is legendary, princess."
+      }
+    },
+    {
+      "key": [
+        7,
+        1,
+        2
+      ],
+      "entries": {
+        "0": "Finish the introduction first. Very ambitious, tough guy.",
+        "1": "Finish the introduction first. Excellent timing, tough guy.",
+        "2": "Finish the introduction first. Another masterstroke, tough guy.",
+        "3": "Finish the introduction first. Your judgment is legendary, tough guy.",
+        "4": "The prologue is not a save playground. Very ambitious, tough guy.",
+        "5": "The prologue is not a save playground. Excellent timing, tough guy.",
+        "6": "The prologue is not a save playground. Another masterstroke, tough guy.",
+        "7": "The prologue is not a save playground. Your judgment is legendary, tough guy.",
+        "8": "Jackie would like you to focus. Very ambitious, tough guy.",
+        "9": "Jackie would like you to focus. Excellent timing, tough guy.",
+        "10": "Jackie would like you to focus. Another masterstroke, tough guy.",
+        "11": "Jackie would like you to focus. Your judgment is legendary, tough guy.",
+        "12": "You have barely started the game. Very ambitious, tough guy.",
+        "13": "You have barely started the game. Excellent timing, tough guy.",
+        "14": "You have barely started the game. Another masterstroke, tough guy.",
+        "15": "You have barely started the game. Your judgment is legendary, tough guy.",
+        "16": "Your shortcut has been declined. Very ambitious, tough guy.",
+        "17": "Your shortcut has been declined. Excellent timing, tough guy.",
+        "18": "Your shortcut has been declined. Another masterstroke, tough guy.",
+        "19": "Your shortcut has been declined. Your judgment is legendary, tough guy."
+      }
+    },
+    {
+      "key": [
+        7,
+        2,
+        1
+      ],
+      "entries": {
+        "0": "FINISH THE FUCKING INTRODUCTION. Fucking brilliant, bitch.",
+        "1": "FINISH THE FUCKING INTRODUCTION. What a goddamn mess, bitch.",
+        "2": "FINISH THE FUCKING INTRODUCTION. Try thinking, bitch.",
+        "3": "FINISH THE FUCKING INTRODUCTION. Congratulations on the bullshit, bitch.",
+        "4": "Stop trying to break the prologue. Fucking brilliant, bitch.",
+        "5": "Stop trying to break the prologue. What a goddamn mess, bitch.",
+        "6": "Stop trying to break the prologue. Try thinking, bitch.",
+        "7": "Stop trying to break the prologue. Congratulations on the bullshit, bitch.",
+        "8": "The opening quest is not your toy. Fucking brilliant, bitch.",
+        "9": "The opening quest is not your toy. What a goddamn mess, bitch.",
+        "10": "The opening quest is not your toy. Try thinking, bitch.",
+        "11": "The opening quest is not your toy. Congratulations on the bullshit, bitch.",
+        "12": "Your early save is a terrible idea. Fucking brilliant, bitch.",
+        "13": "Your early save is a terrible idea. What a goddamn mess, bitch.",
+        "14": "Your early save is a terrible idea. Try thinking, bitch.",
+        "15": "Your early save is a terrible idea. Congratulations on the bullshit, bitch.",
+        "16": "Wait until the fucking montage ends. Fucking brilliant, bitch.",
+        "17": "Wait until the fucking montage ends. What a goddamn mess, bitch.",
+        "18": "Wait until the fucking montage ends. Try thinking, bitch.",
+        "19": "Wait until the fucking montage ends. Congratulations on the bullshit, bitch."
+      }
+    },
+    {
+      "key": [
+        7,
+        2,
+        2
+      ],
+      "entries": {
+        "0": "FINISH THE FUCKING INTRODUCTION. Fucking brilliant, dickhead.",
+        "1": "FINISH THE FUCKING INTRODUCTION. What a goddamn mess, dickhead.",
+        "2": "FINISH THE FUCKING INTRODUCTION. Try thinking, dickhead.",
+        "3": "FINISH THE FUCKING INTRODUCTION. Congratulations on the bullshit, dickhead.",
+        "4": "Stop trying to break the prologue. Fucking brilliant, dickhead.",
+        "5": "Stop trying to break the prologue. What a goddamn mess, dickhead.",
+        "6": "Stop trying to break the prologue. Try thinking, dickhead.",
+        "7": "Stop trying to break the prologue. Congratulations on the bullshit, dickhead.",
+        "8": "The opening quest is not your toy. Fucking brilliant, dickhead.",
+        "9": "The opening quest is not your toy. What a goddamn mess, dickhead.",
+        "10": "The opening quest is not your toy. Try thinking, dickhead.",
+        "11": "The opening quest is not your toy. Congratulations on the bullshit, dickhead.",
+        "12": "Your early save is a terrible idea. Fucking brilliant, dickhead.",
+        "13": "Your early save is a terrible idea. What a goddamn mess, dickhead.",
+        "14": "Your early save is a terrible idea. Try thinking, dickhead.",
+        "15": "Your early save is a terrible idea. Congratulations on the bullshit, dickhead.",
+        "16": "Wait until the fucking montage ends. Fucking brilliant, dickhead.",
+        "17": "Wait until the fucking montage ends. What a goddamn mess, dickhead.",
+        "18": "Wait until the fucking montage ends. Try thinking, dickhead.",
+        "19": "Wait until the fucking montage ends. Congratulations on the bullshit, dickhead."
+      }
+    }
+  ]
+}

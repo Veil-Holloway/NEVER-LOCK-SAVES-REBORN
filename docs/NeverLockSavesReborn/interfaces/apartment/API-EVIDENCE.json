@@ -1,0 +1,119 @@
+{
+  "kind": "Pinned actual game-script interface and location enum inspection; no compiler/runtime evidence",
+  "repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+  "ref": "cfcf5071e5363962a44c33cb7cab749688b0ca51",
+  "sources": [
+    {
+      "path": "scripts/core/systems/preventionSystem.script",
+      "blob_sha": "60adbb06a98d068c038eb4e4da7eec1c23d6b0fc",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/cfcf5071e5363962a44c33cb7cab749688b0ca51/scripts/core/systems/preventionSystem.script",
+      "findings": [
+        {
+          "line": 332,
+          "source": "public const function GetCurrentDistrict() : weak< District >"
+        }
+      ]
+    },
+    {
+      "path": "scripts/core/gameplay/prereqs/districtPrereq.script",
+      "blob_sha": "2a6d44c3ea3fde933a694375e5d07bb6c47e74b9",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/cfcf5071e5363962a44c33cb7cab749688b0ca51/scripts/core/gameplay/prereqs/districtPrereq.script",
+      "findings": [
+        {
+          "line": 15,
+          "source": "ps = ( ( PreventionSystem )( GameInstance.GetScriptableSystemsContainer( game ).Get( 'PreventionSystem' ) ) );"
+        },
+        {
+          "line": 16,
+          "source": "return ps.GetCurrentDistrict().GetDistrictID() == m_district.GetRecordID();"
+        }
+      ]
+    },
+    {
+      "path": "scripts/core/systems/prevention/districtManager.script",
+      "blob_sha": "6dd1f2b85756036ce087ce898b4c92b79561d8db",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/cfcf5071e5363962a44c33cb7cab749688b0ca51/scripts/core/systems/prevention/districtManager.script",
+      "findings": [
+        {
+          "line": 20,
+          "source": "public const function GetDistrictRecord() : District_Record"
+        },
+        {
+          "line": 78,
+          "source": "if( m_districtRecord.Type() == gamedataDistrict.Dogtown )"
+        },
+        {
+          "line": 94,
+          "source": "if( m_districtRecord.Type() == gamedataDistrict.Badlands )"
+        },
+        {
+          "line": 220,
+          "source": "blackboard.SetString( GetAllBlackboardDefs().UI_Map.currentLocationEnumName, districtRecord.EnumName(), true );"
+        },
+        {
+          "line": 235,
+          "source": "public const function GetCurrentDistrict() : weak< District >"
+        }
+      ]
+    },
+    {
+      "path": "scripts/core/data/tweakDBEnums.script",
+      "blob_sha": "251cd26af622aa3a3cb9524244ae6174668fa733",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/cfcf5071e5363962a44c33cb7cab749688b0ca51/scripts/core/data/tweakDBEnums.script",
+      "findings": [
+        {
+          "line": 3204,
+          "source": "CorpoPlaza_Apartment,"
+        },
+        {
+          "line": 3227,
+          "source": "Glen_Apartment,"
+        },
+        {
+          "line": 3234,
+          "source": "JapanTown_Apartment,"
+        },
+        {
+          "line": 3239,
+          "source": "JapanTown_HiromisApartment,"
+        },
+        {
+          "line": 3244,
+          "source": "Kabuki_JudysApartment,"
+        },
+        {
+          "line": 3255,
+          "source": "LittleChina_VApartment,"
+        },
+        {
+          "line": 3267,
+          "source": "Northside_Apartment,"
+        }
+      ]
+    },
+    {
+      "path": "scripts/core/blackboard/blackboardDefinitions.script",
+      "blob_sha": "6736ae253de10465c7aded3e5a6817d75388647e",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/cfcf5071e5363962a44c33cb7cab749688b0ca51/scripts/core/blackboard/blackboardDefinitions.script",
+      "findings": [
+        {
+          "line": 1517,
+          "source": "class UI_MapDef extends BlackboardDefinition"
+        },
+        {
+          "line": 1520,
+          "source": "var currentLocationEnumName : BlackboardID_String;"
+        }
+      ]
+    }
+  ],
+  "supported_subset": "V original apartment district only via gamedataDistrict.LittleChina_VApartment",
+  "unestablished": [
+    "Generic owned-safehouse identity",
+    "Ownership/rental status for four optional apartments",
+    "Mod-added interiors and Phantom Liberty Kress Street safehouse coverage",
+    "Physical area boundary correctness in installed game",
+    "Actual save/reload/progression"
+  ],
+  "recommendation": "Narrow original-apartment entry adapter may be implemented only with explicit coverage label, unknown reset, first-sample baseline, actual direct district reads, existing full native/intro/session/readiness/stability guards, default-off trigger and no claim of universal safety."
+}

@@ -1,0 +1,7 @@
+{
+  "check": "prior_preserved_scope_still_rejects_dispatch_body_mutation",
+  "exit": 1,
+  "expected_marker": "Changed protected method: NLSRebornDeferredDispatch",
+  "detected": true,
+  "scope": "source preservation only; no compiler/game execution"
+}

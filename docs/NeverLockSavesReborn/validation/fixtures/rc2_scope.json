@@ -1,0 +1,72 @@
+{
+  "baseline_package": "Never_Lock_Saves_Reborn_v1.0.0-rc1_Release_Candidate.zip",
+  "baseline_package_sha256": "b48c052a0d6a52e3ad5be6590bff053b003563fb1deef9c3375c99907ed49b7a",
+  "baseline_version": "1.0.0-rc1",
+  "candidate_version": "1.0.0-rc2",
+  "annotation_replacement": {
+    "path": "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds",
+    "before": "let autosave: ref<AutoSaveSystem> = GameInstance.GetAutoSaveSystem(this.GetGame());",
+    "after": "let autosave: ref<gameAutoSaveSystem> = GameInstance.GetAutoSaveSystem(this.GetGame());",
+    "count": 1,
+    "verified_type": "gameAutoSaveSystem"
+  },
+  "label_files": {
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua": {
+      "version_count": 6,
+      "baseline_sha256": "869800a7ab82ed380090d5a84e78a30b7d79869763ed4e4ffb3669c53f1ef41f",
+      "candidate_sha256": "4049bef1a72415ebd7796e980e7cce2911ad7333dc7ca241f60b01a078648166"
+    },
+    "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds": {
+      "version_count": 2,
+      "baseline_sha256": "293a0089f0d3c7591501497ac813b0f3bb5de7d9da4de4b5e233936049333e3e",
+      "candidate_sha256": "8fca7e488d202bef7a1b8c6b75bdd5e24f726480311ffe59131d11c8c83d9e10"
+    }
+  },
+  "unchanged_files": {
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua": "14b0142a2fb4fe3dce80e0699690ef7093470954cc0a4ae38d7fd31517ed9289",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/config_store.lua": "71cc407a911ad5f6a9a8dda749e2ef3839fe74f01fd7fa3da8590968c80dece3",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dark_future.lua": "a4d5afd042e295b7db6af26026c4a55aab8d834ed21d4550946393ceba3fb3b8",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/deferred_save.lua": "b5c7413a274fd3d38612176891ee9dac06ebd2255bc0d40276fc9350400db9ca",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dependency_versions.lua": "32c132404062f25594684567b4a50acdbc61687e6eb59fee8a25fbee2393b53a",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian.lua": "ba22843f8356bd56b952d7629ff89667913a4b195513015aea981b9f41e67c40",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian_bridge.lua": "b3b438e12bd01fc6b0d5ce00a93fff9450e52def53a057971cb3ae469a158a04",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua": "58cbe7e5a431a8ba8a18f3d3f6526df08e029bc1410066b4303083b7244951ab",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua": "023c995c24e0c3c941861557bbe92c9caa7c3e3fe14ee5f0bfc19eaee1598547",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_message_library.lua": "67f090e136d54ed7580518eb4f0b48601d582f23fe3f55015b7ca4fba7a0ba7c",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_messages.lua": "a271bac7f36417815d673bf0c176e7fe64c73b5da77b8c41c815c10fd0b3ecea",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua": "0dfdd44ae3baa6a5a20b0a2121e2844b52e1be4ae6f4b0db366aa061e6c838c6",
+    "r6/scripts/NeverLockSavesReborn/DarkFutureMessages.reds": "d1cc373bf7a030929745f969528b31774998943e3108c0f8b9b96a09a2b7f350",
+    "r6/scripts/NeverLockSavesReborn/DarkFutureSavePolicy.reds": "f707dbbbfe3147fae24290c1832f6274614118daa3e4724ee94d3a6bd18bad37",
+    "tools/NLSRSaveGuardian/README.md": "4051c04e9b51e061556cc252f61dc1e301a68d026e91c0d5117767ea88b46d1f",
+    "tools/NLSRSaveGuardian/save_guardian.py": "c142d5f86a3c9593c99ebfd949643af3705075c71ce370b149d22c62cd77d9c7",
+    "tools/NLSRSaveGuardian/test_recovery_assistant.py": "8bf34e52a58b3b84161eb4f571c41742d74a619545ff012be0dc1f5c2f56d5bd",
+    "tools/NLSRSaveGuardian/test_retention.py": "f8f9bbba3bcb65a45d57e788e5078531ccd8245448a993b619a238f4586537f3",
+    "tools/NLSRSaveGuardian/test_save_guardian.py": "f43218a3e5dc4fe848a5faa58565fe990a5b5fee884d8b2b840af1834febba45"
+  },
+  "protected_roots": [
+    "bin",
+    "r6",
+    "tools/NLSRSaveGuardian"
+  ],
+  "inventory_scope": "All sixteen runtime files and the five original closed-game companion paths. Additional tools are frozen separately by package verification.",
+  "primary_type_contract": {
+    "repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+    "commit": "cfcf5071e5363962a44c33cb7cab749688b0ca51",
+    "getter_source": {
+      "path": "scripts/core/systems/gameInstance.script",
+      "blob": "6113815dfcebbc98207a6ec394acff6df34fa1a8",
+      "line": 92,
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/cfcf5071e5363962a44c33cb7cab749688b0ca51/scripts/core/systems/gameInstance.script"
+    },
+    "class_source": {
+      "path": "scripts/core/systems/gameSystem.script",
+      "blob": "7dfa9b96334b35472ff4a543eddb02d344655fc9",
+      "lines": [
+        37,
+        40
+      ],
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/cfcf5071e5363962a44c33cb7cab749688b0ca51/scripts/core/systems/gameSystem.script"
+    },
+    "verified_return_type": "ref<gameAutoSaveSystem>"
+  }
+}

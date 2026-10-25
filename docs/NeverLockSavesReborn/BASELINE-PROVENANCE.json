@@ -1,0 +1,12 @@
+{
+  "baseline": "1.0.0-rc2 full candidate",
+  "drive_file_id": "1zO8a6tlT92DpfH5yjfwYAGBA1UaFDoKW",
+  "drive_modified_time": "2026-10-25T01:04:25.988Z",
+  "size": 825594,
+  "sha256": "24e36eaec40a2be1484024cc86d71ae1fee56a3817cd0787ce16a75fea88285d",
+  "fresh_folder_metadata_raw_fetch": "verified",
+  "crc": "passed",
+  "manifest_entries_verified": 755,
+  "symptom": "User reports Smart queue does not work and only vanilla cannot-save notification during an interaction",
+  "identity_limit": "User report does not identify exact deployed hash/game or framework versions; source root cause reproduced in fresh RC2 baseline."
+}

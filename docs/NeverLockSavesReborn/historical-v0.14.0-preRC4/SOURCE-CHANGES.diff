@@ -1,0 +1,187 @@
+--- preRC3/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
++++ preRC4/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
+@@ -1,4 +1,4 @@
+--- Never Lock Saves Reborn v0.14.0-preRC3 Release Testing Preview
++-- Never Lock Saves Reborn v0.14.0-preRC4 Release Testing Preview
+ -- Persistent UI settings, runtime bridge, and diagnostics.
+ -- Smart permits only explicit combat locks with combat opt-in; mounted combat also needs vehicle opt-in.
+ -- DF switches control contextual messages only. Optional scheduler defaults OFF.
+@@ -181,6 +181,7 @@
+ local configStore = require('config_store')
+ local profilesModule=optional('profiles')
+ local supportReport=optional('support_report')
++local dependencyVersions=optional('dependency_versions')
+ local profileBank=nil
+ local profileLabel='Default'
+ local profileLabels={}
+@@ -680,7 +681,28 @@
+   local phase=deferredState.pending and 'Waiting' or deferredStatus:find('Submitted',1,true) and 'Submitted' or
+     deferredStatus=='Expired without save' and 'Expired' or deferredStatus:find('Error:',1,true)==1 and 'Error' or 'Unknown'
+   local gameVersion=read(function() return GetSingleton('inkMenuScenario'):GetSystemRequestsHandler():GetGameVersion() end)
+-  local snapshot={build='0.14.0-preRC3',gameBuild=gameVersion,versions={},settings=currentSettings(),
++  -- Collect only on explicit support export. Version APIs cannot affect save policy.
++  local versionSnapshot={}
++  local dependencySample=type(dependencyVersions)=='table' and getmetatable(dependencyVersions)==nil and rawget(dependencyVersions,'sample') or nil
++  if type(dependencySample)=='function' then
++    local ok,value=pcall(dependencySample,{
++      cet=function()
++        if type(GetVersion)~='function' then return nil end
++        return GetVersion()
++      end,
++      codeware=function()
++        if Codeware==nil then return nil end
++        return Codeware.Version()
++      end,
++      nativeSettings=function()
++        if type(GetMod)~='function' then return nil end
++        local native=GetMod('nativeSettings')
++        if type(native)~='table' or getmetatable(native)~=nil then return nil end
++        return rawget(native,'version')
++      end})
++    if ok and type(value)=='table' and getmetatable(value)==nil then versionSnapshot=value end
++  end
++  local snapshot={build='0.14.0-preRC4',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),
+     facts={q000_done=read(function() return Game.GetQuestsSystem():GetFactStr('q000_done') end),
+       q001_started=read(function() return Game.GetQuestsSystem():GetFactStr('q001_started') end)},
+     sensors={combatKnown=combatKnown,combatActive=combatActive,vehicleKnown=vehicleKnown,vehicleActive=vehicleActive,
+@@ -711,7 +733,7 @@
+   end
+   registerNativeSettings()
+   deferredStatus = deferredEnabled and 'Live queue enabled (experimental)' or 'Disabled'
+-  log('v0.14.0-preRC3 Release Testing Preview loaded; experimental native save-lock gate required')
++  log('v0.14.0-preRC4 Release Testing Preview loaded; experimental native save-lock gate required')
+ end)
+ registerForEvent('onOverlayOpen', function() show = true; apply() end)
+ registerForEvent('onOverlayClose', function() show = false end)
+@@ -987,7 +1009,7 @@
+   if not show then return end
+   local visible = ImGui.Begin(title)
+   if visible then
+-    ImGui.Text('v0.14.0-preRC3 Release Testing Preview | Runtime policy')
++    ImGui.Text('v0.14.0-preRC4 Release Testing Preview | Runtime policy')
+     ImGui.TextWrapped('Native menu: '..nativeStatus)
+     ImGui.Separator()
+     for i=0,3 do
+@@ -1146,7 +1168,7 @@
+       ImGui.TextWrapped('Context states: -1 UNKNOWN, 0 inactive/disabled, 1 active. Context: 8 sleep, 11 dehydration, 10 starvation, 9 addiction.')
+       ImGui.TextWrapped('Compatibility is source-reviewed; in-game validation is still required. State samples refresh every two seconds.')
+       if ImGui.Button('Log compatibility snapshot##nls_darkfuture') then
+-        log('v0.14.0-preRC3 Release Testing Preview | mode='..names[mode+1]..' | prologue='..prologueStatus)
++        log('v0.14.0-preRC4 Release Testing Preview | mode='..names[mode+1]..' | prologue='..prologueStatus)
+         log('Dark Future: '..darkFutureStatus)
+         if darkFutureError then log('Dark Future query error: '..darkFutureError) end
+         if dfOK then log('Last Immersion save check: '..tostring(dfLastCheck)) end
+@@ -1180,7 +1202,7 @@
+       if ImGui.Button('Export Guardian report##nls_guardian_export') then
+         local exported=pcall(function()
+           local report=guardian:report()
+-          report.rebornBuild='0.14.0-preRC3'
++          report.rebornBuild='0.14.0-preRC4'
+           report.gameBuild='unknown'; report.frameworkVersions='unknown'
+           configStore.save('guardian-report.json',report)
+         end)
+--- preRC3/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua
++++ preRC4/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua
+@@ -17,6 +17,25 @@
+ local function version(value)
+   if type(value)=='string' and #value<=40 and value:match('^%d+[A-Za-z0-9._+-]*$') then return value end
+   return 'unknown'
++end
++local DEPENDENCY_KEYS={'cet','codeware','nativeSettings','redscript','red4ext','darkFuture'}
++local DEPENDENCY_SOURCES={cet='cet_get_version',codeware='codeware_version',nativeSettings='native_settings_version'}
++local DEPENDENCY_OBSERVATIONS={observed=true,unavailable=true,invalid=true,read_failed=true}
++local function dependencyEvidence(value,versions)
++  local input=tableValue(value)
++  local result={scope='on_demand_runtime_self_report',compatibility='unverified'}
++  for _,key in ipairs(DEPENDENCY_KEYS) do
++    local row=tableValue(rawget(input,key))
++    local status,source=rawget(row,'status'),rawget(row,'source')
++    local expected=DEPENDENCY_SOURCES[key]
++    local valid=type(status)=='string' and type(source)=='string' and
++      ((status=='not_sampled' and source=='none') or
++       (expected and DEPENDENCY_OBSERVATIONS[status] and source==expected) or
++       (not expected and status=='not_supported' and source=='none'))
++    if not valid or (status=='observed' and versions[key]=='unknown') then status,source='not_sampled','none' end
++    result[key]={status=status,source=source}
++  end
++  return result
+ end
+ local function tri(value) return value==0 and 0 or value==1 and 1 or -1 end
+ local function observation(known,active)
+@@ -187,7 +206,8 @@
+       reason=cause(a.reason),accepted=integer(a.accepted,0,2147483647),rejected=integer(a.rejected,0,2147483647),
+       queue_acceptances=integer(a.accepted,0,2147483647),acceptance_scope='host_queue_only',
+       errors=integer(a.errors,0,2147483647),resets=integer(a.resets,0,2147483647),checkpoint_submission='Unknown',completion='Unknown'},latest_failures={}}
+-  for _,key in ipairs({'cet','redscript','red4ext','nativeSettings','darkFuture'}) do report.dependencies[key]=version(deps[key]) end
++  for _,key in ipairs(DEPENDENCY_KEYS) do report.dependencies[key]=version(deps[key]) end
++  report.dependency_evidence=dependencyEvidence(s.dependencyEvidence,report.dependencies)
+   local records=tableValue(g.records)
+   local last=math.min(#records,1000000)
+   for index=math.max(1,last-11),last do
+--- /dev/null
++++ preRC4/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dependency_versions.lua
+@@ -0,0 +1,47 @@
++-- Pure on-demand dependency self-report adapter. No Game/IO/global API access.
++-- Values identify what a loaded API reports, never compatibility or save safety.
++local M={}
++local keys={'cet','codeware','nativeSettings','redscript','red4ext','darkFuture'}
++local sources={cet='cet_get_version',codeware='codeware_version',nativeSettings='native_settings_version'}
++local function plain(value) return type(value)=='table' and getmetatable(value)==nil end
++local function safeVersion(value)
++  if type(value)=='string' and #value<=40 and value:match('^%d+[A-Za-z0-9._+-]*$') then return value end
++end
++local function normalize(key,value)
++  if key=='cet' then
++    if type(value)~='string' or #value>41 then return nil end
++    if value:sub(1,1)=='v' then value=value:sub(2) end
++    return safeVersion(value)
++  elseif key=='codeware' then
++    return safeVersion(value)
++  end
++  -- Native Settings exports a numeric declaration, not a three-part package ID.
++  -- This controlled scalar format cannot invoke an arbitrary __tostring method.
++  if type(value)~='number' or value~=value or value<0 or value>1000000 then return nil end
++  if value==0 then return '0' end
++  local text=string.format('%.14g',value)
++  if #text<=40 and (text:match('^%d+$') or text:match('^%d+%.%d+$')) then return text end
++end
++function M.sample(readers)
++  local input=plain(readers) and readers or {}
++  local result={versions={},evidence={}}
++  for _,key in ipairs(keys) do
++    local source=sources[key]
++    local value,status='unknown',source and 'unavailable' or 'not_supported'
++    if source then
++      local reader=rawget(input,key)
++      if type(reader)=='function' then
++        local ok,raw=pcall(reader)
++        if not ok then status='read_failed'
++        elseif raw~=nil then
++          local normalized=normalize(key,raw)
++          if normalized then value,status=normalized,'observed' else status='invalid' end
++        end
++      end
++    end
++    result.versions[key]=value
++    result.evidence[key]={status=status,source=source or 'none'}
++  end
++  return result
++end
++return M
+--- preRC3/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
++++ preRC4/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
+@@ -1,4 +1,4 @@
+-// v0.14.0-preRC3 Release Testing Preview. Deferred/autosave lanes are opt-in.
++// v0.14.0-preRC4 Release Testing Preview. Deferred/autosave lanes are opt-in.
+ // Engine native saving-unlocked state is the release gate; this does not
+ // guarantee that a quest or phone conversation serializes correctly.
+ @addField(PlayerPuppet) public let nlsDeferredEnabled: Bool = false;
+@@ -437,7 +437,7 @@
+ public final func NLSRebornGetNotificationCategory() -> Int32 { return NLSRebornPolicy.NotificationContext(this.GetGame()); }
+ 
+ public class NLSRebornPolicy {
+-  public static func Version() -> String { return "0.14.0-preRC3"; }
++  public static func Version() -> String { return "0.14.0-preRC4"; }
+   public static func ShuffleSlot(index: Int32, seed: Int32) -> Int32 {
+     let cycle: Int32 = index / 20;
+     let turn: Int32 = index % 20;

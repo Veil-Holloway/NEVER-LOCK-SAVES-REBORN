@@ -1,0 +1,1561 @@
+--- preRC1/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua
++++ preRC2/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua
+@@ -2,7 +2,7 @@
+ -- and queues requests; this module cannot call game APIs, perform IO, or prove a save.
+ local M = {}
+ local DEFAULTS = {enabled=false, intervalSeconds=300, cooldownSeconds=60,
+-  exploration=true, postCombat=true, vehicleExit=true, questMilestone=false}
++  exploration=true, postCombat=true, vehicleExit=true, questMilestone=false, apartmentEntry=false}
+ local PENDING_SECONDS, RETRY_SECONDS, MAX_FRAME_CREDIT = 30, 5, 0.25
+ local function finite(value)
+   return type(value)=='number' and value==value and value~=math.huge and value~=-math.huge
+@@ -56,7 +56,7 @@
+   if changed then state.options=candidate; M.reset(state,nil,'configuration changed') end
+   return true
+ end
+-local function invalidSnapshot(snapshot)
++local function invalidSnapshot(snapshot, options)
+   if type(snapshot)~='table' then return 'observations unavailable' end
+   if not integer(snapshot.session,1,2147483647) then return 'session unavailable' end
+   if snapshot.playerReady~=true then return 'player unavailable' end
+@@ -71,6 +71,9 @@
+   if not boolean(snapshot.nativeUnlocked) then return 'native lock state unknown' end
+   if not boolean(snapshot.stableReady) then return 'stability state unknown' end
+   if not boolean(snapshot.queueBusy) then return 'queue state unknown' end
++  if options.apartmentEntry and (snapshot.apartmentKnown~=true or not boolean(snapshot.apartmentInside)) then
++    return 'apartment location unknown'
++  end
+   return nil
+ end
+ local function wait(state, why)
+@@ -89,11 +92,12 @@
+     return 'disabled'
+   end
+   if not finite(delta) or delta<0 or delta>1 then return interrupt(state,'clock interrupted') end
+-  local invalid=invalidSnapshot(snapshot)
++  local invalid=invalidSnapshot(snapshot,state.options)
+   if invalid then return interrupt(state,invalid) end
+   if state.session~=snapshot.session or not state.baseline then
+     M.reset(state,snapshot.session,'session baseline')
+-    state.baseline={combat=snapshot.combatActive, vehicle=snapshot.vehicleActive}
++    state.baseline={combat=snapshot.combatActive, vehicle=snapshot.vehicleActive,
++      apartment=snapshot.apartmentInside}
+     return wait(state,'session baseline')
+   end
+ 
+@@ -103,11 +107,17 @@
+   state.retryRemaining=math.max(0,state.retryRemaining-credit)
+   local combatEnded=state.baseline.combat and not snapshot.combatActive
+   local vehicleExited=state.baseline.vehicle and not snapshot.vehicleActive
++  local apartmentEntered=state.options.apartmentEntry and state.baseline.apartment==false and snapshot.apartmentInside==true
+   state.baseline.combat=snapshot.combatActive
+   state.baseline.vehicle=snapshot.vehicleActive
++  state.baseline.apartment=snapshot.apartmentInside
+   if state.pending then
+     state.pending.age=state.pending.age+credit
+     if state.pending.age>=PENDING_SECONDS then state.pending=nil; state.retryRemaining=0 end
++  end
++  -- Entry work belongs to this apartment visit, never a later outside state.
++  if state.pending and state.pending.reason=='apartment_entry' and snapshot.apartmentInside~=true then
++    state.pending=nil; state.retryRemaining=0
+   end
+ 
+   -- User work always wins; active contexts invalidate captured automatic work.
+@@ -127,6 +137,8 @@
+     -- and clears buffered events across suspend/load/session boundaries.
+     elseif state.options.questMilestone and snapshot.questMilestone==true then
+       state.pending={reason='quest_milestone',age=0}
++    elseif apartmentEntered then
++      state.pending={reason='apartment_entry',age=0}
+     end
+   end
+   if not snapshot.nativeUnlocked or not snapshot.stableReady then
+--- preRC1/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/config_store.lua
++++ preRC2/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/config_store.lua
+@@ -1,22 +1,42 @@
+ -- CET provides json.encode/decode and sandboxed io/os; no loadfile/dumpfile helpers.
+ local M={}
+-local function read(path)
++local function accepted(value,validator)
++  if validator==nil then return true end
++  local ok,valid,code=pcall(validator,value)
++  if ok and valid~=nil and valid~=false then return true end
++  if ok and (code=='unsupported_schema' or code=='invalid_bank') then return nil,code end
++  return nil,'Invalid configuration schema'
++end
++local function read(path,validator)
+   local f,err=io.open(path,'r')
+   if not f then return nil,err end
+   local text,readError=f:read('*a')
+   local closed,closeError=f:close()
+   if not text or not closed then return nil,readError or closeError end
+   local ok,value=pcall(json.decode,text)
+-  if ok and type(value)=='table' then return value end
++  if ok and type(value)=='table' then
++    local valid,code=accepted(value,validator)
++    if valid then return value end
++    return nil,code
++  end
+   return nil,'Invalid JSON configuration'
+ end
+-function M.load(path)
+-  local data=read(path)
++function M.load(path,validator)
++  local data,code=read(path,validator)
+   if data then return data end
++  -- A newer schema is not corruption and must never be silently downgraded.
++  if code=='unsupported_schema' then return nil,code end
+   -- Recover an interrupted replacement; never execute config as Lua.
+-  return read(path..'.bak')
++  return read(path..'.bak',validator)
+ end
+-function M.save(path,data)
++function M.save(path,data,validator)
++  local valid=accepted(data,validator)
++  assert(valid,'Configuration schema validation failed')
++  if validator~=nil then
++    local _,primaryCode=read(path,validator)
++    local _,backupCode=read(path..'.bak',validator)
++    assert(primaryCode~='unsupported_schema' and backupCode~='unsupported_schema','Unsupported configuration schema; migration required')
++  end
+   -- Encode before opening any file, preserving the existing config on encoder errors.
+   local text=json.encode(data)
+   assert(type(text)=='string','JSON encoder did not return text')
+@@ -29,7 +49,10 @@
+   local old=io.open(path,'r')
+   if old then
+     assert(old:close())
+-    if not read(path) and read(path..'.bak') then
++    local primary,primaryCode=read(path,validator)
++    local backup,backupCode=read(path..'.bak',validator)
++    assert(primaryCode~='unsupported_schema' and backupCode~='unsupported_schema','Unsupported configuration schema; migration required')
++    if not primary and backup then
+       -- A recovered configuration must keep its only validated recovery copy.
+       -- The replacement is fully written above; leave the backup intact if
+       -- installing it fails, rather than rotating corrupt primary bytes over it.
+--- preRC1/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian_bridge.lua
++++ preRC2/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian_bridge.lua
+@@ -4,6 +4,10 @@
+ local CAPACITY, MAX_DEPTH = 128, 32
+ local function integer(v) return type(v)=='number' and v==v and v%1==0 and v>=0 and v<=2147483647 end
+ local function session(v) return integer(v) and v>0 end
++local function countValue(value)
++  if type(value)~='number' or value~=value or value==math.huge or value==-math.huge then return 0 end
++  return math.min(2147483647,math.max(0,math.floor(value)))
++end
+ 
+ function M.new(ledger, api)
+   ledger=type(ledger)=='table' and ledger or {}
+@@ -95,6 +99,13 @@
+       '; unconfirmed '..math.max(0,requested-confirmed)..'; unavailable '..unavailable..
+       '; buffered '..count..'; dropped '..dropped..'; ledger faults '..faults
+   end
++  function result.diagnostics()
++    local observed=0;for _ in pairs(seen) do observed=observed+1 end
++    return {attempted=attempted,requested=countValue(requested),observed=countValue(observed),
++      unconfirmed=countValue(math.max(0,requested-observed)),unavailable=countValue(unavailable),
++      buffered=countValue(count),capacity=CAPACITY,overflow=overflow,
++      dropped=countValue(dropped),ledgerFaults=countValue(faults)}
++  end
+   function result.drain(first,second)
+     local current=first==result and second or first
+     local events,n=buffer,count;buffer={};count=0
+--- preRC1/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
++++ preRC2/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
+@@ -1,4 +1,4 @@
+--- Never Lock Saves Reborn v0.14.0-preRC1 Release Testing Preview
++-- Never Lock Saves Reborn v0.14.0-preRC2 Release Testing Preview
+ -- Persistent UI settings, runtime bridge, and diagnostics.
+ -- Smart permits only explicit combat locks with combat opt-in; mounted combat also needs vehicle opt-in.
+ -- DF switches control contextual messages only. Optional scheduler defaults OFF.
+@@ -15,13 +15,20 @@
+ local deferredCooldownSeconds = 0
+ local deferredLastDispatch = -math.huge
+ local autosaveEnabled = false
+-local autosaveOptions = {enabled=false,intervalSeconds=300,cooldownSeconds=60,exploration=true,postCombat=true,vehicleExit=true,questMilestone=false}
++local statusNotificationsEnabled=false
++local statusEmitter=nil
++local statusBridgeReady=false
++local statusSession=nil
++local statusAppliedEnabled,statusAppliedTone=nil,nil
++local statusRuntime='Disabled'
++local autosaveQueuedReason,autosaveQueuedSerial,autosaveQueuedSession=nil,nil,nil
++local autosaveOptions = {enabled=false,intervalSeconds=300,cooldownSeconds=60,exploration=true,postCombat=true,vehicleExit=true,questMilestone=false,apartmentEntry=false}
+ local autosavePolicy,autosaveState=nil,nil
+ local questEvents=nil
+ local supportFailures={}
+ local failureCodes={write_failed=true,read_failed=true,bridge_unavailable=true,dispatch_rejected=true,
+   scheduler_unavailable=true,report_failed=true,invalid_settings=true,invalid_bank=true,
+-  unreadable_bank=true,invalid_label=true,profile_not_found=true,bank_full=true}
++  unreadable_bank=true,invalid_label=true,profile_not_found=true,bank_full=true,unsupported_schema=true,status_unavailable=true}
+ local function recordFailure(code)
+   if not failureCodes[code] then return end
+   if supportFailures[#supportFailures]==code then return end
+@@ -208,6 +215,52 @@
+ local body = 0
+ local bodyStatus = 'UNKNOWN'
+ local shuffleSeed = math.random(1, 999999)
++local statusModule=optional('status_messages')
++if statusModule then
++  local ok,value=pcall(function() return statusModule.new(shuffleSeed) end)
++  if ok and type(value)=='table' then statusEmitter=value end
++end
++local function statusCall(name,...)
++  if not statusEmitter then return nil end
++  local ok,value=pcall(function(target,method,...)
++    local fn=target[method]
++    if type(fn)~='function' then error('status interface unavailable') end
++    return fn(target,...)
++  end,statusEmitter,name,...)
++  if not ok then
++    statusEmitter=nil;statusBridgeReady=false;statusRuntime='Unavailable; original queue notices retained'
++    return nil
++  end
++  return value
++end
++local function statusNotice(kind,session,serial)
++  if statusBridgeReady then statusCall('enqueue',kind,session,serial,deferredClock) end
++end
++local function configureStatus(player,session)
++  local previouslyActive=statusBridgeReady and statusSession==session
++  local wanted=statusNotificationsEnabled and notificationsEnabled and statusEmitter~=nil and player~=nil and
++    boundedInteger(session,1,2147483647)
++  if statusSession~=session then
++    statusCall('reset',session)
++    statusSession=session;statusAppliedEnabled=nil;statusBridgeReady=false;previouslyActive=false
++  end
++  if statusAppliedEnabled==wanted and statusAppliedTone==tone then return previouslyActive and statusBridgeReady end
++  local accepted=statusCall('configure',wanted,tone)
++  local active=wanted and accepted==true
++  if player then
++    local ok,value=pcall(function()
++      player:NLSRebornSetStatusNotificationsEnabled(active)
++      return player:NLSRebornGetStatusNotificationsEnabled()
++    end)
++    active=active and ok and value==true
++    if not ok or value~=active then pcall(function() player:NLSRebornSetStatusNotificationsEnabled(false) end) end
++  else active=false end
++  statusAppliedEnabled=wanted;statusAppliedTone=tone;statusBridgeReady=active
++  if statusNotificationsEnabled and notificationsEnabled and player and not active then recordFailure('status_unavailable') end
++  statusRuntime=active and 'Ready; messages describe requests only' or
++    statusNotificationsEnabled and 'Unavailable or waiting for player; original queue notices retained' or 'Disabled'
++  return previouslyActive and active
++end
+ local function detectBody(player)
+   -- Body-type suffix is a documented PuppetStateSystem query. Optional API;
+   -- custom/unsupported body types deliberately remain UNKNOWN.
+@@ -227,7 +280,7 @@
+   if ok and (state==0 or state==1) then return true,state==1 end
+   return false,false -- unknown never selects a phone pool
+ end
+-local combatKnown,combatActive,vehicleKnown,vehicleActive = false,false,false,false
++local combatKnown,combatActive,vehicleKnown,vehicleActive,phoneKnown,phoneActive = false,false,false,false,false,false
+ local configStatus = 'Not saved this session'
+ local nativeSettings, nativeOptions = nil, {}
+ local nativeStatus = 'Native Settings UI not detected'
+@@ -241,6 +294,7 @@
+     if type(data.allowCombat) == 'boolean' then allowCombat = data.allowCombat end
+     if type(data.allowVehicle) == 'boolean' then allowVehicle = data.allowVehicle end
+     if type(data.notificationsEnabled) == 'boolean' then notificationsEnabled = data.notificationsEnabled end
++    if type(data.statusNotificationsEnabled)=='boolean' then statusNotificationsEnabled=data.statusNotificationsEnabled end
+     if type(data.diagnosticDetails) == 'boolean' then diagnosticDetails = data.diagnosticDetails end
+     if type(data.deferredEnabled) == 'boolean' then deferredEnabled = data.deferredEnabled end
+     if type(data.guardianEnabled) == 'boolean' then guardianEnabled = data.guardianEnabled end
+@@ -253,6 +307,7 @@
+     if type(data.autosavePostCombat)=='boolean' then autosaveOptions.postCombat=data.autosavePostCombat end
+     if type(data.autosaveVehicleExit)=='boolean' then autosaveOptions.vehicleExit=data.autosaveVehicleExit end
+     if type(data.autosaveQuestMilestone)=='boolean' then autosaveOptions.questMilestone=data.autosaveQuestMilestone end
++    if type(data.autosaveApartmentEntry)=='boolean' then autosaveOptions.apartmentEntry=data.autosaveApartmentEntry end
+     if type(data.tone) == 'number' and data.tone >= 0 and data.tone <= 2 then tone = math.floor(data.tone) end
+     -- Legacy dfBlock* values are intentionally ignored; those obsolete restrictions are removed.
+     for _,option in ipairs(dfNotificationOptions) do
+@@ -263,12 +318,12 @@
+ end
+ local function currentSettings()
+   return {mode=mode,allowCombat=allowCombat,allowVehicle=allowVehicle,tone=tone,
+-    notificationsEnabled=notificationsEnabled,diagnosticDetails=diagnosticDetails,
++    notificationsEnabled=notificationsEnabled,statusNotificationsEnabled=statusNotificationsEnabled,diagnosticDetails=diagnosticDetails,
+     deferredEnabled=deferredEnabled,guardianEnabled=guardianEnabled,deferredTTL=deferredTTL,
+     deferredCooldownSeconds=deferredCooldownSeconds,autosaveEnabled=autosaveEnabled,
+     autosaveIntervalSeconds=autosaveOptions.intervalSeconds,autosaveCooldownSeconds=autosaveOptions.cooldownSeconds,
+     autosaveExploration=autosaveOptions.exploration,autosavePostCombat=autosaveOptions.postCombat,
+-    autosaveVehicleExit=autosaveOptions.vehicleExit,autosaveQuestMilestone=autosaveOptions.questMilestone,
++    autosaveVehicleExit=autosaveOptions.vehicleExit,autosaveQuestMilestone=autosaveOptions.questMilestone,autosaveApartmentEntry=autosaveOptions.apartmentEntry,
+     dfNotifyVehicleSleep=dfNotifications.dfNotifyVehicleSleep,dfNotifyAddiction=dfNotifications.dfNotifyAddiction,
+     dfNotifyStarvation=dfNotifications.dfNotifyStarvation,dfNotifyDehydration=dfNotifications.dfNotifyDehydration}
+ end
+@@ -286,9 +341,9 @@
+ local function syncNative()
+   if not nativeSettings or syncingNative then return end
+   syncingNative = true
+-  local values = {mode=mode+1, tone=tone+1, notifications=notificationsEnabled,
++  local values = {mode=mode+1, tone=tone+1, notifications=notificationsEnabled,statusNotifications=statusNotificationsEnabled,
+     diagnostics=diagnosticDetails, deferred=deferredEnabled, guardian=guardianEnabled, combat=allowCombat, vehicle=allowVehicle,
+-    autosave=autosaveEnabled,autosaveExploration=autosaveOptions.exploration,autosavePostCombat=autosaveOptions.postCombat,autosaveVehicleExit=autosaveOptions.vehicleExit,autosaveQuestMilestone=autosaveOptions.questMilestone,
++    autosave=autosaveEnabled,autosaveExploration=autosaveOptions.exploration,autosavePostCombat=autosaveOptions.postCombat,autosaveVehicleExit=autosaveOptions.vehicleExit,autosaveQuestMilestone=autosaveOptions.questMilestone,autosaveApartmentEntry=autosaveOptions.apartmentEntry,
+     deferredTTL=deferredTTL,deferredCooldownSeconds=deferredCooldownSeconds+1,
+     autosaveIntervalSeconds=autosaveOptions.intervalSeconds-59,autosaveCooldownSeconds=autosaveOptions.cooldownSeconds-29}
+   for _,option in ipairs(dfNotificationOptions) do values[option.key] = dfNotifications[option.key] end
+@@ -353,10 +408,11 @@
+       end)
+     for _,option in ipairs({{'autosaveExploration','Exploration interval','exploration'},
+       {'autosavePostCombat','After combat','postCombat'},{'autosaveVehicleExit','After vehicle exit','vehicleExit'},
+-      {'autosaveQuestMilestone','Verified quest milestone','questMilestone'}}) do
++      {'autosaveQuestMilestone','Verified quest milestone','questMilestone'},
++      {'autosaveApartmentEntry',"V's original apartment area entry",'apartmentEntry'}}) do
+       local key,label,setting=option[1],option[2],option[3]
+       nativeOptions[key]=ns.addSwitch('/nlsreborn/save',label,
+-        'Requires Smart Autosave and verified paused/native/intro/phone/sensor readiness.',autosaveOptions[setting],setting~='questMilestone',function(v)
++        'Requires Smart Autosave and verified paused/native/intro/phone/sensor readiness.',autosaveOptions[setting],setting~='questMilestone' and setting~='apartmentEntry',function(v)
+           if syncingNative then return end
+           autosaveOptions[setting]=not not v;configureAutosave();saveConfig();syncNative()
+         end)
+@@ -404,6 +460,12 @@
+         if syncingNative then return end
+         changeSetting('notifications',v)
+         lastApplied=-1
++      end)
++    nativeOptions.statusNotifications=ns.addSwitch('/nlsreborn/notifications','Queue status notifications',
++      'Optional tone/body-aware queue lifecycle messages. Request submission never confirms a written save.',
++      statusNotificationsEnabled,false,function(v)
++        if syncingNative then return end
++        statusNotificationsEnabled=not not v;saveConfig();syncNative()
+       end)
+     nativeOptions.diagnostics=ns.addSwitch('/nlsreborn/notifications','Detailed diagnostics',
+       'Show bridge counters in the CET overlay.',diagnosticDetails,true,function(v)
+@@ -473,6 +535,19 @@
+ end
+ local function clearDeferred(reason, player)
+   local had=deferredState.pending~=nil
++  local noticeSession,noticeSerial,noticeOrigin=deferredSession,deferredGameSerial,deferredOrigin
++  if not had and player then
++    local ok,pending,source,serial=pcall(function()
++      return player:NLSRebornDeferredIsPending(),player:NLSRebornDeferredGetSource(),player:NLSRebornDeferredGetSerial()
++    end)
++    if ok and pending==true and (source==1 or source==2 or source==3) then
++      noticeSerial=serial;noticeOrigin=source==3 and 'autosave' or 'game'
++    end
++  end
++  if noticeOrigin=='game' or noticeOrigin=='autosave' then
++    statusNotice(reason=='Expired without save' and 'expired' or reason:find('Error:',1,true)==1 and 'error' or 'cancelled',noticeSession,noticeSerial)
++  end
++  autosaveQueuedReason=nil;autosaveQueuedSerial=nil;autosaveQueuedSession=nil
+   if had or deferredOrigin=='game' or deferredOrigin=='autosave' or deferredOrigin=='preview' then
+     local phase=reason=='Expired without save' and 'Expired' or reason:find('Error:',1,true)==1 and 'Error' or 'Cancelled'
+     local cause=reason
+@@ -516,11 +591,13 @@
+   clearDeferred('Profile applied',currentQueuePlayer())
+   mode,allowCombat,allowVehicle,tone=settings.mode,settings.allowCombat,settings.allowVehicle,settings.tone
+   notificationsEnabled,diagnosticDetails=settings.notificationsEnabled,settings.diagnosticDetails
++  statusNotificationsEnabled=settings.statusNotificationsEnabled==true
+   deferredTTL,deferredCooldownSeconds=settings.deferredTTL,settings.deferredCooldownSeconds
+   for _,option in ipairs(dfNotificationOptions) do dfNotifications[option.key]=settings[option.key] end
+   autosaveOptions.intervalSeconds,autosaveOptions.cooldownSeconds=settings.autosaveIntervalSeconds,settings.autosaveCooldownSeconds
+   autosaveOptions.exploration,autosaveOptions.postCombat,autosaveOptions.vehicleExit=settings.autosaveExploration,settings.autosavePostCombat,settings.autosaveVehicleExit
+   autosaveOptions.questMilestone=settings.autosaveQuestMilestone
++  autosaveOptions.apartmentEntry=settings.autosaveApartmentEntry==true
+   setGuardianEnabled(settings.guardianEnabled)
+   setDeferredEnabled(settings.deferredEnabled);setAutosaveEnabled(settings.autosaveEnabled)
+   profileSelected=true;lastApplied=-1;syncNative();apply()
+@@ -529,6 +606,14 @@
+ local function exportSupportReport()
+   if not supportReport or type(supportReport.build)~='function' then reportStatus='Report module unavailable';return end
+   local player=currentQueuePlayer()
++  lastDarkFutureSnapshot={}
++  if player then
++    sampleState(player)
++    sampleDarkFuture(player)
++  else
++    combatKnown,combatActive,vehicleKnown,vehicleActive,phoneKnown,phoneActive=false,false,false,false,false,false
++    body=0;bodyStatus='UNKNOWN';context=0
++  end
+   local function read(fn)
+     local ok,value=pcall(fn);if ok then return value end
+     return nil
+@@ -537,25 +622,48 @@
+   local source=read(function() return player:NLSRebornDeferredGetSource() end)
+   local paused=read(function() return player:NLSRebornPausedState() end)
+   local menu=read(function() return player:NLSRebornMenuState() end)
+-  local pausedValue=nil
++  local pausedValue,inMenuValue=nil,nil
+   if paused==0 and menu==0 then pausedValue=false elseif paused==1 or menu==1 then pausedValue=true end
++  if menu==0 then inMenuValue=false elseif menu==1 then inMenuValue=true end
+   local a=read(function() return autosavePolicy.status(autosaveState) end) or {enabled=autosaveEnabled,status='disabled'}
+   local g=read(function() return guardian:report() end) or {enabled=guardianEnabled}
+   local df={}
+   for _,field in ipairs({'lifecycle','enabled','valid','inMenu'}) do df[field]=lastDarkFutureSnapshot[field] end
+-  df.vehicleSleep=read(function() return player.nlsRebornDFVehicleSleepState end)
+-  df.addiction=read(function() return player.nlsRebornDFAddictionState end)
+-  df.starvation=read(function() return player.nlsRebornDFStarvationState end)
+-  df.dehydration=read(function() return player.nlsRebornDFDehydrationState end)
++  local diagnosticDF=read(function() return player:NLSRebornDiagnosticDFState() end)
++  df.vehicleSleep=read(function() return diagnosticDF.vehicleSleep end)
++  df.addiction=read(function() return diagnosticDF.addiction end)
++  df.starvation=read(function() return diagnosticDF.starvation end)
++  df.dehydration=read(function() return diagnosticDF.dehydration end)
++  local observerEvidence={
++    guardian=read(function() return guardianBridge:diagnostics() end),
++    quest=read(function() return questEvents:diagnostics() end)}
++  local lockEvidence={known=false,overflow=false,codes={}}
++  local rawLocks=read(function() return player:NLSRebornSaveLockSummary() end)
++  if rawLocks=='unlocked' then lockEvidence.known=true
++  elseif rawLocks=='overflow' then lockEvidence.overflow=true
++  elseif type(rawLocks)=='string' and #rawLocks<=512 and rawLocks:match('^locked|') then
++    local allowed={Nothing=true,Combat=true,Scene=true,Quest=true,Script=true,Boundary=true,MainMenu=true,
++      LoadingScreen=true,PlayerStateMachine=true,PlayerState=true,Tier=true,NotEnoughSlots=true,
++      NotEnoughSpace=true,PlayerOnMovingPlatform=true,Unknown=true}
++    local valid=true
++    for code in rawLocks:sub(8):gmatch('[^|]+') do
++      if not allowed[code] or #lockEvidence.codes>=16 then valid=false;break end
++      lockEvidence.codes[#lockEvidence.codes+1]=code
++      if code=='Unknown' then valid=false end
++    end
++    lockEvidence.known=valid and #lockEvidence.codes>0 and rawLocks=='locked|'..table.concat(lockEvidence.codes,'|')
++  end
+   local gate=deferredGate
+   local phase=deferredState.pending and 'Waiting' or deferredStatus:find('Submitted',1,true) and 'Submitted' or
+     deferredStatus=='Expired without save' and 'Expired' or deferredStatus:find('Error:',1,true)==1 and 'Error' or 'Unknown'
+   local gameVersion=read(function() return GetSingleton('inkMenuScenario'):GetSystemRequestsHandler():GetGameVersion() end)
+-  local snapshot={build='0.14.0-preRC1',gameBuild=gameVersion,versions={},settings=currentSettings(),
++  local snapshot={build='0.14.0-preRC2',gameBuild=gameVersion,versions={},settings=currentSettings(),
+     facts={q000_done=read(function() return Game.GetQuestsSystem():GetFactStr('q000_done') end),
+       q001_started=read(function() return Game.GetQuestsSystem():GetFactStr('q001_started') end)},
+     sensors={combatKnown=combatKnown,combatActive=combatActive,vehicleKnown=vehicleKnown,vehicleActive=vehicleActive,
+-      phoneKnown=phoneKnown,phoneActive=phoneActive,paused=pausedValue},context=context,body=body,
++      phoneKnown=phoneKnown,phoneActive=phoneActive,paused=pausedValue,inMenu=inMenuValue},
++    context=player and context or nil,body=player and body or nil,observers=observerEvidence,locks=lockEvidence,
++    statusNotifications=read(function() return statusEmitter:status() end),
+     queue={pending=pending,source=source==1 and 'manual' or source==2 and 'quicksave' or source==3 and 'autosave' or 'unknown',
+       serial=read(function() return player:NLSRebornDeferredGetSerial() end),session=deferredSession,gate=gate,state=phase,origin=deferredOrigin,
+       expiresIn=deferredState.pending and math.max(0,math.ceil(deferredState.pending.expires-deferredClock)) or 0},
+@@ -574,10 +682,13 @@
+   if guardianBridge then pcall(function() guardianBridge:register() end) end
+   if questEvents then pcall(function() questEvents:register() end) end
+   local initialPlayer=currentQueuePlayer()
+-  if initialPlayer then pcall(function() initialPlayer:NLSRebornDeferredCancel() end) end
++  if initialPlayer then
++    pcall(function() initialPlayer:NLSRebornSetStatusNotificationsEnabled(false) end)
++    pcall(function() initialPlayer:NLSRebornDeferredCancel() end)
++  end
+   registerNativeSettings()
+   deferredStatus = deferredEnabled and 'Live queue enabled (experimental)' or 'Disabled'
+-  log('v0.14.0-preRC1 Release Testing Preview loaded; experimental native save-lock gate required')
++  log('v0.14.0-preRC2 Release Testing Preview loaded; experimental native save-lock gate required')
+ end)
+ registerForEvent('onOverlayOpen', function() show = true; apply() end)
+ registerForEvent('onOverlayClose', function() show = false end)
+@@ -644,6 +755,8 @@
+     mountedOK and mounted==0 and phoneOK and phone==0 and prologueActive and session~=nil
+   if ready and type(delta)=='number' and delta>=0 and delta<=1 then autosaveStable=autosaveStable+math.min(delta,0.25)
+   else autosaveStable=0 end
++  local apartmentOK,apartment=true,nil
++  if autosaveOptions.apartmentEntry then apartmentOK,apartment=pcall(function() return player:NLSRebornApartmentState() end) end
+   local freshMilestone=false
+   if questEvents then
+     local uninterrupted=known and prologueActive and session~=nil and pausedValue==false and
+@@ -658,6 +771,7 @@
+   local ok,result=pcall(autosavePolicy.tick,autosaveState,delta,{
+     session=session,playerReady=player~=nil,introComplete=prologueActive,
+     bridgeReady=known,nativeUnlocked=nativeOK and native==true,stableReady=autosaveStable>=2,questMilestone=freshMilestone,
++    apartmentKnown=apartmentOK and (apartment==0 or apartment==1),apartmentInside=apartment==1,
+     paused=pausedValue,
+     combatKnown=combatOK and type(combat)=='boolean',combatActive=combat==true,
+     vehicleKnown=mountedOK and (mounted==0 or mounted==1),vehicleActive=mounted==1,
+@@ -666,7 +780,15 @@
+   },function(reason,expectedSession)
+     if expectedSession~=deferredSession or not player or not autosaveEnabled then return false end
+     local accepted,queued=pcall(function() return player:NLSRebornAutosaveQueue() end)
+-    if accepted and queued==true then deferredEvent='Autosave checkpoint queued: '..tostring(reason) end
++    if accepted and queued==true then
++      local metaOK,serial=pcall(function() return player:NLSRebornDeferredGetSerial() end)
++      if reason=='apartment_entry' and (not metaOK or not boundedInteger(serial,1,2147483647)) then
++        pcall(function() player:NLSRebornAutosaveSetEnabled(false) end)
++        return false
++      end
++      autosaveQueuedReason=reason;autosaveQueuedSerial=metaOK and serial or nil;autosaveQueuedSession=expectedSession
++      deferredEvent='Autosave checkpoint queued: '..tostring(reason)
++    end
+     return accepted and queued==true
+   end)
+   if not ok then
+@@ -683,6 +805,12 @@
+   if type(delta)~='number' or delta~=delta or delta<0 or delta>1 then return true end
+   local ok,safe=pcall(function()
+     local native=player:NLSRebornDeferredNativeUnlocked()
++    if autosaveOptions.apartmentEntry then
++      local apartment=player:NLSRebornApartmentState()
++      if apartment~=0 and apartment~=1 then return false end
++      if autosaveQueuedReason=='apartment_entry' and autosaveQueuedSession==deferredSession and
++        autosaveQueuedSerial==deferredGameSerial and apartment~=1 then return false end
++    end
+     return type(native)=='boolean' and player:NLSRebornPausedState()==0 and player:NLSRebornMenuState()==0 and
+       player:NLSRebornNotificationPhoneState()==0 and player:IsInCombat()==false and player:NLSRebornMountedState()==0
+   end)
+@@ -701,6 +829,7 @@
+       if token>=nextSession then nextSession=token+1 end
+     end
+   end
++  local statusQueueReady=configureStatus(queuePlayer,session)
+   if guardianBridge then pcall(function() guardianBridge:drain(session or 0) end) end
+   if not session then
+     if deferredSession then guardianCall('bridge_gap',deferredSession,'bridge_unavailable') end
+@@ -742,6 +871,7 @@
+             guardianCall('close',deferredSession or 0,deferredOrigin=='preview' and 0 or deferredGameSerial,'Cancelled','replaced')
+           end
+           guardianCall('queued',nil,source==1 and 'manual' or source==3 and 'autosave' or 'unknown',session,serial)
++          if source==3 or statusQueueReady then statusNotice(source==3 and 'auto_queued' or 'queued',session,serial) end
+           if source~=3 and autosavePolicy and autosaveState then
+             pcall(autosavePolicy.reset,autosaveState,session,'player queue has priority')
+           end
+@@ -787,17 +917,30 @@
+         if outcome=='expired' then clearDeferred('Expired without save', queuePlayer)
+         elseif outcome=='request_submitted' then
+           guardianCall('submitted',session,deferredGameSerial)
++          statusNotice('submitted',session,deferredGameSerial)
+           deferredLastDispatch=deferredClock
+           if deferredOrigin=='game' and autosavePolicy and autosaveState then
+             pcall(autosavePolicy.reset,autosaveState,session,'player checkpoint submitted')
+           end
+           deferredStatus='Submitted (save completion unconfirmed)'; deferredEvent='Submitted'
+           deferredOrigin=nil; deferredGameSerial=nil; deferredUnlockStable=0; deferredGate='Idle'
++          autosaveQueuedReason=nil;autosaveQueuedSerial=nil;autosaveQueuedSession=nil
+         elseif outcome=='request_failed' then recordFailure('dispatch_rejected');clearDeferred('Error: deferred dispatch rejected', queuePlayer) end
+       else deferredUnlockStable=0; deferredGate='Idle' end
+     end
+   end
+   runAutosave(queuePlayer,session,delta)
++  if statusBridgeReady and queuePlayer then
++    local info=statusCall('status')
++    if type(info)=='table' and type(info.pending)=='number' and info.pending>0 then
++      local freshBody=detectBody(queuePlayer)
++      local outcome=statusCall('drain',deferredClock,freshBody,function(text)
++        local ok,accepted=pcall(function() return queuePlayer:NLSRebornStatusNotify(text) end)
++        return ok and accepted==true
++      end)
++      if outcome then statusRuntime=tostring(outcome)..'; request/file evidence remain separate' end
++    end
++  end
+   local okPlayer, currentPlayer = pcall(function() return Game.GetPlayer() end)
+   if okPlayer and currentPlayer then
+     if currentPlayer ~= lastPlayer then secondsSincePlayer = 0 end
+@@ -821,7 +964,7 @@
+   if not show then return end
+   local visible = ImGui.Begin(title)
+   if visible then
+-    ImGui.Text('v0.14.0-preRC1 Release Testing Preview | Runtime policy')
++    ImGui.Text('v0.14.0-preRC2 Release Testing Preview | Runtime policy')
+     ImGui.TextWrapped('Native menu: '..nativeStatus)
+     ImGui.Separator()
+     for i=0,3 do
+@@ -851,6 +994,11 @@
+       syncNative()
+       apply()
+     end
++    ImGui.Text('Queue status notifications: '..(statusNotificationsEnabled and 'ON' or 'OFF'))
++    if ImGui.Button((statusNotificationsEnabled and 'Disable' or 'Enable')..' queue status notifications##nls_status_notifications') then
++      statusNotificationsEnabled=not statusNotificationsEnabled;saveConfig();syncNative()
++    end
++    ImGui.TextWrapped('Status channel: '..statusRuntime)
+     ImGui.Text('Detailed diagnostics: ' .. (diagnosticDetails and 'ON' or 'OFF'))
+     if ImGui.Button((diagnosticDetails and 'Hide' or 'Show') .. ' diagnostics##nls_diagnostics') then
+       diagnosticDetails = not diagnosticDetails
+@@ -884,13 +1032,21 @@
+           deferredStatus='Pending: dry-run request'; deferredEvent='Preview request'
+         else deferredEvent='Dry run skipped: game request pending' end
+       end
+-      ImGui.SameLine()
++    end
++    local sharedPending=deferredState.pending~=nil
++    if not sharedPending then
++      local player=currentQueuePlayer()
++      local ok,pending=pcall(function() return player:NLSRebornDeferredIsPending() end)
++      sharedPending=ok and pending==true
++    end
++    if sharedPending then
+       if ImGui.Button('Cancel queued request##nls_cancel') then
+         clearDeferred('Cancelled by user',currentQueuePlayer())
+         deferredStatus='Cancelled by user'; deferredEvent='Cancelled by user'
+       end
+     end
+-    ImGui.TextWrapped('Deferred state: '..(not deferredEnabled and 'Disabled' or deferredState.pending and (deferredOrigin=='preview' and 'Pending (dry run)' or 'Waiting / Pending') or deferredStatus))
++    ImGui.TextWrapped('Manual deferred lane: '..(deferredEnabled and 'Enabled' or 'Disabled')..' | Automatic lane: '..(autosaveEnabled and 'Enabled' or 'Disabled'))
++    ImGui.TextWrapped('Shared queue state: '..(sharedPending and (deferredOrigin=='preview' and 'Pending (dry run)' or deferredOrigin=='autosave' and 'Automatic request pending' or 'Save request pending') or deferredStatus))
+     ImGui.TextWrapped('Bridge: '..deferredBridge..' | Gate: '..deferredGate)
+     ImGui.TextWrapped('Last event: '..deferredEvent)
+     ImGui.TextWrapped('Queue: '..(deferredState.pending and ('pending #'..deferredState.pending.id..' | expires in '..tostring(math.max(0,math.ceil(deferredState.pending.expires-deferredClock)))..'s') or 'empty'))
+@@ -915,7 +1071,7 @@
+       local ok,status=pcall(function() return questEvents:status() end)
+       if ok and type(status)=='string' then ImGui.TextWrapped('Quest milestone observer: '..status) end
+     end
+-    for _,option in ipairs({{'exploration','Exploration interval'},{'postCombat','After combat'},{'vehicleExit','After vehicle exit'},{'questMilestone','Verified quest milestone'}}) do
++    for _,option in ipairs({{'exploration','Exploration interval'},{'postCombat','After combat'},{'vehicleExit','After vehicle exit'},{'questMilestone','Verified quest milestone'},{'apartmentEntry',"V's original apartment area entry"}}) do
+       local key,label=option[1],option[2]
+       if ImGui.Button(label..': '..(autosaveOptions[key] and 'ON' or 'OFF')..'##nls_auto_'..key) then
+         autosaveOptions[key]=not autosaveOptions[key];configureAutosave();saveConfig();syncNative()
+@@ -967,7 +1123,7 @@
+       ImGui.TextWrapped('Context states: -1 UNKNOWN, 0 inactive/disabled, 1 active. Context: 8 sleep, 11 dehydration, 10 starvation, 9 addiction.')
+       ImGui.TextWrapped('Compatibility is source-reviewed; in-game validation is still required. State samples refresh every two seconds.')
+       if ImGui.Button('Log compatibility snapshot##nls_darkfuture') then
+-        log('v0.14.0-preRC1 Release Testing Preview | mode='..names[mode+1]..' | prologue='..prologueStatus)
++        log('v0.14.0-preRC2 Release Testing Preview | mode='..names[mode+1]..' | prologue='..prologueStatus)
+         log('Dark Future: '..darkFutureStatus)
+         if darkFutureError then log('Dark Future query error: '..darkFutureError) end
+         if dfOK then log('Last Immersion save check: '..tostring(dfLastCheck)) end
+@@ -1001,7 +1157,7 @@
+       if ImGui.Button('Export Guardian report##nls_guardian_export') then
+         local exported=pcall(function()
+           local report=guardian:report()
+-          report.rebornBuild='0.14.0-preRC1'
++          report.rebornBuild='0.14.0-preRC2'
+           report.gameBuild='unknown'; report.frameworkVersions='unknown'
+           configStore.save('guardian-report.json',report)
+         end)
+@@ -1042,7 +1198,7 @@
+     if ImGui.Button('Export support report##nls_support_export') then exportSupportReport() end
+     ImGui.TextWrapped('Support report: '..reportStatus)
+     ImGui.TextWrapped('The report is a bounded local snapshot. Installed framework versions and independent save/reload evidence remain unknown unless measured.')
+-    ImGui.TextWrapped('Automatic in-game backups, safehouse autosave triggers and automatic playthrough identity remain planned.')
++    ImGui.TextWrapped('Apartment trigger covers only the original Little China apartment area. Other safehouses, automatic in-game backups and automatic playthrough identity remain unavailable.')
+   end
+   ImGui.End()
+ end)
+--- preRC1/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua
++++ preRC2/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua
+@@ -3,7 +3,8 @@
+ local M={}
+ local defaults={mode=1,allowCombat=false,allowVehicle=false,tone=1,
+   notificationsEnabled=true,diagnosticDetails=true,deferredEnabled=false,
+-  guardianEnabled=false,dfNotifyVehicleSleep=true,dfNotifyAddiction=true,
++  guardianEnabled=false,statusNotificationsEnabled=false,autosaveApartmentEntry=false,
++  dfNotifyVehicleSleep=true,dfNotifyAddiction=true,
+   dfNotifyStarvation=true,dfNotifyDehydration=true,deferredTTL=30,deferredCooldownSeconds=0,
+   autosaveEnabled=false,autosaveExploration=true,autosavePostCombat=true,
+   autosaveVehicleExit=true,autosaveQuestMilestone=false,autosaveIntervalSeconds=300,autosaveCooldownSeconds=60}
+@@ -39,6 +40,7 @@
+   return M.validate(known)
+ end
+ function M.validate_bank(value)
++  if plain(value) and type(value.schema_version)=='number' and value.schema_version>1 then return nil,'unsupported_schema' end
+   if not plain(value) or value.schema_version~=1 or not plain(value.profiles) then return nil,'invalid_bank' end
+   for key in pairs(value) do if key~='schema_version' and key~='profiles' then return nil,'invalid_bank' end end
+   local result={schema_version=1,profiles={}}
+@@ -67,14 +69,15 @@
+   end
+   function api:load()
+     bank=nil -- A read failure must not leave stale settings available for application.
+-    local ok,value=pcall(store.load,path)
++    local ok,value,loadCode=pcall(store.load,path,M.validate_bank)
+     if not ok then return nil,'read_failed' end
+     if value==nil then
++      if loadCode=='unsupported_schema' then return nil,loadCode end
+       if missing() then bank={schema_version=1,profiles={}};return true,'empty' end
+-      return nil,'unreadable_bank'
++      return nil,loadCode=='invalid_bank' and 'invalid_bank' or 'unreadable_bank'
+     end
+-    local validated=M.validate_bank(value)
+-    if not validated then return nil,'invalid_bank' end
++    local validated,validationCode=M.validate_bank(value)
++    if not validated then return nil,validationCode or 'invalid_bank' end
+     bank=validated
+     return true,'loaded'
+   end
+@@ -100,7 +103,7 @@
+       if count>=16 then return nil,'bank_full' end
+     end
+     nextBank.profiles[label]=valid
+-    local wrote,accepted=pcall(store.save,path,nextBank)
++    local wrote,accepted=pcall(store.save,path,nextBank,M.validate_bank)
+     if not wrote or accepted~=true then return nil,'write_failed' end
+     bank=nextBank
+     return true,'saved'
+--- preRC1/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua
++++ preRC2/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua
+@@ -8,6 +8,10 @@
+ end
+ local function validSession(v) return integer(v,2147483647) end
+ local function validHash(v) return integer(v,4294967295) end
++local function countValue(value)
++  if type(value)~='number' or value~=value or value==math.huge or value==-math.huge then return 0 end
++  return math.min(2147483647,math.max(0,math.floor(value)))
++end
+ local function scalarName(v)
+   -- CET CName.value resolves to a string without a gameplay-system call.
+   -- tostring(CName) is a formatted expression, so it must not be used here.
+@@ -144,6 +148,14 @@
+       '; completed observations '..resolved..'; dropped '..dropped..
+       '; saturation drops '..saturated..'; resolver faults '..faults
+   end
++  function result.diagnostics()
++    return {attempted=attempted,requested=requested,callbackObserved=callbackSeen,
++      unconfirmed=requested and not callbackSeen,unavailable=unavailable,armed=armed,
++      buffered=countValue(count),capacity=CAPACITY,overflow=overflow,
++      dedupCount=countValue(seenCount),dedupCapacity=DEDUP_CAPACITY,
++      resolved=countValue(resolved),dropped=countValue(dropped),
++      saturated=countValue(saturated),faults=countValue(faults)}
++  end
+   return result
+ end
+ return M
+--- preRC1/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_message_library.lua
++++ preRC2/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_message_library.lua
+@@ -0,0 +1,432 @@
++-- Authored request-state wording. Body pools share neutral status language.
++-- 54 independent event/tone/body pools, 1080 entries, 360 distinct texts.
++-- This adds status pools; it never rewrites the original core or DF library.
++local M={}
++
++local prefixes={
++  queued="Request queued. ",
++  auto_queued="Automatic checkpoint request queued. ",
++  submitted="Checkpoint request submitted; completion unconfirmed. ",
++  expired="Queued request expired before dispatch. ",
++  cancelled="Queued request cancelled. ",
++  error="Request error; outcome unconfirmed. ",
++}
++local tails={
++  queued={
++    [0]={
++      "Waiting for native saving permission.",
++      "Permission will be checked again before dispatch.",
++      "This is pending work, not a completed save.",
++      "The queue will retain it until its expiry.",
++      "No checkpoint submission has been recorded for this request.",
++      "Native save locks still apply.",
++      "You can cancel this pending request.",
++      "The current safety gate has not released it.",
++      "One pending request is being tracked.",
++      "It will expire if the dispatch gate stays closed.",
++      "Dispatch requires fresh permission checks.",
++      "Completion remains unknown while this request waits.",
++      "The queue is waiting for eligible conditions.",
++      "Intro protection remains part of the dispatch gate.",
++      "An unlocked gate must remain stable before dispatch.",
++      "This notice confirms queue intake only.",
++      "No save-file confirmation is available from this notice.",
++      "Replacing this request will replace its queue entry.",
++      "The dispatch gate will be evaluated on update.",
++      "Check queue diagnostics for the current waiting reason.",
++    },
++    [1]={
++      "The gate has been informed. It remains spectacularly unmoved.",
++      "Your paperwork is waiting for permission to become more paperwork.",
++      "Progress would be lovely. Permission comes first.",
++      "The queue has one job. Currently, that job is waiting.",
++      "Consider this an appointment with a reluctant gate.",
++      "Native locks have declined your enthusiasm.",
++      "This is a queue notice, not a victory parade.",
++      "It is pending. The suspense is entirely administrative.",
++      "The gate is checking its diary.",
++      "A polite wait has been scheduled. Naturally.",
++      "Your urgency has reached the queue. It has not impressed the locks.",
++      "One pending item. An ambitious little bureaucracy.",
++      "Still waiting for the game to permit the next step.",
++      "Permission remains a stubbornly relevant detail.",
++      "The queue acknowledges your impatience without sharing it.",
++      "Pending is a state, apparently a lifestyle.",
++      "A completed file would require considerably more evidence.",
++      "The game gets a vote. How inconvenient.",
++      "Your progress is not being certified by a sentence on screen.",
++      "The gate will be asked again. Persistence has paperwork.",
++    },
++    [2]={
++      "The damn gate still has to open.",
++      "The locks do not give a shit about enthusiasm.",
++      "Pending. No magical bullshit about completed saves.",
++      "The queue is doing its damn waiting job.",
++      "Your urgency and the native locks are having a shit meeting.",
++      "Permission first. Fuck the shortcuts.",
++      "It is in line, not written in some imaginary damn file.",
++      "The game has not cleared the damn dispatch gate.",
++      "One queue entry. Zero bullshit guarantees.",
++      "The fucking locks still apply.",
++      "Waiting beats pretending this shit already finished.",
++      "The gate needs to stay open for a damn moment.",
++      "This is pending work, not a fucking certificate.",
++      "Expiry still applies. The damn clock is stubborn.",
++      "The queue heard you. The damn gate remains in charge.",
++      "No fake success confetti for this shit.",
++      "Cancel it if you want. The damn queue is yours.",
++      "Fresh checks still matter, for fucks sake.",
++      "The locks have not surrendered their damn opinion.",
++      "Pending means pending. Revolutionary shit, apparently.",
++    },
++  },
++  auto_queued={
++    [0]={
++      "An enabled trigger handed work to the guarded queue.",
++      "The queue will recheck readiness before submission.",
++      "Player requests retain priority.",
++      "This is an automatic queue handoff only.",
++      "Native save permission still applies.",
++      "Write completion remains unknown.",
++      "The dispatch gate must remain eligible.",
++      "The queued work can expire without dispatch.",
++      "Unsafe or unknown observations can cancel it.",
++      "The current trigger has been consumed for this handoff.",
++      "No save-file verification is supplied by this notice.",
++      "An automatic trigger does not bypass the intro guard.",
++      "Stabilization is still required before dispatch.",
++      "You can cancel the pending queue entry.",
++      "Other engine save activity is tracked separately.",
++      "A checkpoint has not been confirmed written.",
++      "This automatic entry shares the serialized dispatch lane.",
++      "The next step is a fresh dispatch check.",
++      "Cooldown and deduplication remain active.",
++      "Check the queue for its current lifecycle state.",
++    },
++    [1]={
++      "The timer did paperwork. The game still gets approval rights.",
++      "Automation has discovered the waiting room.",
++      "A trigger fired. A completed file would be a separate achievement.",
++      "The machine is queuing politely, against all expectations.",
++      "One automatic handoff. No imaginary triumph.",
++      "Your manual requests still outrank this little volunteer.",
++      "The scheduler has volunteered for bureaucracy.",
++      "An automatic idea is waiting for native permission.",
++      "It has joined the same queue as the rest of reality.",
++      "The trigger has spoken. The gate may remain silent.",
++      "Automation does not come with exemption paperwork.",
++      "The scheduler has done its bit. Evidence remains fashionable.",
++      "An interval is not a diploma in save integrity.",
++      "The game still insists on being consulted.",
++      "Polite automation. A rare and suspicious creature.",
++      "It queued a step, not an entire success story.",
++      "Cooldown has entered the conversation, as it should.",
++      "This is where automatic becomes administratively pending.",
++      "A new file has not been conjured by this announcement.",
++      "Your progress deserves evidence, not a motivational notification.",
++    },
++    [2]={
++      "The damn scheduler handed work to the guarded queue.",
++      "Automatic does not mean the locks stopped giving a shit.",
++      "The trigger fired. The damn file is still unconfirmed.",
++      "Your manual work gets priority. Fuck queue fights.",
++      "Automation is waiting its damn turn.",
++      "One handoff. No bullshit completion claim.",
++      "The gate still needs a damn readiness check.",
++      "The scheduler can count. It cannot certify shit.",
++      "Native locks remain in charge of their damn permission.",
++      "This is an automatic queue entry, not fucking magic.",
++      "Cooldown stays on duty. No burst of bullshit.",
++      "The intro guard still applies, for fucks sake.",
++      "Cancel the damn entry if you do not want it.",
++      "The trigger has been consumed. No repeated shitstorm.",
++      "An automatic thought is now a pending damn task.",
++      "Fresh checks before dispatch. Fuck blind assumptions.",
++      "No save-file proof comes with this damn toast.",
++      "The queue still waits for the game to permit shit.",
++      "The scheduler has paperwork, not supernatural fucking powers.",
++      "A queued checkpoint is still a queued damn checkpoint.",
++    },
++  },
++  submitted={
++    [0]={
++      "The dispatch call accepted this request.",
++      "A usable save file has not been independently verified.",
++      "Check the resulting file and reload separately.",
++      "Submission is separate from write completion.",
++      "Guardian retains unknown write and reload evidence.",
++      "The queued entry has left the dispatch lane.",
++      "This notice reports the request handoff only.",
++      "File creation still needs independent observation.",
++      "Quest progression requires a separate gameplay check.",
++      "No reload verification is attached to this notice.",
++      "The engine was asked for a checkpoint.",
++      "Check diagnostics for the observed dispatch state.",
++      "This is not a save-integrity certificate.",
++      "The request was sent after its dispatch checks.",
++      "Engine completion hints are separate observations.",
++      "Further save activity can occur independently.",
++      "Checkpoint submission does not prove serialization correctness.",
++      "Inventory and position need a real reload check.",
++      "The queue does not infer a written file from this handoff.",
++      "Retain a known recovery copy until testing is complete.",
++    },
++    [1]={
++      "The paperwork left the building. Evidence has not returned.",
++      "A sent message is not a completed miracle.",
++      "The engine has been asked. Applause can wait.",
++      "The queue has discharged its tiny administrative duty.",
++      "Certainty would require the scandalous act of checking a file.",
++      "One handoff, several entirely separate questions.",
++      "The gate said go. It did not write a warranty.",
++      "The engine received a suggestion with excellent paperwork.",
++      "A notification is not qualified to inspect your inventory.",
++      "Your confidence may proceed after the reload test.",
++      "We have submission. The documentary evidence remains shy.",
++      "No confetti has been authorized by actual file evidence.",
++      "The request has gone ahead of the certainty.",
++      "Queue status has improved. Reality still needs checking.",
++      "The engine gets to do the next part.",
++      "A little less waiting, exactly the same need for evidence.",
++      "The request left. The assumptions were asked to stay behind.",
++      "This sentence has not personally reloaded your character.",
++      "Dispatch happened. Grand conclusions remain out of office.",
++      "The queue is finished speaking. The file gets the last word.",
++    },
++    [2]={
++      "The damn dispatch call accepted the handoff.",
++      "Check the fucking file before declaring victory.",
++      "Submission is not proof the game wrote shit correctly.",
++      "The engine got the request. No bullshit warranty included.",
++      "The queue did its damn part. Reload evidence is separate.",
++      "No fucking confetti until the file has evidence.",
++      "The request was sent. Certainty still needs work, damn it.",
++      "A toast cannot inspect your fucking inventory.",
++      "Actual progression checks still matter. Shocking shit.",
++      "The handoff is recorded. The damn write is not certified.",
++      "The engine was asked. That is the whole fucking claim.",
++      "Save integrity does not come free with this shit.",
++      "Queue done talking. The damn engine has the next move.",
++      "Keep the assumptions on a fucking leash.",
++      "No invented reload success for this shit.",
++      "The dispatch gate opened. It did not sign a damn guarantee.",
++      "You have a handoff, not a magical fucking recovery proof.",
++      "Check position and objectives after a real damn reload.",
++      "The request moved forward. The evidence did not grow fucking wings.",
++      "Completion still needs confirmation. Read the damn first sentence.",
++    },
++  },
++  expired={
++    [0]={
++      "The queue time limit was reached.",
++      "This queued entry is no longer pending.",
++      "Native permission did not release this entry in time.",
++      "You can make another request when conditions permit.",
++      "The expiry concerns this queued entry only.",
++      "Other engine save activity remains separate.",
++      "No write outcome is inferred from this queue timeout.",
++      "The queue removed the expired entry.",
++      "A new request will receive fresh dispatch checks.",
++      "The configured waiting period has ended.",
++      "The dispatch lane did not submit this expired entry.",
++      "Check queue diagnostics for the last gate.",
++      "Expiry does not verify or invalidate other save files.",
++      "The pending timer reached its boundary.",
++      "This entry cannot be dispatched later.",
++      "No delayed retry will be made for this expired entry.",
++      "Existing recovery copies are unaffected by this status.",
++      "The queue is no longer waiting on this entry.",
++      "Another attempt requires a new request.",
++      "The time limit ended this queue lifecycle.",
++    },
++    [1]={
++      "The waiting room has a closing time. Apparently.",
++      "The gate took longer than the queue was willing to age.",
++      "An administrative deadline has achieved something.",
++      "Even pending paperwork eventually retires.",
++      "The queue has declined to wait until the heat death of the universe.",
++      "The timer found its limit before the gate found enthusiasm.",
++      "Waiting has concluded without a dispatch ceremony.",
++      "This queue entry is now historical paperwork.",
++      "The deadline has a firmer personality than the gate.",
++      "You may try again. The old entry will not haunt the queue.",
++      "The gate remained unavailable past its appointment.",
++      "The queue has ended this particular staring contest.",
++      "No delayed cameo from this entry later.",
++      "The timer has finally contributed a decision.",
++      "Bureaucracy has discovered an ending.",
++      "The wait ended. Claims about other files did not begin.",
++      "This item has left the queue through the least exciting door.",
++      "The clock was, regrettably, serious.",
++      "The queue has stopped preserving this little ambition.",
++      "A fresh attempt will need fresh paperwork.",
++    },
++    [2]={
++      "The damn timer ran out.",
++      "The gate outwaited the fucking queue.",
++      "This entry is done waiting for permission. Shit happens.",
++      "No delayed bullshit dispatch from this expired entry.",
++      "The time limit means something, damn it.",
++      "The queue refused to wait forever. Fuck eternity.",
++      "That pending entry has reached its damn deadline.",
++      "The clock finished the fucking argument.",
++      "The gate stayed unavailable too damn long for this entry.",
++      "Another attempt needs a new request, not wishful shit.",
++      "The expired entry is out of the damn queue.",
++      "The timer has closed this particular bullshit meeting.",
++      "No future surprise from this dead-end damn wait.",
++      "The queue timed out, not your entire fucking save history.",
++      "Expiry says nothing about other files. Keep the damn scope straight.",
++      "This entry will not linger and ambush the fucking dispatch lane.",
++      "The deadline won. The damn gate can keep its opinion.",
++      "The waiting period ended. No bullshit resurrection of this entry.",
++      "Your next attempt gets fresh checks, for fucks sake.",
++      "The queue has dropped this expired damn task.",
++    },
++  },
++  cancelled={
++    [0]={
++      "This pending entry has been removed.",
++      "The queue will not dispatch this cancelled entry.",
++      "Other save activity is unaffected by this queue status.",
++      "Any new attempt will need a new request.",
++      "The cancellation concerns this queue lifecycle only.",
++      "The pending slot has been cleared.",
++      "No delayed retry remains for this entry.",
++      "Safety or user action ended this pending work.",
++      "Write outcomes for other requests remain separate.",
++      "This notice does not certify any save-file state.",
++      "The queue has stopped waiting on this entry.",
++      "Check diagnostics for the cancellation reason.",
++      "Another trigger can be evaluated under its normal guards.",
++      "The cancelled entry cannot be submitted later.",
++      "Existing recovery copies remain outside this queue operation.",
++      "The current pending work was explicitly cleared.",
++      "Dispatch eligibility will be checked afresh for new work.",
++      "The queue lifecycle ended without further retries.",
++      "This entry is no longer eligible for dispatch.",
++      "No completion outcome is inferred from cancellation.",
++    },
++    [1]={
++      "The queue has accepted the concept of no.",
++      "This little piece of paperwork is going nowhere.",
++      "One less pending ambition in the waiting room.",
++      "The queue has stopped keeping the seat warm.",
++      "A decision was made. The entry has taken it personally.",
++      "The cancelled entry will not arrange a surprise return.",
++      "Administrative closure, with considerably less drama.",
++      "This item has been excused from further waiting.",
++      "The queue has tidied away this particular possibility.",
++      "No delayed cameo. How refreshingly literal.",
++      "The pending list has received an edit.",
++      "One queue lifecycle, now with an ending.",
++      "The queue respects cancellation. A novel social skill.",
++      "This task is no longer considering its options.",
++      "It has left the waiting room without collecting a dispatch.",
++      "The pending entry has been politely uninvited.",
++      "No assumptions about unrelated files were harmed.",
++      "A new attempt will need a new ticket.",
++      "The queue has stopped arguing for this entry.",
++      "Cancellation has done precisely what the label suggested.",
++    },
++    [2]={
++      "That damn entry is out of the queue.",
++      "No delayed bullshit from this cancelled task.",
++      "The queue heard no and respected it. Fucking remarkable.",
++      "The pending slot has been cleared, damn it.",
++      "This entry is not coming back for a fucking encore.",
++      "One less task waiting around like shit in a hallway.",
++      "The queue has stopped entertaining this damn entry.",
++      "Cancel means cancel. No sneaky fucking retry.",
++      "The pending work is cleared. That is the whole damn claim.",
++      "Nothing about unrelated files is being certified by this shit.",
++      "You want another attempt, make a new damn request.",
++      "The queue has closed this fucking tab.",
++      "Safety or user action ended this task. No bullshit comeback.",
++      "This queue entry has been told to fuck off.",
++      "The cancelled task will not sneak through the damn gate.",
++      "Another trigger still needs its own fucking checks.",
++      "No imaginary completion story attached to this shit.",
++      "The queue stopped waiting. The damn diagnostics have the reason.",
++      "This pending entry has left the fucking schedule.",
++      "The cancelled work is finished being a damn possibility.",
++    },
++  },
++  error={
++    [0]={
++      "The operation did not provide a confirmed completion.",
++      "Check the support report for the recorded failure code.",
++      "No usable-file claim can be made from this result.",
++      "This error is distinct from save-file verification.",
++      "The queue cannot certify a completed write.",
++      "Inspect the current lifecycle before retrying.",
++      "Existing recovery copies may help with further investigation.",
++      "No automatic restore will be performed.",
++      "Other engine activity remains independently observable.",
++      "The reported failure does not identify every possible engine outcome.",
++      "Collect fresh logs before diagnosing the game state.",
++      "The current request needs review.",
++      "A retry requires fresh permission checks.",
++      "This notice does not prove a save file is missing.",
++      "Write and reload verification remain separate tasks.",
++      "The support snapshot preserves bounded diagnostic state.",
++      "No quest facts will be changed to hide the failure.",
++      "Check the dispatch and bridge state.",
++      "The recorded error is not a progression verdict.",
++      "Keep a recovery copy while investigating.",
++    },
++    [1]={
++      "The paperwork has returned with a complaint.",
++      "Certainty has declined to attend this meeting.",
++      "The support report may have more substance than optimism.",
++      "The queue is reporting a problem, not writing fiction.",
++      "An error message is not a forensic examination of your files.",
++      "The diagnosis needs evidence. Dreadfully unfashionable.",
++      "Please consult reality before inventing the ending.",
++      "The bridge has contributed an administrative objection.",
++      "The next step is inspection, not a confidence speech.",
++      "No automatic miracle restore has been scheduled.",
++      "This is where the logs earn their otherwise questionable existence.",
++      "The queue would prefer evidence over dramatic conclusions.",
++      "A retry is an option. Assumptions are not a repair tool.",
++      "The error has supplied less certainty than one might hope.",
++      "No file has been personally interviewed by this sentence.",
++      "The support snapshot has the least theatrical version.",
++      "An error can report its own limits. Imagine that.",
++      "The operation has requested a more qualified investigation.",
++      "This notification refuses to manufacture a happy ending.",
++      "Please keep the recovery copy out of the optimism department.",
++    },
++    [2]={
++      "Check the damn support report.",
++      "No bullshit claim about whether a file was written.",
++      "The bridge reported a problem. Inspect the fucking evidence.",
++      "An error is not permission to invent shit about your files.",
++      "Keep the recovery copy and read the damn logs.",
++      "No fucking automatic restore is happening behind your back.",
++      "The request needs review, not a bullshit victory speech.",
++      "The outcome needs evidence. That is the damn point.",
++      "Fresh checks before a retry, for fucks sake.",
++      "This error does not certify that anything was fucking lost.",
++      "The support snapshot has the bounded details, damn it.",
++      "No quest flags are getting mangled to hide this shit.",
++      "Inspect the bridge and dispatch state before guessing, damn it.",
++      "Written and reloaded are separate fucking questions.",
++      "The queue has a problem, not supernatural fucking knowledge.",
++      "Unconfirmed means there is still shit to check.",
++      "The error report comes without an invented damn ending.",
++      "The logs get to do some actual fucking work now.",
++      "Do not turn one error into a whole fictional shitstorm.",
++      "Keep the evidence. Fuck unsupported guarantees.",
++    },
++  },
++}
++function M.get(kind,tone,body)
++  if type(kind)~='string' or not tails[kind] or (tone~=0 and tone~=1 and tone~=2) or (body~=0 and body~=1 and body~=2) then return nil end
++  local result={};for index,tail in ipairs(tails[kind][tone]) do result[index]=prefixes[kind]..tail end
++  return result
++end
++function M.inventory()
++  return {pools=54,entries=1080,distinct_texts=360,events=6,tones=3,body_profiles=3,messages_per_pool=20,body_wording='neutral_shared_across_body_pools',scope='request_status_only'}
++end
++return M
+--- preRC1/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_messages.lua
++++ preRC2/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_messages.lua
+@@ -0,0 +1,177 @@
++-- Optional pure request-status notices. No Game/CET/IO calls or save policy.
++-- Only a literal-true UI bridge handoff commits a shuffle choice. That handoff
++-- says nothing about actual visibility, file writes, reloads or progression.
++local library=require('status_message_library')
++local M={}
++local MAX=2147483647
++local TTL,COOLDOWN,PENDING_CAPACITY,HISTORY_CAPACITY=10,2,16,128
++local priority={queued=1,auto_queued=1,cancelled=2,submitted=3,expired=4,error=5}
++local transitions={queued={submitted=true,expired=true,cancelled=true,error=true},
++  auto_queued={submitted=true,expired=true,cancelled=true,error=true}}
++local function integer(v,low,high)
++  return type(v)=='number' and v==v and v>=low and v<=high and v==math.floor(v)
++end
++local function clock(v)
++  return type(v)=='number' and v==v and v>=0 and v<=1000000000000
++end
++local function increment(v,by) return math.min(MAX,v+(by or 1)) end
++local function random(state,limit)
++  -- Park-Miller/Schrage keeps intermediates exact in both Lua5.1 doubles and
++  -- Lua5.3 integer hosts. It never consumes the process-wide math.random state.
++  local high=math.floor(state/127773)
++  local value=16807*(state-high*127773)-2836*high
++  if value<=0 then value=value+2147483647 end
++  return value,(value%limit)+1
++end
++
++function M.new(seed)
++  local rng=integer(seed,1,2147483646) and seed or 1
++  local enabled,tone,session=false,0,0
++  local pending,count,sequence={},0,0
++  local history,historyOrder,highWater={},{},0
++  local bags={}
++  local lastClock,lastAttempt=nil,nil
++  local epoch,draining=0,false
++  local accepted,failed,dropped,suppressed=0,0,0,0
++  local lastPool,lastKind='none','none'
++  local api={}
++  local function discard()
++    dropped=increment(dropped,count)
++    pending={};count=0
++  end
++  local function advance(now)
++    if not clock(now) or (lastClock~=nil and now<lastClock) then
++      discard();epoch=epoch+1;lastClock=clock(now) and now or nil;lastAttempt=nil
++      return false
++    end
++    lastClock=now
++    for serial,event in pairs(pending) do
++      if now-event.created>=TTL then
++        pending[serial]=nil;count=count-1;dropped=increment(dropped)
++      end
++    end
++    return true
++  end
++  local function trimPending(kind)
++    if count<PENDING_CAPACITY then return true end
++    local worst
++    for serial,event in pairs(pending) do
++      if not worst or priority[event.kind]<priority[worst.kind] or
++          (priority[event.kind]==priority[worst.kind] and event.sequence<worst.sequence) then worst=event end
++    end
++    if worst and priority[kind]<priority[worst.kind] then dropped=increment(dropped);return false end
++    if worst then pending[worst.serial]=nil;count=count-1;dropped=increment(dropped) end
++    return true
++  end
++  local function choice(key)
++    local old=bags[key]
++    local nextBag={order={},index=1,last=nil}
++    local nextRng=rng
++    if old then
++      nextBag.index=old.index;nextBag.last=old.last
++      for i,value in ipairs(old.order) do nextBag.order[i]=value end
++    end
++    if not old or nextBag.index>20 then
++      for i=1,20 do nextBag.order[i]=i end
++      for i=20,2,-1 do
++        local j
++        nextRng,j=random(nextRng,i)
++        nextBag.order[i],nextBag.order[j]=nextBag.order[j],nextBag.order[i]
++      end
++      if nextBag.order[1]==nextBag.last then
++        nextBag.order[1],nextBag.order[2]=nextBag.order[2],nextBag.order[1]
++      end
++      nextBag.index=1
++    end
++    local index=nextBag.order[nextBag.index]
++    nextBag.index=nextBag.index+1;nextBag.last=index
++    return index,nextBag,nextRng
++  end
++  function api:configure(value,voice)
++    if type(value)~='boolean' or not integer(voice,0,2) then return false,'invalid_configuration' end
++    if value~=enabled or voice~=tone then
++      discard();epoch=epoch+1
++      enabled=value;tone=voice
++    end
++    return true
++  end
++  function api:reset(value)
++    local nextSession=integer(value,1,MAX) and value or 0
++    discard();epoch=epoch+1;lastClock=nil;lastAttempt=nil
++    if nextSession~=session then history={};historyOrder={};highWater=0 end
++    session=nextSession
++    return true
++  end
++  function api:enqueue(kind,current,serial,now)
++    if not enabled then return false,'disabled' end
++    if not priority[kind] or not integer(current,1,MAX) or current~=session or not integer(serial,1,MAX) then
++      suppressed=increment(suppressed);return false,'invalid_event'
++    end
++    if not advance(now) then return false,'invalid_clock' end
++    local previous=history[serial]
++    if previous then
++      if not transitions[previous] or transitions[previous][kind]~=true then
++        suppressed=increment(suppressed);return false,'duplicate_or_regression'
++      end
++    elseif serial<=highWater then
++      -- Eviction never makes a stale serial look like fresh work.
++      suppressed=increment(suppressed);return false,'stale_serial'
++    else
++      highWater=serial
++      historyOrder[#historyOrder+1]=serial
++      if #historyOrder>HISTORY_CAPACITY then
++        local expired=table.remove(historyOrder,1)
++        history[expired]=nil
++      end
++    end
++    history[serial]=kind
++    epoch=epoch+1
++    if pending[serial]==nil then
++      if not trimPending(kind) then return false,'capacity_priority' end
++      count=count+1
++    end
++    sequence=sequence+1
++    pending[serial]={kind=kind,session=current,serial=serial,created=now,sequence=sequence}
++    return true
++  end
++  function api:drain(now,body,emit)
++    if draining then return 'busy' end
++    if not enabled then return 'disabled' end
++    if not advance(now) then return 'invalid_clock' end
++    if count==0 then return 'idle' end
++    if lastAttempt~=nil and now-lastAttempt<COOLDOWN then return 'throttled' end
++    if type(emit)~='function' then return 'emitter_unavailable' end
++    if not integer(body,0,2) then body=0 end
++    local event
++    for _,candidate in pairs(pending) do
++      if not event or priority[candidate.kind]>priority[event.kind] or
++          (priority[candidate.kind]==priority[event.kind] and candidate.sequence<event.sequence) then event=candidate end
++    end
++    local key=event.kind..'/'..tone..'/'..body
++    local loaded,pool=pcall(library.get,event.kind,tone,body)
++    lastAttempt=now
++    if not loaded or type(pool)~='table' or #pool~=20 then failed=increment(failed);return 'emitter_failed' end
++    local index,nextBag,nextRng=choice(key)
++    if type(pool[index])~='string' then failed=increment(failed);return 'emitter_failed' end
++    local generation=epoch
++    draining=true
++    local ok,value=pcall(emit,pool[index])
++    draining=false
++    if epoch~=generation or not enabled or pending[event.serial]~=event or session~=event.session then return 'interrupted' end
++    if not ok or value~=true then failed=increment(failed);return 'emitter_failed' end
++    bags[key]=nextBag;rng=nextRng
++    pending[event.serial]=nil;count=count-1
++    accepted=increment(accepted);lastPool=key;lastKind=event.kind;epoch=epoch+1
++    return 'emitter_accepted'
++  end
++  function api:status()
++    return {enabled=enabled,tone=tone,session=session,pending=count,pending_capacity=PENDING_CAPACITY,
++      tracked_requests=#historyOrder,history_capacity=HISTORY_CAPACITY,serial_high_water=highWater,
++      accepted=accepted,failed=failed,dropped=dropped,suppressed=suppressed,
++      last_pool=lastPool,last_kind=lastKind,rng_state=rng,
++      acceptance_scope='ui_bridge_handoff_only',ui_visibility='unknown',
++      write_status='Unknown',reload_status='Unknown',ttl_seconds=TTL,throttle_seconds=COOLDOWN}
++  end
++  return api
++end
++return M
+--- preRC1/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua
++++ preRC2/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua
+@@ -30,16 +30,17 @@
+   stabilizing=true,cancelled_by_user=true,disabled=true,expired=true,dispatch_rejected=true,
+   bridge_unavailable=true,player_unavailable=true,session_changed=true,replaced=true,
+   tracking_stopped=true,preview=true,callback_returned=true,executing=true,submitted=true,
+-  blocked_intro=true,unknown=true,exploration_interval=true,post_combat=true,vehicle_exit=true,quest_milestone=true,
+-  read_failed=true,write_failed=true,invalid_settings=true,invalid_bank=true,unreadable_bank=true,
++  blocked_intro=true,unknown=true,exploration_interval=true,post_combat=true,vehicle_exit=true,quest_milestone=true,apartment_entry=true,
++  read_failed=true,write_failed=true,invalid_settings=true,invalid_bank=true,unreadable_bank=true,unsupported_schema=true,
+   invalid_label=true,profile_not_found=true,bank_full=true,sensor_unavailable=true,
+-  scheduler_unavailable=true,dispatch_error=true,report_failed=true,
++  scheduler_unavailable=true,status_unavailable=true,dispatch_error=true,report_failed=true,
+   observations_unavailable=true,session_unavailable=true,pause_unknown=true,
+   combat_unknown=true,vehicle_unknown=true,phone_unknown=true,native_state_unknown=true,
+   stability_unknown=true,queue_unknown=true,clock_interrupted=true,configuration_changed=true,
+   session_baseline=true,player_queue_priority=true,phone_active=true,combat_active=true,
+   vehicle_active=true,native_save_lock=true,native_unlock_stabilizing=true,cooldown=true,
+-  watching_supported_triggers=true,retry_delay=true,request_callback_unavailable=true}
++  watching_supported_triggers=true,retry_delay=true,request_callback_unavailable=true,
++  safety_interrupted=true,profile_applied=true}
+ local reasonAliases={['configuration changed']='configuration_changed',['observations unavailable']='observations_unavailable',
+   ['session unavailable']='session_unavailable',['player unavailable']='player_unavailable',
+   ['bridge unavailable']='bridge_unavailable',['introduction protected or unknown']='blocked_intro',
+@@ -56,13 +57,15 @@
+ local function cause(value) return member(reasonAliases[value] or value,causes) end
+ local gates={idle=true,disabled=true,preview=true,native_lock_or_unknown=true,stabilizing=true,
+   blocked_intro=true,bridge_unavailable=true,player_unavailable=true,session_changed=true,
+-  expired=true,cancelled=true,dispatch_rejected=true}
++  expired=true,cancelled=true,dispatch_rejected=true,safety_interrupted=true,profile_applied=true}
+ local gateAliases={['Idle']='idle',['Disabled']='disabled',['Preview: dry run']='preview',
+   ['Waiting: native save lock or unknown']='native_lock_or_unknown',
+   ['Native unlocked: stabilization']='stabilizing',['Prologue protected or facts unknown']='blocked_intro',
+   ['Bridge unavailable']='bridge_unavailable',['Player unavailable']='player_unavailable',
+   ['Player session changed']='session_changed',['Expired without save']='expired',
+-  ['Cancelled by user']='cancelled',['Error: deferred dispatch rejected']='dispatch_rejected'}
++  ['Cancelled by user']='cancelled',['Error: deferred dispatch rejected']='dispatch_rejected',
++  ['Autosave interrupted by safety state']='safety_interrupted',['Autosave disabled']='disabled',
++  ['Profile applied']='profile_applied'}
+ local categories={[0]='Exploration',[1]='Combat',[2]='Vehicle',[3]='Vehicle combat',
+   [4]='Stealth',[5]='Phone call',[7]='Prologue Protection',[12]='Prologue Protection / Corpo call'}
+ local function pool(value)
+@@ -79,6 +82,80 @@
+   if type(value)~='string' or #value>96 then return 'unknown' end
+   if value:match('^R%d+%-%d+:G%d+:%d+:%d+$') or value:match('^local_%d+:G%d+:%d+:%d+$') then return value end
+   return 'unknown'
++end
++local function observerSummary(value)
++  local outer=tableValue(value)
++  local bridge,quest=tableValue(outer.guardian),tableValue(outer.quest)
++  return {
++    guardian={attempted=boolean(bridge.attempted),requested=integer(bridge.requested,0,10),
++      observed=integer(bridge.observed,0,10),unconfirmed=integer(bridge.unconfirmed,0,10),
++      unavailable=integer(bridge.unavailable,0,10),buffered=integer(bridge.buffered,0,128),
++      capacity=integer(bridge.capacity,0,128),overflow=boolean(bridge.overflow),
++      dropped=integer(bridge.dropped,0,2147483647),ledger_faults=integer(bridge.ledgerFaults,0,2147483647)},
++    quest={attempted=boolean(quest.attempted),requested=boolean(quest.requested),
++      callback_observed=boolean(quest.callbackObserved),unconfirmed=boolean(quest.unconfirmed),
++      unavailable=boolean(quest.unavailable),armed=boolean(quest.armed),overflow=boolean(quest.overflow),
++      buffered=integer(quest.buffered,0,64),capacity=integer(quest.capacity,0,64),
++      dedup_count=integer(quest.dedupCount,0,128),dedup_capacity=integer(quest.dedupCapacity,0,128),
++      resolved=integer(quest.resolved,0,2147483647),dropped=integer(quest.dropped,0,2147483647),
++      saturated=integer(quest.saturated,0,2147483647),faults=integer(quest.faults,0,2147483647)}}
++end
++local LOCK_CODES={Nothing=true,Combat=true,Scene=true,Quest=true,Script=true,Boundary=true,
++  MainMenu=true,LoadingScreen=true,PlayerStateMachine=true,PlayerState=true,Tier=true,
++  NotEnoughSlots=true,NotEnoughSpace=true,PlayerOnMovingPlatform=true}
++local function lockSummary(value)
++  local locks=tableValue(value)
++  local codes=locks.codes
++  local result={known=boolean(locks.known),overflow=boolean(locks.overflow),reason_codes={},max_reasons=16}
++  local plain=type(codes)=='table' and getmetatable(codes)==nil
++  if not plain then
++    if result.known==true then result.known=false end
++    return result
++  end
++  local count,highest,valid=0,0,true
++  -- Inspect a bounded set of keys; sparse/oversized or non-list data cannot
++  -- be advertised as a complete native lock inventory.
++  for key in pairs(codes) do
++    count=count+1
++    if count>16 then result.overflow=true;valid=false;break end
++    if integer(key,1,16)=='unknown' then valid=false
++    else highest=math.max(highest,key) end
++  end
++  if highest~=count then valid=false end
++  for index=1,16 do
++    local code=rawget(codes,index)
++    if code~=nil then
++      if type(code)=='string' and LOCK_CODES[code] then
++        result.reason_codes[#result.reason_codes+1]=code
++      else
++        result.reason_codes[#result.reason_codes+1]='Unknown';valid=false
++      end
++    end
++  end
++  if not valid or result.overflow~=false then
++    if result.known==true then result.known=false end
++  end
++  return result
++end
++local STATUS_KINDS={queued=true,auto_queued=true,submitted=true,expired=true,cancelled=true,error=true,none=true}
++local function statusPool(value)
++  if value=='none' then return value end
++  if type(value)~='string' or #value>24 then return 'unknown' end
++  local kind,tone,body=value:match('^([a-z_]+)/([0-2])/([0-2])$')
++  if not kind or kind=='none' or not STATUS_KINDS[kind] then return 'unknown' end
++  return value
++end
++local function statusSummary(value)
++  local s=tableValue(value)
++  return {enabled=boolean(s.enabled),tone=integer(s.tone,0,2),session=integer(s.session,0,2147483647),
++    pending=integer(s.pending,0,16),pending_capacity=integer(s.pending_capacity,0,16),
++    tracked_requests=integer(s.tracked_requests,0,128),history_capacity=integer(s.history_capacity,0,128),
++    serial_high_water=integer(s.serial_high_water,0,2147483647),
++    accepted_ui_handoffs=integer(s.accepted,0,2147483647),failed=integer(s.failed,0,2147483647),
++    dropped=integer(s.dropped,0,2147483647),suppressed=integer(s.suppressed,0,2147483647),
++    last_pool=statusPool(s.last_pool),last_kind=member(s.last_kind,STATUS_KINDS),
++    ttl_seconds=integer(s.ttl_seconds,0,10),throttle_seconds=integer(s.throttle_seconds,0,2),
++    acceptance_scope='ui_bridge_handoff_only',ui_visibility='unknown',write_status='Unknown',reload_status='Unknown'}
+ end
+ function M.build(snapshot)
+   local s=tableValue(snapshot)
+@@ -92,7 +169,9 @@
+     facts={q000_done=integer(facts.q000_done,0,2147483647),q001_started=integer(facts.q001_started,0,2147483647)},
+     context={category=integer(s.context,0,12),body=integer(s.body,0,2),
+       combat=observation(sensors.combatKnown,sensors.combatActive),vehicle=observation(sensors.vehicleKnown,sensors.vehicleActive),
+-      phone=observation(sensors.phoneKnown,sensors.phoneActive),paused=boolean(sensors.paused)},
++      phone=observation(sensors.phoneKnown,sensors.phoneActive),paused=boolean(sensors.paused),in_menu=boolean(sensors.inMenu)},
++    observers=observerSummary(s.observers),native_locks=lockSummary(s.locks),
++    status_notifications=statusSummary(s.statusNotifications),
+     queue={pending=boolean(queue.pending),source=member(queue.source,sources),serial=integer(queue.serial,0,2147483647),
+       session=integer(queue.session,0,2147483647),gate=member(gateAliases[queue.gate] or queue.gate,gates),
+       state=member(queue.state,phases),origin=member(queue.origin,{game=true,preview=true,autosave=true}),expires_in=integer(queue.expiresIn,0,120)},
+--- preRC1/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
++++ preRC2/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
+@@ -1,8 +1,21 @@
+-// v0.14.0-preRC1 Release Testing Preview. Deferred/autosave lanes are opt-in.
++// v0.14.0-preRC2 Release Testing Preview. Deferred/autosave lanes are opt-in.
+ // Engine native saving-unlocked state is the release gate; this does not
+ // guarantee that a quest or phone conversation serializes correctly.
+ @addField(PlayerPuppet) public let nlsDeferredEnabled: Bool = false;
+ @addField(PlayerPuppet) public let nlsAutosaveEnabled: Bool = false;
++@addField(PlayerPuppet) private let nlsStatusNotificationsEnabled: Bool = false;
++@addMethod(PlayerPuppet)
++public final func NLSRebornSetStatusNotificationsEnabled(enabled: Bool) -> Void { this.nlsStatusNotificationsEnabled = enabled; }
++@addMethod(PlayerPuppet)
++public final func NLSRebornGetStatusNotificationsEnabled() -> Bool { return this.nlsStatusNotificationsEnabled; }
++@addMethod(PlayerPuppet)
++public final func NLSRebornStatusNotify(message: String) -> Bool {
++  if !this.nlsStatusNotificationsEnabled || !this.NLSRebornGetNotificationsEnabled() || Equals(message, "") { return false; };
++  if !IsDefined(GameInstance.GetUISystem(this.GetGame())) { return false; };
++  PauseMenuGameController.NLSRebornNotify(this.GetGame(), message);
++  return true; // accepted by UI event bridge, not confirmation of display or save completion
++}
++
+ @addField(PlayerPuppet) public let nlsDeferredPending: Bool = false;
+ @addField(PlayerPuppet) public let nlsDeferredSerial: Int32 = 0;
+ @addField(PlayerPuppet) public let nlsDeferredSource: Int32 = 0;
+@@ -33,6 +46,52 @@
+   this.nlsDeferredPending = true;
+   return true;
+ }
++// Explicit diagnostic reads do not alter save policy or cached DF context.
++@addMethod(PlayerPuppet)
++public final func NLSRebornDiagnosticDFState() -> ref<NLSRebornDFState> { return NLSRebornDFPolicy.Read(this); }
++@addMethod(PlayerPuppet)
++public final func NLSRebornSaveLockSummary() -> String {
++  let locks: array<gameSaveLock>;
++  let locked: Bool = GameInstance.IsSavingLocked(this.GetGame(), locks);
++  if ArraySize(locks) > 16 { return "overflow"; };
++  if !locked && ArraySize(locks) == 0 { return "unlocked"; };
++  if !locked || ArraySize(locks) == 0 { return "unknown"; };
++  let result: String = "locked";
++  let index: Int32 = 0;
++  while index < ArraySize(locks) {
++    if Equals(locks[index].reason, gameSaveLockReason.Nothing) { result = result + "|Nothing"; }
++    else if Equals(locks[index].reason, gameSaveLockReason.Combat) { result = result + "|Combat"; }
++    else if Equals(locks[index].reason, gameSaveLockReason.Scene) { result = result + "|Scene"; }
++    else if Equals(locks[index].reason, gameSaveLockReason.Quest) { result = result + "|Quest"; }
++    else if Equals(locks[index].reason, gameSaveLockReason.Script) { result = result + "|Script"; }
++    else if Equals(locks[index].reason, gameSaveLockReason.Boundary) { result = result + "|Boundary"; }
++    else if Equals(locks[index].reason, gameSaveLockReason.MainMenu) { result = result + "|MainMenu"; }
++    else if Equals(locks[index].reason, gameSaveLockReason.LoadingScreen) { result = result + "|LoadingScreen"; }
++    else if Equals(locks[index].reason, gameSaveLockReason.PlayerStateMachine) { result = result + "|PlayerStateMachine"; }
++    else if Equals(locks[index].reason, gameSaveLockReason.PlayerState) { result = result + "|PlayerState"; }
++    else if Equals(locks[index].reason, gameSaveLockReason.Tier) { result = result + "|Tier"; }
++    else if Equals(locks[index].reason, gameSaveLockReason.NotEnoughSlots) { result = result + "|NotEnoughSlots"; }
++    else if Equals(locks[index].reason, gameSaveLockReason.NotEnoughSpace) { result = result + "|NotEnoughSpace"; }
++    else if Equals(locks[index].reason, gameSaveLockReason.PlayerOnMovingPlatform) { result = result + "|PlayerOnMovingPlatform"; }
++    else { result = result + "|Unknown"; };
++    index += 1;
++  };
++  return result;
++}
++@addMethod(PlayerPuppet)
++public final func NLSRebornApartmentState() -> Int32 {
++  let systems: ref<ScriptableSystemsContainer> = GameInstance.GetScriptableSystemsContainer(this.GetGame());
++  if !IsDefined(systems) { return -1; };
++  let prevention: ref<PreventionSystem> = systems.Get(n"PreventionSystem") as PreventionSystem;
++  if !IsDefined(prevention) { return -1; };
++  let district: wref<District> = prevention.GetCurrentDistrict();
++  if !IsDefined(district) { return -1; };
++  let record: ref<District_Record> = district.GetDistrictRecord();
++  if !IsDefined(record) { return -1; };
++  if Equals(record.Type(), gamedataDistrict.LittleChina_VApartment) { return 1; };
++  return 0;
++}
++
+ // Source-backed read-only readiness; unknown services fail closed.
+ @addMethod(PlayerPuppet)
+ public final func NLSRebornPausedState() -> Int32 {
+@@ -378,7 +437,7 @@
+ public final func NLSRebornGetNotificationCategory() -> Int32 { return NLSRebornPolicy.NotificationContext(this.GetGame()); }
+ 
+ public class NLSRebornPolicy {
+-  public static func Version() -> String { return "0.14.0-preRC1"; }
++  public static func Version() -> String { return "0.14.0-preRC2"; }
+   public static func ShuffleSlot(index: Int32, seed: Int32) -> Int32 {
+     let cycle: Int32 = index / 20;
+     let turn: Int32 = index % 20;
+@@ -1885,7 +1944,7 @@
+     if NLSRebornPolicy.AllowForcedCheckpointFallback(this.m_gameInstance) || dfContext > 0 {
+       let queuePlayer: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.m_gameInstance).GetLocalPlayerControlledGameObject() as PlayerPuppet;
+       if IsDefined(queuePlayer) && queuePlayer.NLSRebornDeferredQueue(1) {
+-        if queuePlayer.NLSRebornGetNotificationsEnabled() { PauseMenuGameController.NLSRebornNotify(this.m_gameInstance, "Save queued until normal saving is available."); };
++        if queuePlayer.NLSRebornGetNotificationsEnabled() && !queuePlayer.NLSRebornGetStatusNotificationsEnabled() { PauseMenuGameController.NLSRebornNotify(this.m_gameInstance, "Save queued until normal saving is available."); };
+         return;
+       };
+       GameInstance.GetAutoSaveSystem(this.m_gameInstance).RequestForcedCheckpoint();
+@@ -1915,7 +1974,7 @@
+     if !this.m_quickSaveInProgress && !this.IsSaveFailedNotificationActive() && !this.IsGameSavedNotificationActive() {
+       let queuePlayer: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.m_gameInstance).GetLocalPlayerControlledGameObject() as PlayerPuppet;
+       if IsDefined(queuePlayer) && queuePlayer.NLSRebornDeferredQueue(2) {
+-        if queuePlayer.NLSRebornGetNotificationsEnabled() { PauseMenuGameController.NLSRebornNotify(this.m_gameInstance, "Quicksave queued until normal saving is available."); };
++        if queuePlayer.NLSRebornGetNotificationsEnabled() && !queuePlayer.NLSRebornGetStatusNotificationsEnabled() { PauseMenuGameController.NLSRebornNotify(this.m_gameInstance, "Quicksave queued until normal saving is available."); };
+         return;
+       };
+       GameInstance.GetAutoSaveSystem(this.m_gameInstance).RequestForcedCheckpoint();
+@@ -1947,7 +2006,7 @@
+     if !this.m_quickSaveInProgress {
+       let queuePlayer: ref<PlayerPuppet> = this.GetPlayerControlledObject() as PlayerPuppet;
+       if IsDefined(queuePlayer) && queuePlayer.NLSRebornDeferredQueue(2) {
+-        if queuePlayer.NLSRebornGetNotificationsEnabled() { PauseMenuGameController.NLSRebornNotify(this.GetPlayerControlledObject().GetGame(), "Quicksave queued until normal saving is available."); };
++        if queuePlayer.NLSRebornGetNotificationsEnabled() && !queuePlayer.NLSRebornGetStatusNotificationsEnabled() { PauseMenuGameController.NLSRebornNotify(this.GetPlayerControlledObject().GetGame(), "Quicksave queued until normal saving is available."); };
+         return;
+       };
+       GameInstance.GetAutoSaveSystem(this.GetPlayerControlledObject().GetGame()).RequestForcedCheckpoint();

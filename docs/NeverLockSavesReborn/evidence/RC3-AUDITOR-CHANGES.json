@@ -1,0 +1,32 @@
+[
+  {
+    "path": "tools/NLSRInstallAudit/README.md",
+    "baseline_sha256": "63d7866014d3725ed5aeb0801ce3dd770bc29fba071191086aeae60b89747740",
+    "candidate_sha256": "48972f76058e9a2d9a84061cbfd87db0393fe88deef024e26ef04999bd311ce1"
+  },
+  {
+    "path": "tools/NLSRInstallAudit/VALIDATION.md",
+    "baseline_sha256": "c0cf64eb3cf7edea1fa987d287f9f6b37bf5a410333dcabc7f1a9f96dafeaded",
+    "candidate_sha256": "356b897acec29d78c37278af50e58160e87ea8d372a3b53a67cef3712c720398"
+  },
+  {
+    "path": "tools/NLSRInstallAudit/audit_installation.py",
+    "baseline_sha256": "15927ddf87c6874845b0466d47ce9943a228d688f151ee927e37bddf1b498c94",
+    "candidate_sha256": "c6401112bc9f6bf44ae283200a25beaaa92a85e5096fd5917503186565438ae2"
+  },
+  {
+    "path": "tools/NLSRInstallAudit/runtime_inventory.json",
+    "baseline_sha256": "c8a9d0804b49a45078264f6201a5a613cc21c091a40cd4bf1f70b77cfb5d4aff",
+    "candidate_sha256": "f2247af5195e9d0932a2bbc13fed52f3cafd2e60b65e4e80819fba47b2c8aef2"
+  },
+  {
+    "path": "tools/NLSRInstallAudit/tests/test_author.py",
+    "baseline_sha256": "d88edd0e547c5b2eb19459ce204beae70165af2976416f1f3b40a5f0a379661d",
+    "candidate_sha256": "437b782c450b3e40f76008450a6aaf99d2472d8392a6676f31a5239d7c219e77"
+  },
+  {
+    "path": "tools/NLSRInstallAudit/tests/test_independent.py",
+    "baseline_sha256": "fb748dfe5fd0a496df0420a745a43fe6d9f630a6ea7eecc7961efb3b0a617331",
+    "candidate_sha256": "11061b77cf4168389d9fb1e7d13522679d1fce147ba5773c5921257ec447ff11"
+  }
+]

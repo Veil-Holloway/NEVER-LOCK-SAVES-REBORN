@@ -1,0 +1,16 @@
+{
+  "runtime_and_companion_changed_source_paths": [
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
+    "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds"
+  ],
+  "changed_existing_methods": [
+    "Version",
+    "HandlePressToSaveGame",
+    "HandlePressToQuickSaveGame",
+    "HandleQuickSave"
+  ],
+  "added_methods": [
+    "HandleSmartBlockedSave"
+  ],
+  "queue_gate_and_dispatch_byte_equal": true
+}

@@ -1,0 +1,37 @@
+{
+  "scope": "Independent exact-byte runtime preservation and real-filesystem CLI probes; no compiler/game execution",
+  "passed": true,
+  "runtime_files": 16,
+  "lua_files": 13,
+  "redscript_files": 3,
+  "unchanged_runtime_files": 14,
+  "unchanged_companion_files": 5,
+  "annotation_changes": 1,
+  "version_label_changes": 8,
+  "init_sha256": "4049bef1a72415ebd7796e980e7cce2911ad7333dc7ca241f60b01a078648166",
+  "redscript_sha256": "8fca7e488d202bef7a1b8c6b75bdd5e24f726480311ffe59131d11c8c83d9e10",
+  "inventory_sha256": "c8a9d0804b49a45078264f6201a5a613cc21c091a40cd4bf1f70b77cfb5d4aff",
+  "probes": [
+    {
+      "probe": "clean_final_rc2_runtime",
+      "exit": 0,
+      "audit_status": "exact_match",
+      "no_input_writes": true,
+      "private_path_omitted": true
+    },
+    {
+      "probe": "stale_rc1_redscript_rejected",
+      "exit": 1,
+      "audit_status": "drift_or_review",
+      "no_input_writes": true,
+      "private_path_omitted": true
+    },
+    {
+      "probe": "stale_rc1_init_rejected",
+      "exit": 1,
+      "audit_status": "drift_or_review",
+      "no_input_writes": true,
+      "private_path_omitted": true
+    }
+  ]
+}

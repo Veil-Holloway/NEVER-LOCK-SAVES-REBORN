@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "scope": "independent exact-byte source preservation; no gameplay execution",
+  "runtime_files": 16,
+  "lua_files": 13,
+  "redscript_files": 3,
+  "label_only_files": [
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
+      "baseline_sha256": "d01299cf73937deb60f6ae9885182bda65f82a023f0e8b9149e5f9835430cf77",
+      "candidate_sha256": "869800a7ab82ed380090d5a84e78a30b7d79869763ed4e4ffb3669c53f1ef41f"
+    },
+    {
+      "path": "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds",
+      "baseline_sha256": "9a8580e237a9b08c55a2eacdd02262749d1ebe0b840298b165ef2be8ff966365",
+      "candidate_sha256": "293a0089f0d3c7591501497ac813b0f3bb5de7d9da4de4b5e233936049333e3e"
+    }
+  ],
+  "unchanged_helper_files": 5,
+  "baseline_check_groups": 51,
+  "candidate_check_groups": 54,
+  "added_check_groups": [
+    "installation_auditor",
+    "rc1_scope_controls",
+    "rc1_source_freeze"
+  ]
+}

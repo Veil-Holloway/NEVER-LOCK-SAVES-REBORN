@@ -1,0 +1,13 @@
+{
+  "result": "PASS",
+  "assertions": 17499,
+  "core_gender_tone_pools": 54,
+  "core_entries": 1080,
+  "df_gender_tone_pools": 24,
+  "df_entries": 480,
+  "neutral_introduction_tone_pools": 3,
+  "neutral_introduction_entries": 60,
+  "core_sha256": "293a0089f0d3c7591501497ac813b0f3bb5de7d9da4de4b5e233936049333e3e",
+  "df_sha256": "d1cc373bf7a030929745f969528b31774998943e3108c0f8b9b96a09a2b7f350",
+  "scope": "Constrained actual-source execution with explicit integer/CName/ternary lowering and external game doubles. No REDscript compiler, game, save-write or reload evidence."
+}

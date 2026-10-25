@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-24",
+  "scope": "Fresh pinned primary source declarations; no CET/game/native ABI execution",
+  "sources": [
+    {
+      "file": "cet-Scripting.cpp",
+      "blob_sha": "879d7f93c07c4cae3676a268c06d3982fdf54140",
+      "url": "https://github.com/maximegmd/CyberEngineTweaks/blob/ed706fb8518712ffedf6b566e52873b257bc49fb/src/scripting/Scripting.cpp",
+      "full_source_characters": 40583,
+      "excerpts": "128:     globals[\"GetVersion\"] = []() -> std::string\n129:     {\n130:         return CET_GIT_TAG;\n131:     };"
+    },
+    {
+      "file": "cet-LuaSandbox.cpp",
+      "blob_sha": "85e97e345b91bc7444b55a76eee7bb971c9ae7df",
+      "url": "https://github.com/maximegmd/CyberEngineTweaks/blob/ed706fb8518712ffedf6b566e52873b257bc49fb/src/scripting/LuaSandbox.cpp",
+      "full_source_characters": 24165,
+      "excerpts": "45: static constexpr const char* s_cGlobalObjectsWhitelist[] = {\n46:     \"print\",\n47:     \"GetVersion\",\n48:     \"GetDisplayResolution\",\n49:     \"ModArchiveExists\","
+    },
+    {
+      "file": "cet-xmake.lua",
+      "blob_sha": "20de082f0333e565b256c094d097a7cf38ac2482",
+      "url": "https://github.com/maximegmd/CyberEngineTweaks/blob/ed706fb8518712ffedf6b566e52873b257bc49fb/xmake.lua",
+      "full_source_characters": 7573,
+      "excerpts": "102:         configVars.CET_GIT_TAG = os.iorun(\"git describe --tags\"):gsub(\"%s\", \"\")\n103:         configVars.CET_GIT_TAG_LONG = os.iorun(\"git describe --tags --long\"):gsub(\"%s\", \"\")"
+    },
+    {
+      "file": "codeware-Facade.hpp",
+      "blob_sha": "0f0993f8b107cb235898c605fac3510c9626af7b",
+      "url": "https://github.com/psiberx/cp2077-codeware/blob/a652bbbcf6feb65988c67f15f428e9398a3d827c/src/App/Facade.hpp",
+      "full_source_characters": 457,
+      "excerpts": "12:     static bool Require(Red::CString& aVersion);\n13:     static Red::CString GetVersion();\n19: RTTI_DEFINE_CLASS(App::Facade, App::Project::Name, {\n20:     RTTI_ABSTRACT();\n21:     RTTI_METHOD(Require);\n22:     RTTI_METHOD(GetVersion, \"Version\");\n23: });"
+    },
+    {
+      "file": "codeware-Facade.cpp",
+      "blob_sha": "28eae18f8997c94646de4b77b5c716d49cf7f415",
+      "url": "https://github.com/psiberx/cp2077-codeware/blob/a652bbbcf6feb65988c67f15f428e9398a3d827c/src/App/Facade.cpp",
+      "full_source_characters": 398,
+      "excerpts": "11: Red::CString App::Facade::GetVersion()\n12: {\n13:     return Project::Version.to_string().c_str();\n14: }"
+    },
+    {
+      "file": "codeware-Facade.reds",
+      "blob_sha": "1625cb2187c66c24a7a03aba1da96b27d2dbbcda",
+      "url": "https://github.com/psiberx/cp2077-codeware/blob/a652bbbcf6feb65988c67f15f428e9398a3d827c/scripts/Facade.reds",
+      "full_source_characters": 156,
+      "excerpts": "2: public abstract native class Codeware {\n3:     public static native func Require(version: String) -> Bool\n4:     public static native func Version() -> String\n5: }"
+    },
+    {
+      "file": "codeware-Project.hpp.in",
+      "blob_sha": "2effd8c4bd2c42832f928c48c3de60cd455fda17",
+      "url": "https://github.com/psiberx/cp2077-codeware/blob/a652bbbcf6feb65988c67f15f428e9398a3d827c/config/Project.hpp.in",
+      "full_source_characters": 403,
+      "excerpts": "18: constexpr auto Version = semver::from_string_noexcept(\"${VERSION}\").value();"
+    },
+    {
+      "file": "nativeSettings-init.lua",
+      "blob_sha": "7bb56d8afb5914caa1f24b6bf9f72761ae1a95fb",
+      "url": "https://github.com/justarandomguyintheinternet/CP77_nativeSettings/blob/4065b51456f5e3df8f29e1dc3c07edcc294e68e9/nativeSettings/init.lua",
+      "full_source_characters": 64508,
+      "excerpts": "21:     fromInit = false,\n22:     version = 1.97,\n23:     Cron = require(\"Cron\")\n24: }\n1463: return nativeSettings"
+    },
+    {
+      "file": "nativeSettings-README.md",
+      "blob_sha": "57397777c79d63dc1b92317d8730d7aea92f573e",
+      "url": "https://github.com/justarandomguyintheinternet/CP77_nativeSettings/blob/4065b51456f5e3df8f29e1dc3c07edcc294e68e9/README.md",
+      "full_source_characters": 12289,
+      "excerpts": "10: 3. Import it into your mod:\n11: \t```lua\n12: \tnativeSettings = GetMod(\"nativeSettings\")\n13: \t```"
+    }
+  ],
+  "local_dark_future": {
+    "path": "inputs/darkfuture/Main/DFMainSystem.reds",
+    "sha256": "3db27db06985757d95c0aac9e5a20a7bed708548278c503b5b761476b580195c",
+    "observed": "private Float2.0 migration marker; no public versiongetter established"
+  },
+  "not_established": [
+    "RED4ext runtime release getter callable from CET",
+    "redscript compiler release getter callable from CET",
+    "Dark Future public distribution-version getter"
+  ]
+}

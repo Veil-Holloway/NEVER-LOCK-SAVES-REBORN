@@ -1,0 +1,82 @@
+{
+  "evidence_kind": "Primary game-script declarations and matching RTTI; no compiler/game execution",
+  "conclusion": {
+    "incorrect_type": "AutoSaveSystem",
+    "correct_type": "gameAutoSaveSystem",
+    "replacement": "ref<AutoSaveSystem> -> ref<gameAutoSaveSystem>",
+    "method": "GetAutoSaveSystem",
+    "checkpoint_method": "RequestForcedCheckpoint",
+    "checkpoint_return": "Bool"
+  },
+  "user_log": {
+    "path": "upload/redscript_rCURRENT.log",
+    "diagnostic": "UNRESOLVED_TYPE",
+    "source_line": 170,
+    "type": "AutoSaveSystem"
+  },
+  "sources": [
+    {
+      "repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+      "commit": "cfcf5071e5363962a44c33cb7cab749688b0ca51",
+      "commit_created_at": "2026-10-24T07:55:30Z",
+      "path": "scripts/core/systems/gameInstance.script",
+      "blob_sha": "6113815dfcebbc98207a6ec394acff6df34fa1a8",
+      "line": 92,
+      "excerpt": "public import static function GetAutoSaveSystem( self : GameInstance ) : gameAutoSaveSystem;",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/cfcf5071e5363962a44c33cb7cab749688b0ca51/scripts/core/systems/gameInstance.script"
+    },
+    {
+      "repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+      "commit": "cfcf5071e5363962a44c33cb7cab749688b0ca51",
+      "path": "scripts/core/systems/gameSystem.script",
+      "blob_sha": "7dfa9b96334b35472ff4a543eddb02d344655fc9",
+      "lines": [
+        37,
+        40
+      ],
+      "excerpt": "importonly class gameAutoSaveSystem extends gameIAutoSaveSystem\n{\n  public import function RequestCheckpoint() : Bool;\n  public import function RequestForcedCheckpoint() : Bool;\n  public import function InvalidateAutoSaveRequests();\n}",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/cfcf5071e5363962a44c33cb7cab749688b0ca51/scripts/core/systems/gameSystem.script"
+    },
+    {
+      "repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+      "commit": "cfcf5071e5363962a44c33cb7cab749688b0ca51",
+      "path": "scripts/core/entity/gameObject.script",
+      "blob_sha": "517c0d5eb413b7d844f8d3c874f901fa8b8a5aeb",
+      "line": 3428,
+      "excerpt": "return GameInstance.GetAutoSaveSystem( GetGame() ).RequestForcedCheckpoint();",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/cfcf5071e5363962a44c33cb7cab749688b0ca51/scripts/core/entity/gameObject.script"
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "snapshot_warning": "Historical 2021 RTTI, corroboration only; not current-game compatibility evidence",
+      "path": "public/dumps/classes/ScriptGameInstance.json",
+      "blob_sha": "3567317ee156559553338490e9a7eab4bf272a18",
+      "finding": "GetAutoSaveSystem returns handle:gameAutoSaveSystem",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/8f13e59e5007d97f3d105b8959bbe1bbbe9992a2/public/dumps/classes/ScriptGameInstance.json"
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "path": "public/dumps/classes/gameAutoSaveSystem.json",
+      "blob_sha": "abf0f9eefce1bcfedffe4fc52277affa8294e053",
+      "finding": "class gameAutoSaveSystem extends gameIAutoSaveSystem; historical own-method list contains RequestCheckpoint, not used to infer modern forced method",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/8f13e59e5007d97f3d105b8959bbe1bbbe9992a2/public/dumps/classes/gameAutoSaveSystem.json"
+    }
+  ],
+  "runtime_occurrences": {
+    "wrong_annotation_count": 1,
+    "wrong_annotation_line": 170,
+    "checkpoint_local_call_line": 173,
+    "other_direct_calls": [
+      1950,
+      1980,
+      2012
+    ]
+  },
+  "limits": [
+    "No installed game cache/current REDscript compiler execution here",
+    "Only explicit annotation fix required by this diagnostic; preserve guards/null check/serial clear/forced request semantics",
+    "Do not replace with guessed AutosaveSystem; primary exact symbol includes game prefix"
+  ]
+}

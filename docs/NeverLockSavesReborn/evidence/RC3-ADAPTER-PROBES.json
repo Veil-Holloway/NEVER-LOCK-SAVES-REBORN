@@ -1,0 +1,47 @@
+[
+  {
+    "check": "check_rc3_scope.py",
+    "exit_code": 0,
+    "output": "PASS exact RC3 scope: one Smart request helper, three guarded call sites and eight version labels; 19 complete runtime/helper files unchanged; 21 exact paths. Source identity only.\n"
+  },
+  {
+    "check": "check_rc2_scope.py",
+    "exit_code": 0,
+    "output": "PASS exact RC1 preservation: one autosave type annotation and eight version labels only; 19 whole runtime/helper files unchanged; 21 exact protected paths. Source identity only.\n"
+  },
+  {
+    "check": "check_rc1_scope.py",
+    "exit_code": 0,
+    "output": "PASS RC1 source freeze: eight version labels and five adjacent titles only; 19 whole runtime/helper files unchanged; 21 exact source/helper paths. Source identity only.\n"
+  },
+  {
+    "check": "check_dependency_scope.py",
+    "exit_code": 0,
+    "output": "PASS exact preRC3 scope: init export/optional seam, additive report fields, thirteen-file syntax coverage and version labels only; 17 complete runtime/helper files unchanged. Source identity only.\n"
+  },
+  {
+    "check": "check_main_config_scope.py",
+    "exit_code": 0,
+    "output": "PASS exact preRC2 preservation: entire init.lua outside validator and three persistence seams; complete REDscript except version labels; 46 protected source/helper/test files after explicit dependency-diagnostic normalization. Source identity only.\n"
+  },
+  {
+    "check": "check_preserved_scope.py",
+    "exit_code": 0,
+    "output": "PASS preserved scope: 6 files, 49 REDscript methods, 41 companion functions/classes match preRC1; three request hooks differ only by a notification guard. Source identity only.\n"
+  },
+  {
+    "check": "run_rc2_scope_controls.py",
+    "exit_code": 0,
+    "output": "{\n  \"scope\": \"RC2 source/identity checks only; no compiler or game runtime.\",\n  \"unmodified_candidate\": \"passed\",\n  \"negative_controls\": [\n    {\n      \"control\": \"reported_type_regression\",\n      \"rejected\": true,\n      \"reason\": \"Verified autosave type declaration missing\"\n    },\n    {\n      \"control\": \"guessed_type_regression\",\n      \"rejected\": true,\n      \"reason\": \"Verified autosave type declaration missing\"\n    },\n    {\n      \"control\": \"getter_spelling_changed\",\n      \"rejected\": true,\n      \"reason\": \"Verified autosave type declaration missing\"\n    },\n    {\n      \"control\": \"service_guard_removed\",\n      \"rejected\": true,\n      \"reason\": \"RC2 source differs outside exact type/labels\"\n    },\n    {\n      \"control\": \"pending_clear_removed\",\n      \"rejected\": true,\n      \"reason\": \"RC2 source differs outside exact type/labels\"\n    },\n    {\n      \"control\": \"checkpoint_submit_changed\",\n      \"rejected\": true,\n      \"reason\": \"RC2 source differs outside exact type/labels\"\n    },\n    {\n      \"control\": \"mixed_init_version\",\n      \"rejected\": true,\n      \"reason\": \"Unexpected RC2 version count\"\n    },\n    {\n      \"control\": \"init_nonlabel_change\",\n      \"rejected\": true,\n      \"reason\": \"RC2 source differs outside exact type/labels\"\n    },\n    {\n      \"control\": \"module_changed\",\n      \"rejected\": true,\n      \"reason\": \"Changed protected RC2 file\"\n    },\n    {\n      \"control\": \"companion_changed\",\n      \"rejected\": true,\n      \"reason\": \"Changed protected RC2 file\"\n    },\n    {\n      \"control\": \"extra_runtime_file\",\n      \"rejected\": true,\n      \"reason\": \"RC2 runtime/helper file inventory changed\"\n    },\n    {\n      \"control\": \"missing_runtime_file\",\n      \"rejected\": true,\n      \"reason\": \"RC2 runtime/helper file inventory changed\"\n    }\n  ]\n}\nPASS twelve intended RC2 source-scope mutation controls; reported and guessed type regressions also fail focused contract\n"
+  },
+  {
+    "check": "run_rc1_scope_controls.py",
+    "exit_code": 0,
+    "output": "{\n  \"scope\": \"RC1 source-preservation checks only; no game runtime.\",\n  \"unmodified_candidate\": \"passed\",\n  \"negative_controls\": [\n    {\n      \"control\": \"mixed_init_version\",\n      \"rejected\": true,\n      \"reason\": \"Unexpected RC1 version count\"\n    },\n    {\n      \"control\": \"mixed_init_title\",\n      \"rejected\": true,\n      \"reason\": \"Unexpected RC1 title count\"\n    },\n    {\n      \"control\": \"init_nonlabel_change\",\n      \"rejected\": true,\n      \"reason\": \"RC1 source differs from frozen labels\"\n    },\n    {\n      \"control\": \"reds_wrong_version\",\n      \"rejected\": true,\n      \"reason\": \"Unexpected RC1 version count\"\n    },\n    {\n      \"control\": \"reds_nonlabel_change\",\n      \"rejected\": true,\n      \"reason\": \"RC1 source differs from frozen labels\"\n    },\n    {\n      \"control\": \"module_changed\",\n      \"rejected\": true,\n      \"reason\": \"Changed protected RC1 file\"\n    },\n    {\n      \"control\": \"companion_changed\",\n      \"rejected\": true,\n      \"reason\": \"Changed protected RC1 file\"\n    },\n    {\n      \"control\": \"extra_runtime_file\",\n      \"rejected\": true,\n      \"reason\": \"Runtime/helper file inventory changed\"\n    },\n    {\n      \"control\": \"missing_runtime_file\",\n      \"rejected\": true,\n      \"reason\": \"Runtime/helper file inventory changed\"\n    }\n  ]\n}\nPASS nine intended RC1 source-freeze mutation controls\n"
+  },
+  {
+    "check": "run_rc3_scope_controls.py",
+    "exit_code": 0,
+    "output": "{\n  \"scope\": \"Exact source/identity controls only; no game/runtime/compiler.\",\n  \"unmodified_candidate\": \"passed\",\n  \"negative_controls\": [\n    {\n      \"control\": \"smart_mode_scope_changed\",\n      \"rejected\": true,\n      \"reason\": \"RC3 source differs outside reviewed Smart routing/labels\"\n    },\n    {\n      \"control\": \"smart_queue_admission_removed\",\n      \"rejected\": true,\n      \"reason\": \"RC3 source differs outside reviewed Smart routing/labels\"\n    },\n    {\n      \"control\": \"manual_smart_call_removed\",\n      \"rejected\": true,\n      \"reason\": \"RC3 source differs outside reviewed Smart routing/labels\"\n    },\n    {\n      \"control\": \"pause_smart_call_removed\",\n      \"rejected\": true,\n      \"reason\": \"RC3 source differs outside reviewed Smart routing/labels\"\n    },\n    {\n      \"control\": \"gameplay_smart_call_removed\",\n      \"rejected\": true,\n      \"reason\": \"RC3 source differs outside reviewed Smart routing/labels\"\n    },\n    {\n      \"control\": \"native_unlock_dispatch_guard_removed\",\n      \"rejected\": true,\n      \"reason\": \"RC3 source differs outside reviewed Smart routing/labels\"\n    },\n    {\n      \"control\": \"pending_clear_removed\",\n      \"rejected\": true,\n      \"reason\": \"RC3 source differs outside reviewed Smart routing/labels\"\n    },\n    {\n      \"control\": \"reported_autosave_type_regression\",\n      \"rejected\": true,\n      \"reason\": \"RC3 source differs outside reviewed Smart routing/labels\"\n    },\n    {\n      \"control\": \"mixed_init_version\",\n      \"rejected\": true,\n      \"reason\": \"RC3 source differs outside reviewed Smart routing/labels\"\n    },\n    {\n      \"control\": \"init_nonlabel_change\",\n      \"rejected\": true,\n      \"reason\": \"RC3 source differs outside reviewed Smart routing/labels\"\n    },\n    {\n      \"control\": \"module_changed\",\n      \"rejected\": true,\n      \"reason\": \"Changed protected RC3 file\"\n    },\n    {\n      \"control\": \"companion_changed\",\n      \"rejected\": true,\n      \"reason\": \"Changed protected RC3 file\"\n    },\n    {\n      \"control\": \"extra_runtime_file\",\n      \"rejected\": true,\n      \"reason\": \"RC3 runtime/helper file inventory changed\"\n    },\n    {\n      \"control\": \"missing_runtime_file\",\n      \"rejected\": true,\n      \"reason\": \"RC3 runtime/helper file inventory changed\"\n    }\n  ]\n}\nPASS fourteen intended RC3 source-scope mutation controls\n"
+  }
+]

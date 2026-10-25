@@ -1,0 +1,116 @@
+{
+  "date": "2026-10-24",
+  "scope": "Bounded read-only primary-source research; no game, compiler, native RTTI or installed-version validation",
+  "conclusion": "A native save metadata playthroughID field exists, but no verified read-only current-loaded-playthrough accessor was established; automatic profile binding remains unsupported",
+  "sources": [
+    {
+      "repository": "psiberx/cp2077-codeware",
+      "commit": "a652bbbcf6feb65988c67f15f428e9398a3d827c",
+      "path": "scripts/Base/Imports/saveGameMetadata.reds",
+      "blob_sha": "2b16d2e530d77e7063d34be3a8bc44277ef24607",
+      "url": "https://github.com/psiberx/cp2077-codeware/blob/a652bbbcf6feb65988c67f15f428e9398a3d827c/scripts/Base/Imports/saveGameMetadata.reds",
+      "findings": [
+        "native struct saveGameMetadata exposes playthroughID: String",
+        "This is a type declaration; no current-loaded-game getter is declared in this file"
+      ]
+    },
+    {
+      "repository": "psiberx/cp2077-codeware",
+      "commit": "a652bbbcf6feb65988c67f15f428e9398a3d827c",
+      "path": "scripts/Base/Imports/InheritedStructs/saveMetadata.reds",
+      "blob_sha": "f85660b87f635a88b3b1cc5f606f46f507d09e62",
+      "url": "https://github.com/psiberx/cp2077-codeware/blob/a652bbbcf6feb65988c67f15f428e9398a3d827c/scripts/Base/Imports/InheritedStructs/saveMetadata.reds",
+      "findings": [
+        "native struct saveMetadata exposes playthroughID: String and disk/save metadata fields",
+        "No accessor ties this instance to the currently loaded save/playthrough"
+      ]
+    },
+    {
+      "repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+      "commit": "cfcf5071e5363962a44c33cb7cab749688b0ca51",
+      "path": "scripts/core/ui/systemRequestsHandler.script",
+      "blob_sha": "af4300d70d8de4e3c20299f47545096fec0d1853",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/cfcf5071e5363962a44c33cb7cab749688b0ca51/scripts/core/ui/systemRequestsHandler.script",
+      "findings": [
+        "GetLatestSaveMetadata() returns LatestSaveMetadataInfo",
+        "LatestSaveMetadataInfo exposes location/tracked quest/lifepath/time/loading-screen fields, no playthroughID",
+        "LoadSavedGame(saveId:Int32) and LoadLastCheckpoint(onlySamePlaythrough:Bool) do not return persistent identity"
+      ]
+    },
+    {
+      "repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+      "commit": "cfcf5071e5363962a44c33cb7cab749688b0ca51",
+      "path": "scripts/cyberpunk/UI/fullscreen/pregame/loadGameMenu.script",
+      "blob_sha": "65b00ce0b95ea033dbd6094ec487e32e3e55d1af",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/cfcf5071e5363962a44c33cb7cab749688b0ca51/scripts/cyberpunk/UI/fullscreen/pregame/loadGameMenu.script",
+      "findings": [
+        "SaveMetadataInfo includes saveIndex,saveID,internalName,timestamp,lifePath,gameVersion and display state, not playthroughID",
+        "OnSaveMetadataReady(info:SaveMetadataInfo) describes an enumerated save-slot record, not durable character identity"
+      ]
+    },
+    {
+      "repository": "psiberx/cp2077-codeware",
+      "commit": "a652bbbcf6feb65988c67f15f428e9398a3d827c",
+      "path": "scripts/Base/Addons/LatestSaveMetadataInfo.reds",
+      "blob_sha": "322fa056bcfb9c6847d63c7e174dba0c3d44643b",
+      "url": "https://github.com/psiberx/cp2077-codeware/blob/a652bbbcf6feb65988c67f15f428e9398a3d827c/scripts/Base/Addons/LatestSaveMetadataInfo.reds",
+      "findings": [
+        "Adds gameVersion and additionalContentIds only"
+      ]
+    },
+    {
+      "repository": "psiberx/cp2077-codeware",
+      "commit": "a652bbbcf6feb65988c67f15f428e9398a3d827c",
+      "path": "scripts/Callback/Events/GameSessionEvent.reds",
+      "blob_sha": "d4ab7cbb2ca8ea408348f93a73a8c4a7505fbedb",
+      "url": "https://github.com/psiberx/cp2077-codeware/blob/a652bbbcf6feb65988c67f15f428e9398a3d827c/scripts/Callback/Events/GameSessionEvent.reds",
+      "findings": [
+        "GameSessionEvent exposes IsRestored()->Bool and IsPreGame()->Bool, no persistent ID"
+      ]
+    },
+    {
+      "repository": "psiberx/cp2077-codeware",
+      "commit": "a652bbbcf6feb65988c67f15f428e9398a3d827c",
+      "path": "src/App/Callback/Events/GameSessionEvent.hpp",
+      "blob_sha": "5e8ced1cf4ab26afce97493ccbf760ce2cc3b7c9",
+      "url": "https://github.com/psiberx/cp2077-codeware/blob/a652bbbcf6feb65988c67f15f428e9398a3d827c/src/App/Callback/Events/GameSessionEvent.hpp",
+      "findings": [
+        "C++ event payload stores preGame/restored booleans; no identity field"
+      ]
+    },
+    {
+      "repository": "psiberx/cp2077-cet-kit",
+      "commit": "f64c837e589ffffc030e79ed0123688eb3091098",
+      "path": "GameSession.lua",
+      "blob_sha": "5837b08d29d980e8ef340f81f8f0caca741bd7dc",
+      "url": "https://github.com/psiberx/cp2077-cet-kit/blob/f64c837e589ffffc030e79ed0123688eb3091098/GameSession.lua",
+      "findings": [
+        "GetKey returns mod-owned sessionKeyValue",
+        "Persistent key is stored by SetFactStr('_psxgs_session_key',key); not a read-only native playthrough ID",
+        "This technique violates this project's no-new-quest-fact-write constraint and is not adopted"
+      ]
+    }
+  ],
+  "search_scope": {
+    "codeware_tree": {
+      "commit": "a652bbbcf6feb65988c67f15f428e9398a3d827c",
+      "entries": 7709,
+      "truncated": false
+    },
+    "queries": [
+      "playthrough",
+      "session",
+      "saveMetadata",
+      "saveGameMetadata",
+      "GetPlaythroughID",
+      "GetSaveMetadata",
+      "saveMetadataContainer",
+      "OnSaveMetadataReady"
+    ],
+    "repositories": [
+      "psiberx/cp2077-codeware",
+      "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+      "psiberx/cp2077-cet-kit"
+    ]
+  }
+}

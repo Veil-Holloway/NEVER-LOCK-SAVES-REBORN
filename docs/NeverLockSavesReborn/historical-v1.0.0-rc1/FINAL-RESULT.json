@@ -1,0 +1,18 @@
+{
+  "build": "1.0.0-rc1",
+  "designation": "Release candidate for testing",
+  "scope_decision": "User approved Option A; listed automatic capabilities deferred after1.0",
+  "integrated_groups": 54,
+  "integrated_exit": 0,
+  "extracted_groups": 54,
+  "extracted_exit": 0,
+  "frozen_records": 88,
+  "runtime_files": 16,
+  "runtime_behavior": "Identical to preRC4 except8versionliterals and5adjacenttitles",
+  "installation_auditor_tests": 89,
+  "auditor_skips": 0,
+  "source_mutation_controls": 9,
+  "independent_filesystem_probes": 3,
+  "gameplay_evidence": "priorpreRC4 broaduserreport only; no fabricatedRC1pass",
+  "stable_public_clearance": false
+}

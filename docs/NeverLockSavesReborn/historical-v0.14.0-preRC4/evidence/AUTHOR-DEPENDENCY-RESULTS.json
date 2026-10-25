@@ -1,0 +1,26 @@
+{
+  "source_frozen": true,
+  "collector_assertions": 834,
+  "report_assertions": 554,
+  "mutation_controls": 9,
+  "mutations_all_intended": true,
+  "existing_report_assertions": 83,
+  "existing_independent_report_assertions": 156,
+  "existing_observer_report_assertions": 215,
+  "all_fresh_exit_codes": 0,
+  "host": "texlua Lua5.3; no CET/native ABI/game execution",
+  "files": {
+    "work/prerc4/release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dependency_versions.lua": "32c132404062f25594684567b4a50acdbc61687e6eb59fee8a25fbee2393b53a",
+    "work/prerc4/release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua": "0dfdd44ae3baa6a5a20b0a2121e2844b52e1be4ae6f4b0db366aa061e6c838c6",
+    "work/dependency_versions/test_dependency_versions.lua": "97bb53832958b37205d84186988736f5a9bc1b963a19aa93ed8d6646285f55c8",
+    "work/dependency_versions/test_dependency_report.lua": "5a1e64e9abfc440afadc7c9754aef4f3e3103d3a5c22e11f52dff1e48335b552",
+    "work/dependency_versions/run_dependency_controls.py": "e0ae782dfe30d4b0b225ba954015d49438d6dad039a444602f8fbae2ee3d1d9f"
+  },
+  "baseline_negative_control": {
+    "script": "test_dependency_report.lua",
+    "release": "preRC3",
+    "exit_code": 1,
+    "intended_assertion": "NLSR-DEPENDENCY-EVIDENCE"
+  },
+  "portable_command": "python run_dependency_controls.py --module-dir MODDIR --output OUTPUT --lua /usr/bin/texlua"
+}

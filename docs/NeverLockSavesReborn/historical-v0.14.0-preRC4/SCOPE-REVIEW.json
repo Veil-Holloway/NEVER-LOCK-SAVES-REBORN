@@ -1,0 +1,25 @@
+{
+  "scope": "Independent whole-byte comparison outside explicitly reviewed dependency diagnostics seams and version tags",
+  "normalized_init_sha256": "5330c2d0aa71dcca8ce9bbc5ae63b11e45b0be83dc70eac2768661ae347d3054",
+  "normalized_support_report_sha256": "0e96e4bbbe05f84334f0556ccc9b99a8f1be9d3b0ac521d9b3b35d33d7577285",
+  "unchanged_runtime_helper_code_count": 16,
+  "unchanged": {
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua": "14b0142a2fb4fe3dce80e0699690ef7093470954cc0a4ae38d7fd31517ed9289",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/config_store.lua": "71cc407a911ad5f6a9a8dda749e2ef3839fe74f01fd7fa3da8590968c80dece3",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dark_future.lua": "a4d5afd042e295b7db6af26026c4a55aab8d834ed21d4550946393ceba3fb3b8",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/deferred_save.lua": "b5c7413a274fd3d38612176891ee9dac06ebd2255bc0d40276fc9350400db9ca",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian.lua": "ba22843f8356bd56b952d7629ff89667913a4b195513015aea981b9f41e67c40",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian_bridge.lua": "b3b438e12bd01fc6b0d5ce00a93fff9450e52def53a057971cb3ae469a158a04",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua": "58cbe7e5a431a8ba8a18f3d3f6526df08e029bc1410066b4303083b7244951ab",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua": "023c995c24e0c3c941861557bbe92c9caa7c3e3fe14ee5f0bfc19eaee1598547",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_message_library.lua": "67f090e136d54ed7580518eb4f0b48601d582f23fe3f55015b7ca4fba7a0ba7c",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_messages.lua": "a271bac7f36417815d673bf0c176e7fe64c73b5da77b8c41c815c10fd0b3ecea",
+    "r6/scripts/NeverLockSavesReborn/DarkFutureMessages.reds": "d1cc373bf7a030929745f969528b31774998943e3108c0f8b9b96a09a2b7f350",
+    "r6/scripts/NeverLockSavesReborn/DarkFutureSavePolicy.reds": "f707dbbbfe3147fae24290c1832f6274614118daa3e4724ee94d3a6bd18bad37",
+    "tools/NLSRSaveGuardian/save_guardian.py": "c142d5f86a3c9593c99ebfd949643af3705075c71ce370b149d22c62cd77d9c7",
+    "tools/NLSRSaveGuardian/test_recovery_assistant.py": "8bf34e52a58b3b84161eb4f571c41742d74a619545ff012be0dc1f5c2f56d5bd",
+    "tools/NLSRSaveGuardian/test_retention.py": "f8f9bbba3bcb65a45d57e788e5078531ccd8245448a993b619a238f4586537f3",
+    "tools/NLSRSaveGuardian/test_save_guardian.py": "f43218a3e5dc4fe848a5faa58565fe990a5b5fee884d8b2b840af1834febba45"
+  },
+  "passed": true
+}

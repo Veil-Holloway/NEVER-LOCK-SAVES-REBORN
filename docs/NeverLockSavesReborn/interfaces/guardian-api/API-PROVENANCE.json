@@ -1,0 +1,91 @@
+{
+  "sources": [
+    {
+      "repository": "maximegmd/CyberEngineTweaks",
+      "path": "src/scripting/Scripting.cpp",
+      "git_blob_sha": "879d7f93c07c4cae3676a268c06d3982fdf54140",
+      "url": "https://github.com/maximegmd/CyberEngineTweaks/blob/master/src/scripting/Scripting.cpp",
+      "evidence_lines": {
+        "ObserveBefore": [
+          380,
+          383
+        ],
+        "ObserveAfter": [
+          385,
+          388
+        ],
+        "ObserveAlias": [
+          390,
+          390
+        ]
+      },
+      "observed_signatures": [
+        "ObserveBefore(typeName: string, fullName: string, callback: function) -> void",
+        "ObserveAfter(typeName: string, fullName: string, callback: function) -> void"
+      ]
+    },
+    {
+      "repository": "maximegmd/CyberEngineTweaks",
+      "path": "src/scripting/FunctionOverride.cpp",
+      "git_blob_sha": "7cd280e6a4c3905dcfea5d14e39be2b41f6d8363",
+      "url": "https://github.com/maximegmd/CyberEngineTweaks/blob/master/src/scripting/FunctionOverride.cpp",
+      "evidence_lines": {
+        "self_then_original_args": [
+          163,
+          194
+        ],
+        "before_original_args": [
+          368,
+          381
+        ],
+        "after_original_args_no_return": [
+          435,
+          448
+        ],
+        "missing_method_logs_returns": [
+          569,
+          595
+        ],
+        "worker_thread_note": [
+          599,
+          602
+        ]
+      },
+      "findings": [
+        "Instance self is first, then reflected original parameters in order",
+        "Before/After receive same original argument array; original return is not appended",
+        "Native registration returns void; missing class/method is logged without exception",
+        "pcall success can only establish call did not throw, not hook attachment",
+        "Hook callbacks may execute on worker threads"
+      ]
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "path": "public/dumps/classes/PauseMenuGameController.json",
+      "git_blob_sha": "1ee96ba2d2f002517e89686abe576a0aedc8d44b",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/8f13e59e5007d97f3d105b8959bbe1bbbe9992a2/public/dumps/classes/PauseMenuGameController.json",
+      "signature": "OnSavingComplete(success: Bool, locks: array<gameSaveLock>) -> Bool"
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "path": "public/dumps/classes/gameuiInGameMenuGameController.json",
+      "git_blob_sha": "22392e87c2431ac181f2a26beeeb32bdb4937c23",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/8f13e59e5007d97f3d105b8959bbe1bbbe9992a2/public/dumps/classes/gameuiInGameMenuGameController.json",
+      "signature": "OnSavingComplete(success: Bool, locks: array<gameSaveLock>) -> Bool"
+    },
+    {
+      "repository": "maximegmd/CyberEngineTweaks",
+      "path": "src/scripting/LuaSandbox.cpp",
+      "git_blob_sha": "85e97e345b91bc7444b55a76eee7bb971c9ae7df",
+      "url": "https://github.com/maximegmd/CyberEngineTweaks/blob/master/src/scripting/LuaSandbox.cpp",
+      "finding": "GetLuaPath rejects absolute and escaping relative paths; sandbox IO cannot copy the normal external save directory"
+    }
+  ],
+  "supported_game_version": "unknown: pinned game script/RTTI snapshot versions not established",
+  "installed_CET_version": "unknown",
+  "validation_scope": "Primary source/RTTI inspection only; no game/CET execution or registration test",
+  "completion_boundary": "Engine callback has Boolean result and lock list only; no request identity or file path. Treat strictly as uncorrelated hint, never Written/Verified/Reloaded."
+}
+

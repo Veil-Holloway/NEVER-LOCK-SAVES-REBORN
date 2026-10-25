@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+config.json
+config.json.bak
+config.json.tmp
+profile-settings.json
+profile-settings.json.bak
+profile-settings.json.tmp
+support-report.json
+guardian-report.json
+*.log
+# Keep packaged offline evidence; unrelated runtime/user logs stay ignored.
+!docs/NeverLockSavesReborn/**/evidence/**/*.log

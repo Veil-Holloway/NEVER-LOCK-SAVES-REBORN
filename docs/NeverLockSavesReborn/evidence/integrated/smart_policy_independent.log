@@ -1,0 +1,10 @@
+{
+  "source_sha256": "8fca7e488d202bef7a1b8c6b75bdd5e24f726480311ffe59131d11c8c83d9e10",
+  "scope": "bounded actual-source Python evaluation with game/service doubles; not compiler/runtime evidence",
+  "cases": 2115,
+  "expected_permits": 6,
+  "expected_denials": 2109,
+  "failed_cases": 0,
+  "first_failures": [],
+  "negative_control": false
+}

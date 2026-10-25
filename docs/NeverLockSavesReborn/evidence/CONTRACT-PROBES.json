@@ -1,0 +1,36 @@
+{
+  "scope": "Source-contract checks, not compilation",
+  "checks": [
+    {
+      "check": "baseline_known_type_failure",
+      "exit": 1,
+      "expected_marker_observed": true
+    },
+    {
+      "check": "candidate_type_contract",
+      "exit": 0,
+      "expected_marker_observed": true
+    },
+    {
+      "check": "candidate_exact_scope",
+      "exit": 0,
+      "expected_marker_observed": true
+    },
+    {
+      "check": "candidate_prior_scope_adapter",
+      "exit": 0,
+      "expected_marker_observed": true
+    },
+    {
+      "check": "prior_nine_controls_retained",
+      "exit": 0,
+      "expected_marker_observed": true
+    },
+    {
+      "check": "new_twelve_controls",
+      "exit": 0,
+      "expected_marker_observed": true
+    }
+  ],
+  "setup_note": "First direct-output attempt lacked the unchanged rc1 fixture; isolated full baseline+overlay validation tree used for actual integrated fixture checks."
+}

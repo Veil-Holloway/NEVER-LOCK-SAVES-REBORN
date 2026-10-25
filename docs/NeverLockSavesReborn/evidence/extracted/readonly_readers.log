@@ -1,0 +1,16 @@
+{
+  "checks": 1993,
+  "source_sha256": "8fca7e488d202bef7a1b8c6b75bdd5e24f726480311ffe59131d11c8c83d9e10",
+  "df_sha256": "f707dbbbfe3147fae24290c1832f6274614118daa3e4724ee94d3a6bd18bad37",
+  "baseline_missing": [],
+  "negative_controls_detected": [
+    "missing apartment district guessed clear",
+    "wrong apartment district accepted",
+    "lock inventory overflow guard weakened",
+    "unknown reason guessed combat",
+    "quest reason guessed combat",
+    "missing DF modules report clear"
+  ],
+  "passed": true,
+  "scope": "Independent bounded actual-source execution; native/DF boundaries doubled; NOT compilation, ABI or game/save evidence"
+}

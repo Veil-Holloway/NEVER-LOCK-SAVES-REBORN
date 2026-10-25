@@ -1,0 +1,15 @@
+{
+  "source": "/workspace/scratch/ba7d0d23f8da/work/rc1/extracted/r6/scripts/NeverLockSavesReborn/DarkFutureSavePolicy.reds",
+  "sha256": "f707dbbbfe3147fae24290c1832f6274614118daa3e4724ee94d3a6bd18bad37",
+  "checks": 322,
+  "module_combinations": 16,
+  "negative_controls_detected": [
+    "stage4 misclassified",
+    "active loses to unknown",
+    "missing modules activate live reader",
+    "sleep incorrectly gated on validity",
+    "unknown default promoted to active"
+  ],
+  "result": "PASS",
+  "scope": "Actual-source subset execution with external game/DF doubles; no real import resolution, REDscript compile, game, or save-file validation."
+}

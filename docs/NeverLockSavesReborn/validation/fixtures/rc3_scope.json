@@ -1,0 +1,119 @@
+{
+  "baseline_package": "Never_Lock_Saves_Reborn_v1.0.0-rc2_Release_Candidate.zip",
+  "baseline_package_sha256": "24e36eaec40a2be1484024cc86d71ae1fee56a3817cd0787ce16a75fea88285d",
+  "baseline_version": "1.0.0-rc2",
+  "candidate_version": "1.0.0-rc3",
+  "approved_change": "One Smart-only native-locked request helper and three guarded request-hook calls; eight version labels. All dispatch, introduction, queue scheduler, notification libraries, non-Smart mode policy, and closed-game companion bodies preserved.",
+  "protected_roots": [
+    "bin",
+    "r6",
+    "tools/NLSRSaveGuardian"
+  ],
+  "changed_files": {
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua": {
+      "baseline_sha256": "4049bef1a72415ebd7796e980e7cce2911ad7333dc7ca241f60b01a078648166",
+      "candidate_sha256": "58f1295871e29b5a0b5d15e78670f481669461242e49c628efa31dc1be4dedd5",
+      "splices": [
+        {
+          "candidate_start_line": 0,
+          "candidate_end_line": 1,
+          "before": "-- Never Lock Saves Reborn v1.0.0-rc2 Release Candidate\r\n",
+          "after": "-- Never Lock Saves Reborn v1.0.0-rc3 Release Candidate\r\n"
+        },
+        {
+          "candidate_start_line": 704,
+          "candidate_end_line": 705,
+          "before": "  local snapshot={build='1.0.0-rc2',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),\r\n",
+          "after": "  local snapshot={build='1.0.0-rc3',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),\r\n"
+        },
+        {
+          "candidate_start_line": 735,
+          "candidate_end_line": 736,
+          "before": "  log('v1.0.0-rc2 Release Candidate loaded; experimental native save-lock gate required')\r\n",
+          "after": "  log('v1.0.0-rc3 Release Candidate loaded; experimental native save-lock gate required')\r\n"
+        },
+        {
+          "candidate_start_line": 1011,
+          "candidate_end_line": 1012,
+          "before": "    ImGui.Text('v1.0.0-rc2 Release Candidate | Runtime policy')\r\n",
+          "after": "    ImGui.Text('v1.0.0-rc3 Release Candidate | Runtime policy')\r\n"
+        },
+        {
+          "candidate_start_line": 1170,
+          "candidate_end_line": 1171,
+          "before": "        log('v1.0.0-rc2 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)\r\n",
+          "after": "        log('v1.0.0-rc3 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)\r\n"
+        },
+        {
+          "candidate_start_line": 1204,
+          "candidate_end_line": 1205,
+          "before": "          report.rebornBuild='1.0.0-rc2'\r\n",
+          "after": "          report.rebornBuild='1.0.0-rc3'\r\n"
+        }
+      ]
+    },
+    "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds": {
+      "baseline_sha256": "8fca7e488d202bef7a1b8c6b75bdd5e24f726480311ffe59131d11c8c83d9e10",
+      "candidate_sha256": "f2953b6903bb09da3bdec5eb7ee991a51928817ac2b527d9e816e9fc591c48d1",
+      "splices": [
+        {
+          "candidate_start_line": 0,
+          "candidate_end_line": 1,
+          "before": "// v1.0.0-rc2 Release Candidate. Deferred/autosave lanes are opt-in.\r\n",
+          "after": "// v1.0.0-rc3 Release Candidate. Deferred/autosave lanes are opt-in.\r\n"
+        },
+        {
+          "candidate_start_line": 439,
+          "candidate_end_line": 440,
+          "before": "  public static func Version() -> String { return \"1.0.0-rc2\"; }\r\n",
+          "after": "  public static func Version() -> String { return \"1.0.0-rc3\"; }\r\n"
+        },
+        {
+          "candidate_start_line": 1873,
+          "candidate_end_line": 1900,
+          "before": "",
+          "after": "  // Smart queue admission is independent of permission to force a checkpoint.\r\n  // Called only for a native-locked user request, after quicksave busy guards.\r\n  public static func HandleSmartBlockedSave(game: GameInstance, source: Int32) -> Bool {\r\n    let players: ref<PlayerSystem> = GameInstance.GetPlayerSystem(game);\r\n    if !IsDefined(players) { return false; };\r\n    let player: ref<PlayerPuppet> = players.GetLocalPlayerControlledGameObject() as PlayerPuppet;\r\n    if !IsDefined(player) || player.NLSRebornGetMode() != 3 || player.nlsRebornSafetyBlock || !player.NLSRebornDeferredIntroComplete() { return false; };\r\n    if player.NLSRebornDeferredQueue(source) {\r\n      if player.NLSRebornGetNotificationsEnabled() && !player.NLSRebornGetStatusNotificationsEnabled() {\r\n        if source == 1 {\r\n          PauseMenuGameController.NLSRebornNotify(game, \"Save queued until normal saving is available.\");\r\n        } else {\r\n          PauseMenuGameController.NLSRebornNotify(game, \"Quicksave queued until normal saving is available.\");\r\n        };\r\n      };\r\n      return true;\r\n    };\r\n    // Preserve the existing explicit combat exception when the queue is off.\r\n    if NLSRebornPolicy.AllowForcedCheckpointFallback(game) { return false; };\r\n    if player.NLSRebornGetNotificationsEnabled() {\r\n      let message: String = \"Saving is blocked by the current game state. No save was queued.\";\r\n      if player.NLSRebornGetTone() == 1 { message = \"The game still has the save button hostage. No save queued.\"; };\r\n      if player.NLSRebornGetTone() == 2 { message = \"The game is still blocking this damn save. No save queued.\"; };\r\n      PauseMenuGameController.NLSRebornNotify(game, message);\r\n    };\r\n    return true;\r\n  }\r\n"
+        },
+        {
+          "candidate_start_line": 1970,
+          "candidate_end_line": 1971,
+          "before": "",
+          "after": "    if NLSRebornPolicy.HandleSmartBlockedSave(this.m_gameInstance, 1) { return; };\r\n"
+        },
+        {
+          "candidate_start_line": 2000,
+          "candidate_end_line": 2003,
+          "before": "",
+          "after": "  if GameInstance.IsSavingLocked(this.m_gameInstance, locks) && !this.m_quickSaveInProgress && !this.IsSaveFailedNotificationActive() && !this.IsGameSavedNotificationActive() {\r\n    if NLSRebornPolicy.HandleSmartBlockedSave(this.m_gameInstance, 2) { return; };\r\n  };\r\n"
+        },
+        {
+          "candidate_start_line": 2035,
+          "candidate_end_line": 2038,
+          "before": "",
+          "after": "  if IsDefined(this.GetPlayerControlledObject()) && GameInstance.IsSavingLocked(this.GetPlayerControlledObject().GetGame(), locks) && !this.m_quickSaveInProgress {\r\n    if NLSRebornPolicy.HandleSmartBlockedSave(this.GetPlayerControlledObject().GetGame(), 2) { return; };\r\n  };\r\n"
+        }
+      ]
+    }
+  },
+  "unchanged_files": {
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua": "14b0142a2fb4fe3dce80e0699690ef7093470954cc0a4ae38d7fd31517ed9289",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/config_store.lua": "71cc407a911ad5f6a9a8dda749e2ef3839fe74f01fd7fa3da8590968c80dece3",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dark_future.lua": "a4d5afd042e295b7db6af26026c4a55aab8d834ed21d4550946393ceba3fb3b8",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/deferred_save.lua": "b5c7413a274fd3d38612176891ee9dac06ebd2255bc0d40276fc9350400db9ca",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dependency_versions.lua": "32c132404062f25594684567b4a50acdbc61687e6eb59fee8a25fbee2393b53a",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian.lua": "ba22843f8356bd56b952d7629ff89667913a4b195513015aea981b9f41e67c40",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian_bridge.lua": "b3b438e12bd01fc6b0d5ce00a93fff9450e52def53a057971cb3ae469a158a04",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua": "58cbe7e5a431a8ba8a18f3d3f6526df08e029bc1410066b4303083b7244951ab",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua": "023c995c24e0c3c941861557bbe92c9caa7c3e3fe14ee5f0bfc19eaee1598547",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_message_library.lua": "67f090e136d54ed7580518eb4f0b48601d582f23fe3f55015b7ca4fba7a0ba7c",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_messages.lua": "a271bac7f36417815d673bf0c176e7fe64c73b5da77b8c41c815c10fd0b3ecea",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua": "0dfdd44ae3baa6a5a20b0a2121e2844b52e1be4ae6f4b0db366aa061e6c838c6",
+    "r6/scripts/NeverLockSavesReborn/DarkFutureMessages.reds": "d1cc373bf7a030929745f969528b31774998943e3108c0f8b9b96a09a2b7f350",
+    "r6/scripts/NeverLockSavesReborn/DarkFutureSavePolicy.reds": "f707dbbbfe3147fae24290c1832f6274614118daa3e4724ee94d3a6bd18bad37",
+    "tools/NLSRSaveGuardian/README.md": "4051c04e9b51e061556cc252f61dc1e301a68d026e91c0d5117767ea88b46d1f",
+    "tools/NLSRSaveGuardian/save_guardian.py": "c142d5f86a3c9593c99ebfd949643af3705075c71ce370b149d22c62cd77d9c7",
+    "tools/NLSRSaveGuardian/test_recovery_assistant.py": "8bf34e52a58b3b84161eb4f571c41742d74a619545ff012be0dc1f5c2f56d5bd",
+    "tools/NLSRSaveGuardian/test_retention.py": "f8f9bbba3bcb65a45d57e788e5078531ccd8245448a993b619a238f4586537f3",
+    "tools/NLSRSaveGuardian/test_save_guardian.py": "f43218a3e5dc4fe848a5faa58565fe990a5b5fee884d8b2b840af1834febba45"
+  }
+}

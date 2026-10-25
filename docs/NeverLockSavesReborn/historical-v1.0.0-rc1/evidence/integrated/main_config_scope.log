@@ -1,0 +1,1 @@
+PASS exact preRC2 preservation: entire init.lua outside validator and three persistence seams; complete REDscript except version labels; 46 protected source/helper/test files after explicit dependency-diagnostic normalization. Source identity only.

@@ -1,0 +1,4 @@
+PASS config_store: 22 real-disk/failure assertions; JSON is an external-boundary double
+RECOVERY-REGRESSION primary=nil backup={"mode":3,"tone":2} load=3
+SUCCESS-REGRESSION backup={"mode":3,"tone":2} second recovery=3
+PASS all 47 config_store assertions, including recovered-backup preservation

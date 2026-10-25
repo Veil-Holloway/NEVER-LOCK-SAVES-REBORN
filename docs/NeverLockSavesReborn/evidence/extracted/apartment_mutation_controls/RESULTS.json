@@ -1,0 +1,59 @@
+{
+  "scope": "Actual Lua5.3 scheduler and doubled game observations; no game/save evidence",
+  "module_sha256": "14b0142a2fb4fe3dce80e0699690ef7093470954cc0a4ae38d7fd31517ed9289",
+  "positive": {
+    "exit_code": 0,
+    "output": "PASS apartment scheduler: 126 public-boundary assertions; no game/save evidence\n"
+  },
+  "negative_controls": [
+    {
+      "name": "ignore_optin",
+      "exit_code": 1,
+      "output": "...everLockSavesReborn/validation/test_apartment_policy.lua:6: disabled apartment option creates no entry request: expected 0, got 1\n",
+      "detected_for_intended_reason": true
+    },
+    {
+      "name": "ignore_outside_baseline",
+      "exit_code": 1,
+      "output": "...everLockSavesReborn/validation/test_apartment_policy.lua:6: initial inside observation creates no request: expected 0, got 4\n",
+      "detected_for_intended_reason": true
+    },
+    {
+      "name": "ignore_unknown_location",
+      "exit_code": 1,
+      "output": "...everLockSavesReborn/validation/test_apartment_policy.lua:6: unknown apartment data cancels captured event: expected none, got apartment_entry\n",
+      "detected_for_intended_reason": true
+    },
+    {
+      "name": "retain_work_after_exit",
+      "exit_code": 1,
+      "output": "...everLockSavesReborn/validation/test_apartment_policy.lua:6: leaving before readiness cancels apartment work: expected none, got apartment_entry\n",
+      "detected_for_intended_reason": true
+    },
+    {
+      "name": "ignore_cooldown",
+      "exit_code": 1,
+      "output": "...everLockSavesReborn/validation/test_apartment_policy.lua:6: shared cooldown wins: expected 1, got 2\n",
+      "detected_for_intended_reason": true
+    },
+    {
+      "name": "ignore_session_change",
+      "exit_code": 1,
+      "output": "...everLockSavesReborn/validation/test_apartment_policy.lua:6: readiness interruption clears apartment event: expected none, got apartment_entry\n",
+      "detected_for_intended_reason": true
+    },
+    {
+      "name": "ignore_master_off",
+      "exit_code": 1,
+      "output": "...everLockSavesReborn/validation/test_apartment_policy.lua:6: master off suppresses apartment trigger: expected 0, got 1\n",
+      "detected_for_intended_reason": true
+    },
+    {
+      "name": "ignore_stabilization",
+      "exit_code": 1,
+      "output": "...everLockSavesReborn/validation/test_apartment_policy.lua:6: entry does not bypass stabilization: expected 0, got 1\n",
+      "detected_for_intended_reason": true
+    }
+  ],
+  "passed": true
+}

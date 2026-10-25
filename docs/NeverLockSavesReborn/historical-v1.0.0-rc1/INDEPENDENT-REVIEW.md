@@ -1,0 +1,18 @@
+# RC1 independent release review
+
+October 24, 2026 (America/Vancouver). Reviewed the integrated `1.0.0-rc1` staging tree against its freshly authenticated preRC4 baseline. No unresolved blocking finding in the reviewed source, current feature contract, testing handoff, matrix or installation auditor.
+
+## Evidence
+
+- Independent exact-byte check passed on the integrated tree: 16 runtime files (13 Lua, three REDscript). Only two files differ, consisting of eight version labels and five adjacent presentation labels. All other runtime bytes and all five SaveGuardian companion/document/test files are identical.
+- All original 51 check groups remain; direct runner diff contains exactly three added cases and no changed existing command. Original validation files are byte-identical except the reviewed dependency-scope adapter and runner. The adapter changes one import and two source reads, retaining the preRC4→preRC3→preRC2 preservation chain.
+- Reviewed the frozen RC1 scope check and its nine negative controls. It pins the two exact candidate files and all unchanged protected files, rejects mixed labels/body edits/missing or extra runtime files and preserves strict runtime inventory. Initial overly broad `tools/` inventory was corrected to explicit `bin`, `r6` and existing SaveGuardian roots so the new auditor can be added without weakening runtime checks.
+- Independently recomputed every runtime inventory row and the auditor's embedded inventory hash: all 16 size/SHA-256 records match actual candidate bytes. Auditor diff is limited to RC1/version pins, 16-file count, removal of the non-self-pinnable archive option and associated report/marker labels; read-only scans, bounds, privacy and path safeguards are retained.
+- Three additional independent public-CLI probes passed on real temporary filesystem inputs: clean 16-file installation returns exact-match/exit 0, private config contents are ignored, and removing the added dependency collector produces drift/exit 1. Input contents/size/mtime remained unchanged and private input paths were absent from output. See `AUDITOR-PROBES.json`.
+- Matrix independently verified: exactly 42 rows, one attributed broad preRC4 working report, 38 UNTESTED and three UNAVAILABLE rows. All target RC1; deferred rows explicitly say after 1.0. No actual game/dependency version or per-case pass was fabricated.
+- Read the integrated README/current contract/testing pointers, release contract, testing handoff, roadmap and changelog. They consistently record approved Option A, retain experimental qualifications, distinguish requested/queued/submitted from written/reloaded/progressed, and explicitly defer automatic loaded-playthrough binding, all-owned-safehouses, automatic live backups/correlation and dependent completion messages after 1.0. Historical preview requirements are superseded, not silently marked complete.
+- Inspected the fresh integrated runner results: 54 groups all exit 0, including 89 auditor tests. This review inspected those logs rather than independently repeating all 54 groups. Root owns final extracted-package and delivery verification.
+
+## Limits
+
+This review and the temporary filesystem probes establish source preservation and offline tool behavior. They do not establish CET LuaJIT/5.1 execution, current REDscript compilation, Windows reparse/process behavior, exact installed dependency versions, game save creation, reload, quest progression or companion restored-game results. Broad user feedback remains accepted as broad feedback. No upstream whole-package MIT/redistribution clearance, public repository publication or author contact is asserted. Final ZIP integrity, extracted reruns and authenticated delivery readback remain the coordinator's checks.

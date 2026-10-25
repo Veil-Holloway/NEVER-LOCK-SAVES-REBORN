@@ -1,0 +1,429 @@
+{
+  "evidence_kind": "Primary source/RTTI inspection; not compilation or game execution",
+  "source_snapshot_warning": "NativeDB commit dated 2021-12-15; installed game version compatibility remains unverified. Supplied Dark Future sources corroborate time/combat/mounted APIs.",
+  "sources": [
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "path": "public/dumps/classes/gameSaveLock.json",
+      "blob_sha": "ed5cce968dd1f2d049198998621ba0be1f803f42",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/8f13e59e5007d97f3d105b8959bbe1bbbe9992a2/public/dumps/classes/gameSaveLock.json",
+      "interface": {
+        "name": "gameSaveLock",
+        "flags": 66,
+        "props": [
+          {
+            "type": "gameSaveLockReason",
+            "name": "reason",
+            "flags": 6627016704
+          }
+        ]
+      }
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "path": "public/dumps/enums/gameSaveLockReason.json",
+      "blob_sha": "1cc0944db2e75df81f7e8c8c1a5a63447b7d575a",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/8f13e59e5007d97f3d105b8959bbe1bbbe9992a2/public/dumps/enums/gameSaveLockReason.json",
+      "interface": {
+        "name": "gameSaveLockReason",
+        "members": [
+          {
+            "name": "Nothing",
+            "value": 0
+          },
+          {
+            "name": "Combat",
+            "value": 1
+          },
+          {
+            "name": "Scene",
+            "value": 2
+          },
+          {
+            "name": "Quest",
+            "value": 3
+          },
+          {
+            "name": "Script",
+            "value": 4
+          },
+          {
+            "name": "Boundary",
+            "value": 5
+          },
+          {
+            "name": "MainMenu",
+            "value": 6
+          },
+          {
+            "name": "LoadingScreen",
+            "value": 7
+          },
+          {
+            "name": "PlayerStateMachine",
+            "value": 8
+          },
+          {
+            "name": "PlayerState",
+            "value": 9
+          },
+          {
+            "name": "Tier",
+            "value": 10
+          },
+          {
+            "name": "NotEnoughSlots",
+            "value": 11
+          },
+          {
+            "name": "NotEnoughSpace",
+            "value": 12
+          },
+          {
+            "name": "PlayerOnMovingPlatform",
+            "value": 13
+          }
+        ]
+      }
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "path": "public/dumps/classes/gameTimeSystem.json",
+      "blob_sha": "123d884ab473c75a09eedb87b6e527585e6a73c7",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/8f13e59e5007d97f3d105b8959bbe1bbbe9992a2/public/dumps/classes/gameTimeSystem.json",
+      "interface": [
+        {
+          "fullName": "IsPausedState",
+          "shortName": "IsPausedState",
+          "return": {
+            "type": "Bool",
+            "flags": 64
+          },
+          "index": 10344,
+          "flags": 1
+        }
+      ]
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "blob_sha": "3567317ee156559553338490e9a7eab4bf272a18",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/master/public/dumps/classes/ScriptGameInstance.json",
+      "interface": {
+        "name": "ScriptGameInstance",
+        "funcs": [
+          {
+            "fullName": "GetPlaythroughTime",
+            "shortName": "GetPlaythroughTime",
+            "return": {
+              "type": "EngineTime",
+              "flags": 64
+            },
+            "index": 9598,
+            "flags": 3,
+            "params": [
+              {
+                "type": "ScriptGameInstance",
+                "name": "self",
+                "flags": 128
+              }
+            ]
+          },
+          {
+            "fullName": "GetTimeSystem",
+            "shortName": "GetTimeSystem",
+            "return": {
+              "type": "handle:gameTimeSystem",
+              "flags": 64
+            },
+            "index": 9639,
+            "flags": 3,
+            "params": [
+              {
+                "type": "ScriptGameInstance",
+                "name": "self",
+                "flags": 128
+              }
+            ]
+          },
+          {
+            "fullName": "IsSavingLocked",
+            "shortName": "IsSavingLocked",
+            "return": {
+              "type": "Bool",
+              "flags": 64
+            },
+            "index": 9684,
+            "flags": 3,
+            "params": [
+              {
+                "type": "ScriptGameInstance",
+                "name": "self",
+                "flags": 128
+              },
+              {
+                "type": "array:gameSaveLock",
+                "name": "locks",
+                "flags": 640
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "blob_sha": "8972963cbdb86510d975e31737209884420a9f51",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/master/public/dumps/classes/inkISystemRequestsHandler.json",
+      "interface": {
+        "name": "inkISystemRequestsHandler",
+        "funcs": [
+          {
+            "fullName": "GetGameVersion",
+            "shortName": "GetGameVersion",
+            "return": {
+              "type": "String",
+              "flags": 64
+            },
+            "index": 1615,
+            "flags": 1
+          },
+          {
+            "fullName": "GetLatestSaveMetadata",
+            "shortName": "GetLatestSaveMetadata",
+            "return": {
+              "type": "handle:inkLatestSaveMetadataInfo",
+              "flags": 64
+            },
+            "index": 1643,
+            "flags": 1
+          },
+          {
+            "fullName": "IsGamePaused",
+            "shortName": "IsGamePaused",
+            "return": {
+              "type": "Bool",
+              "flags": 64
+            },
+            "index": 1619,
+            "flags": 1
+          },
+          {
+            "fullName": "IsPreGame",
+            "shortName": "IsPreGame",
+            "return": {
+              "type": "Bool",
+              "flags": 64
+            },
+            "index": 1620,
+            "flags": 1
+          }
+        ]
+      }
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "blob_sha": "f44f2fc015dfc87856bb96475fb9cad1c111806d",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/master/public/dumps/classes/cpPlayerSystem.json",
+      "interface": {
+        "name": "cpPlayerSystem",
+        "funcs": [
+          {
+            "fullName": "GetLocalPlayerControlledGameObject",
+            "shortName": "GetLocalPlayerControlledGameObject",
+            "return": {
+              "type": "handle:gameObject",
+              "flags": 64
+            },
+            "index": 12219,
+            "flags": 8193
+          },
+          {
+            "fullName": "GetLocalPlayerMainGameObject",
+            "shortName": "GetLocalPlayerMainGameObject",
+            "return": {
+              "type": "handle:gameObject",
+              "flags": 64
+            },
+            "index": 12218,
+            "flags": 8193
+          }
+        ]
+      }
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "blob_sha": "6ba53e19eed8251d09c13c308538d1c91ed3edb6",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/master/public/dumps/classes/inkMenuScenario.json",
+      "interface": {
+        "name": "inkMenuScenario",
+        "funcs": [
+          {
+            "fullName": "GetSystemRequestsHandler",
+            "shortName": "GetSystemRequestsHandler",
+            "return": {
+              "type": "whandle:inkISystemRequestsHandler",
+              "flags": 64
+            },
+            "index": 1443,
+            "flags": 1
+          }
+        ]
+      }
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "blob_sha": "8b2979f9c51581b883fa2367df0535ca4124a7f0",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/master/public/dumps/classes/inkLatestSaveMetadataInfo.json",
+      "interface": {
+        "parent": "IScriptable",
+        "name": "inkLatestSaveMetadataInfo",
+        "flags": 2,
+        "props": [
+          {
+            "type": "String",
+            "name": "locationName",
+            "flags": 6627016704
+          },
+          {
+            "type": "String",
+            "name": "trackedQuest",
+            "flags": 6627016704
+          },
+          {
+            "type": "inkLifePath",
+            "name": "lifePath",
+            "flags": 6627016704
+          },
+          {
+            "type": "Double",
+            "name": "playTime",
+            "flags": 6627016704
+          },
+          {
+            "type": "Double",
+            "name": "playthroughTime",
+            "flags": 6627016704
+          },
+          {
+            "type": "Uint64",
+            "name": "initialLoadingScreenID",
+            "flags": 6627016704
+          },
+          {
+            "type": "String",
+            "name": "gameVersion",
+            "flags": 6627016704
+          }
+        ]
+      }
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "blob_sha": "4b6866977d3f4bb4509c313d11151030290ebd6e",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/master/public/dumps/classes/VehicleComponent.json",
+      "interface": {
+        "name": "VehicleComponent",
+        "funcs": [
+          {
+            "fullName": "VehicleComponent::IsMountedToVehicle;GameInstanceGameObject",
+            "shortName": "IsMountedToVehicle",
+            "return": {
+              "type": "Bool",
+              "flags": 64
+            },
+            "flags": 518,
+            "params": [
+              {
+                "type": "ScriptGameInstance",
+                "name": "gi",
+                "flags": 128
+              },
+              {
+                "type": "whandle:gameObject",
+                "name": "owner",
+                "flags": 128
+              }
+            ]
+          },
+          {
+            "fullName": "VehicleComponent::IsMountedToVehicle;GameInstanceEntityID",
+            "shortName": "IsMountedToVehicle",
+            "return": {
+              "type": "Bool",
+              "flags": 64
+            },
+            "flags": 518,
+            "params": [
+              {
+                "type": "ScriptGameInstance",
+                "name": "gi",
+                "flags": 128
+              },
+              {
+                "type": "entEntityID",
+                "name": "ownerID",
+                "flags": 128
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "blob_sha": "28c4235b09ce52282db65a151757199c785474f7",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/master/public/dumps/globals.json",
+      "interface": {
+        "name": "globals",
+        "funcs": [
+          {
+            "fullName": "GetMountedVehicle;GameObject",
+            "shortName": "GetMountedVehicle",
+            "return": {
+              "type": "whandle:vehicleBaseObject",
+              "flags": 64
+            },
+            "flags": 514,
+            "params": [
+              {
+                "type": "handle:gameObject",
+                "name": "object",
+                "flags": 128
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "repository": "striderxfossility/NativeDB",
+      "commit": "8f13e59e5007d97f3d105b8959bbe1bbbe9992a2",
+      "blob_sha": "1865e972841dd3c9549a99a2fd0dfa4ca82a8b4a",
+      "url": "https://github.com/striderxfossility/NativeDB/blob/master/public/dumps/classes/PlayerPuppet.json",
+      "interface": {
+        "name": "PlayerPuppet",
+        "funcs": [
+          {
+            "fullName": "IsInCombat;",
+            "shortName": "IsInCombat",
+            "return": {
+              "type": "Bool",
+              "flags": 64
+            },
+            "flags": 8708
+          }
+        ]
+      }
+    }
+  ]
+}

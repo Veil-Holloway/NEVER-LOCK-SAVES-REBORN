@@ -1,0 +1,1396 @@
+--- preRC4/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
++++ RC1/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
+@@ -1,4 +1,4 @@
+--- Never Lock Saves Reborn v0.14.0-preRC4 Release Testing Preview
++-- Never Lock Saves Reborn v1.0.0-rc1 Release Candidate
+ -- Persistent UI settings, runtime bridge, and diagnostics.
+ -- Smart permits only explicit combat locks with combat opt-in; mounted combat also needs vehicle opt-in.
+ -- DF switches control contextual messages only. Optional scheduler defaults OFF.
+@@ -702,7 +702,7 @@
+       end})
+     if ok and type(value)=='table' and getmetatable(value)==nil then versionSnapshot=value end
+   end
+-  local snapshot={build='0.14.0-preRC4',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),
++  local snapshot={build='1.0.0-rc1',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),
+     facts={q000_done=read(function() return Game.GetQuestsSystem():GetFactStr('q000_done') end),
+       q001_started=read(function() return Game.GetQuestsSystem():GetFactStr('q001_started') end)},
+     sensors={combatKnown=combatKnown,combatActive=combatActive,vehicleKnown=vehicleKnown,vehicleActive=vehicleActive,
+@@ -733,7 +733,7 @@
+   end
+   registerNativeSettings()
+   deferredStatus = deferredEnabled and 'Live queue enabled (experimental)' or 'Disabled'
+-  log('v0.14.0-preRC4 Release Testing Preview loaded; experimental native save-lock gate required')
++  log('v1.0.0-rc1 Release Candidate loaded; experimental native save-lock gate required')
+ end)
+ registerForEvent('onOverlayOpen', function() show = true; apply() end)
+ registerForEvent('onOverlayClose', function() show = false end)
+@@ -1009,7 +1009,7 @@
+   if not show then return end
+   local visible = ImGui.Begin(title)
+   if visible then
+-    ImGui.Text('v0.14.0-preRC4 Release Testing Preview | Runtime policy')
++    ImGui.Text('v1.0.0-rc1 Release Candidate | Runtime policy')
+     ImGui.TextWrapped('Native menu: '..nativeStatus)
+     ImGui.Separator()
+     for i=0,3 do
+@@ -1168,7 +1168,7 @@
+       ImGui.TextWrapped('Context states: -1 UNKNOWN, 0 inactive/disabled, 1 active. Context: 8 sleep, 11 dehydration, 10 starvation, 9 addiction.')
+       ImGui.TextWrapped('Compatibility is source-reviewed; in-game validation is still required. State samples refresh every two seconds.')
+       if ImGui.Button('Log compatibility snapshot##nls_darkfuture') then
+-        log('v0.14.0-preRC4 Release Testing Preview | mode='..names[mode+1]..' | prologue='..prologueStatus)
++        log('v1.0.0-rc1 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)
+         log('Dark Future: '..darkFutureStatus)
+         if darkFutureError then log('Dark Future query error: '..darkFutureError) end
+         if dfOK then log('Last Immersion save check: '..tostring(dfLastCheck)) end
+@@ -1202,7 +1202,7 @@
+       if ImGui.Button('Export Guardian report##nls_guardian_export') then
+         local exported=pcall(function()
+           local report=guardian:report()
+-          report.rebornBuild='0.14.0-preRC4'
++          report.rebornBuild='1.0.0-rc1'
+           report.gameBuild='unknown'; report.frameworkVersions='unknown'
+           configStore.save('guardian-report.json',report)
+         end)
+--- preRC4/docs/NeverLockSavesReborn/validation/check_dependency_scope.py
++++ RC1/docs/NeverLockSavesReborn/validation/check_dependency_scope.py
+@@ -1,12 +1,13 @@
+ #!/usr/bin/env python3
+ """Exact preRC3 identity outside the new on-demand diagnostic seams."""
+ from pathlib import Path
++from check_rc1_scope import normalized_pre_rc4
+ import hashlib,json,sys
+ FIXTURE=Path(__file__).parent/'fixtures/dependency_scope.json'
+ def fixture():return json.loads(FIXTURE.read_text())
+ def sha(value):return hashlib.sha256(value).hexdigest()
+ def normalized_init(root):
+- f=fixture();b=(root/f['init_path']).read_bytes();assert b.count(b'0.14.0-preRC4')==6
++ f=fixture();b=normalized_pre_rc4(root,f['init_path']);assert b.count(b'0.14.0-preRC4')==6
+  b=b.replace(b'0.14.0-preRC4',b'0.14.0-preRC3')
+  addition=b"local dependencyVersions=optional('dependency_versions')\r\n";assert b.count(addition)==1;b=b.replace(addition,b'')
+  start=b.index(b'  -- Collect only on explicit support export.');end=b.index(b'  local snapshot=',start)
+@@ -15,7 +16,7 @@
+  assert sha(b)==f['baseline_hashes'][f['init_path']],'Unrelated init source changed';return b
+ 
+ def normalized_redscript(root):
+- f=fixture();b=(root/f['redscript_path']).read_bytes();assert b.count(b'0.14.0-preRC4')==2
++ f=fixture();b=normalized_pre_rc4(root,f['redscript_path']);assert b.count(b'0.14.0-preRC4')==2
+  b=b.replace(b'0.14.0-preRC4',b'0.14.0-preRC3');assert sha(b)==f['baseline_hashes'][f['redscript_path']],'Unrelated REDS source changed';return b
+ 
+ def normalized_report(root):
+--- preRC4/docs/NeverLockSavesReborn/validation/check_rc1_scope.py
++++ RC1/docs/NeverLockSavesReborn/validation/check_rc1_scope.py
+@@ -0,0 +1,65 @@
++#!/usr/bin/env python3
++"""RC1 label-only preservation against the exact authenticated preRC4 payload.
++
++Byte identity is evidence about source scope, not gameplay or compatibility.
++The original preRC4->preRC3 and preRC3->preRC2 guards remain in force.
++"""
++from pathlib import Path
++import hashlib
++import json
++import sys
++
++FIXTURE = Path(__file__).parent / 'fixtures/rc1_scope.json'
++
++
++def fixture():
++    return json.loads(FIXTURE.read_text())
++
++
++def sha(value):
++    return hashlib.sha256(value).hexdigest()
++
++
++def normalized_pre_rc4(root, rel, require_candidate=False):
++    """Normalize only the two reviewed labels; require exact pinned source."""
++    f = fixture()
++    spec = f['label_files'][rel]
++    data = (root / rel).read_bytes()
++    before = f['baseline_version'].encode()
++    after = f['candidate_version'].encode()
++    title_before = f['baseline_title'].encode()
++    title_after = f['candidate_title'].encode()
++    if not require_candidate and sha(data) == spec['baseline_sha256']:
++        return data
++    assert data.count(after) == spec['version_count'], 'Unexpected RC1 version count: ' + rel
++    assert data.count(before) == 0, 'Mixed preview/candidate versions: ' + rel
++    assert data.count(title_after) == spec['title_count'], 'Unexpected RC1 title count: ' + rel
++    assert data.count(title_before) == 0, 'Mixed preview/candidate titles: ' + rel
++    assert sha(data) == spec['candidate_sha256'], 'RC1 source differs from frozen labels: ' + rel
++    data = data.replace(after, before).replace(title_after, title_before)
++    assert sha(data) == spec['baseline_sha256'], 'Unrelated runtime source changed: ' + rel
++    return data
++
++
++def check(root):
++    f = fixture()
++    for rel in f['label_files']:
++        normalized_pre_rc4(root, rel, require_candidate=True)
++    actual = set()
++    # New support/audit tools are frozen separately; preserve the entire old companion.
++    for top in f['protected_roots']:
++        for p in (root / top).rglob('*'):
++            if p.is_file() and '__pycache__' not in p.parts and p.suffix not in ('.pyc', '.pyo'):
++                assert not p.is_symlink(), 'Unexpected source symlink'
++                actual.add(p.relative_to(root).as_posix())
++    expected = set(f['label_files']) | set(f['unchanged_files'])
++    assert actual == expected, 'Runtime/helper file inventory changed'
++    for rel, expected_hash in f['unchanged_files'].items():
++        assert sha((root / rel).read_bytes()) == expected_hash, 'Changed protected RC1 file: ' + rel
++    print('PASS RC1 source freeze: eight version labels and five adjacent titles only; '
++          + str(len(f['unchanged_files'])) + ' whole runtime/helper files unchanged; '
++          + str(len(actual)) + ' exact source/helper paths. Source identity only.')
++
++
++if __name__ == '__main__':
++    check(Path(sys.argv[1]).resolve())
+--- preRC4/docs/NeverLockSavesReborn/validation/run_checks.py
++++ RC1/docs/NeverLockSavesReborn/validation/run_checks.py
+@@ -69,6 +69,9 @@
+  ('status_independent',lua+[str(HERE/'test_status_public_independent.lua'),str(module_dir)]),
+  ('dependency_export_independent',[sys.executable,str(HERE/'run_dependency_export_independent.py'),'--release',str(root),'--output',str(out/'dependency_export_independent'),'--lua',lua[0]]+['--lua-arg='+value for value in lua[1:]]),
+  ('dependency_scope',[sys.executable,str(HERE/'check_dependency_scope.py'),str(root)]),
++ ('rc1_source_freeze',[sys.executable,str(HERE/'check_rc1_scope.py'),str(root)]),
++ ('rc1_scope_controls',[sys.executable,str(HERE/'run_rc1_scope_controls.py'),str(root)]),
++ ('installation_auditor',[sys.executable,'-B','-m','unittest','discover','-s',str(root/'tools/NLSRInstallAudit/tests'),'-p','test_*.py','-v']),
+  ('dependency_versions',lua+[str(HERE/'test_dependency_versions.lua'),str(module_dir/'dependency_versions.lua')]),
+  ('dependency_report',lua+[str(HERE/'test_dependency_report.lua'),str(module_dir)]),
+  ('dependency_mutation_controls',[sys.executable,str(HERE/'run_dependency_controls.py'),'--module-dir',str(module_dir),'--output',str(out/'dependency_mutation_controls'),'--lua',lua[0]]+['--lua-arg='+value for value in lua[1:]]),
+--- preRC4/docs/NeverLockSavesReborn/validation/run_rc1_scope_controls.py
++++ RC1/docs/NeverLockSavesReborn/validation/run_rc1_scope_controls.py
+@@ -0,0 +1,53 @@
++#!/usr/bin/env python3
++"""Exercise RC1 source-freeze rejection using independent, temporary byte edits."""
++import json
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++import tempfile
++
++root = Path(sys.argv[1]).resolve()
++here = Path(__file__).resolve().parent
++fixture = json.loads((here / 'fixtures/rc1_scope.json').read_text())
++init, reds = tuple(fixture['label_files'])
++module = 'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua'
++helper = 'tools/NLSRSaveGuardian/save_guardian.py'
++
++def run(candidate):
++    return subprocess.run([sys.executable, str(here / 'check_rc1_scope.py'), str(candidate)], capture_output=True, text=True)
++
++baseline = run(root)
++assert baseline.returncode == 0, 'Unmodified candidate must pass before controls: ' + baseline.stderr
++cases = [
++    ('mixed_init_version', init, b'1.0.0-rc1', b'0.14.0-preRC4', 'Unexpected RC1 version count'),
++    ('mixed_init_title', init, b'Release Candidate', b'Release Testing Preview', 'Unexpected RC1 title count'),
++    ('init_nonlabel_change', init, b'local function saveConfig()', b'local function saveConfig() -- unreviewed body edit', 'RC1 source differs from frozen labels'),
++    ('reds_wrong_version', reds, b'1.0.0-rc1', b'1.0.0-rc2', 'Unexpected RC1 version count'),
++    ('reds_nonlabel_change', reds, None, b'\n// unreviewed source edit\n', 'RC1 source differs from frozen labels'),
++    ('module_changed', module, None, b'\n-- unreviewed module edit\n', 'Changed protected RC1 file'),
++    ('companion_changed', helper, None, b'\n# unreviewed companion edit\n', 'Changed protected RC1 file'),
++    ('extra_runtime_file', 'r6/scripts/NeverLockSavesReborn/unreviewed.reds', None, b'// unexpected runtime file\n', 'Runtime/helper file inventory changed'),
++    ('missing_runtime_file', module, b'__REMOVE_FILE__', b'', 'Runtime/helper file inventory changed'),
++]
++results = []
++with tempfile.TemporaryDirectory(prefix='nlsr-rc1-scope-') as tmp:
++    for name, rel, before, after, expected in cases:
++        candidate = Path(tmp) / name
++        for top in fixture['protected_roots']:
++            shutil.copytree(root / top, candidate / top, ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.pyo'))
++        p = candidate / rel
++        if before == b'__REMOVE_FILE__':
++            p.unlink()
++        elif before is None:
++            p.parent.mkdir(parents=True, exist_ok=True)
++            p.write_bytes((p.read_bytes() if p.exists() else b'') + after)
++        else:
++            b = p.read_bytes()
++            assert b.count(before) >= 1, 'Control anchor missing: ' + name
++            p.write_bytes(b.replace(before, after, 1))
++        result = run(candidate)
++        assert result.returncode != 0 and expected in result.stderr, 'Control did not fail for intended source-scope reason: ' + name + '\n' + result.stdout + result.stderr
++        results.append({'control': name, 'rejected': True, 'reason': expected})
++print(json.dumps({'scope':'RC1 source-preservation checks only; no game runtime.', 'unmodified_candidate':'passed', 'negative_controls':results}, indent=2))
++print('PASS nine intended RC1 source-freeze mutation controls')
+--- preRC4/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
++++ RC1/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
+@@ -1,4 +1,4 @@
+-// v0.14.0-preRC4 Release Testing Preview. Deferred/autosave lanes are opt-in.
++// v1.0.0-rc1 Release Candidate. Deferred/autosave lanes are opt-in.
+ // Engine native saving-unlocked state is the release gate; this does not
+ // guarantee that a quest or phone conversation serializes correctly.
+ @addField(PlayerPuppet) public let nlsDeferredEnabled: Bool = false;
+@@ -437,7 +437,7 @@
+ public final func NLSRebornGetNotificationCategory() -> Int32 { return NLSRebornPolicy.NotificationContext(this.GetGame()); }
+ 
+ public class NLSRebornPolicy {
+-  public static func Version() -> String { return "0.14.0-preRC4"; }
++  public static func Version() -> String { return "1.0.0-rc1"; }
+   public static func ShuffleSlot(index: Int32, seed: Int32) -> Int32 {
+     let cycle: Int32 = index / 20;
+     let turn: Int32 = index % 20;
+--- preRC4/tools/NLSRInstallAudit/audit_installation.py
++++ RC1/tools/NLSRInstallAudit/audit_installation.py
+@@ -0,0 +1,429 @@
++#!/usr/bin/env python3
++"""Read-only, bounded RC1 installation observations; standard library only."""
++import argparse
++from datetime import datetime, timezone
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import stat
++import sys
++
++RELEASE = '1.0.0-rc1'
++INVENTORY_SHA256 = '34df536f27eabaff08bdd6d066552467f28099caa3d0c9c1c0286ff16850d392'
++LUA_ROOT = 'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn'
++REDS_ROOT = 'r6/scripts/NeverLockSavesReborn'
++MAX_FILE = 2 * 1024 * 1024
++MAX_SCAN_ENTRIES = 8192
++MAX_SCAN_BYTES = 64 * 1024 * 1024
++MAX_DEPTH = 16
++LOG_TAIL = 128 * 1024
++VERSION_KEYS = {'game', 'cet', 'redscript', 'red4ext', 'codeware', 'native_settings', 'dark_future'}
++DEPENDENCIES = (
++    ('cet', 'bin/x64/plugins/cyber_engine_tweaks.asi'),
++    ('red4ext', 'red4ext/RED4ext.dll'),
++    ('codeware', 'red4ext/plugins/Codeware/Codeware.dll'),
++    ('redscript', 'engine/tools/scc.exe'),
++    ('native_settings', 'bin/x64/plugins/cyber_engine_tweaks/mods/nativeSettings/init.lua'),
++)
++LIMITATIONS = [
++    'File matches establish installed bytes only; no game compilation or runtime compatibility is verified.',
++    'Versions are explicit user labels; dependency observations establish file presence only.',
++    'Optional log tails are unscoped observations and may describe earlier sessions or unrelated mods.',
++    'No save creation, written-file correlation, reload, quest progression, or stable release is established.',
++    'Link and stability checks are best effort; hostile concurrent path replacement cannot be excluded.',
++]
++
++
++class AuditError(Exception):
++    def __init__(self, code):
++        self.code = code
++
++
++def unsafe(st):
++    return stat.S_ISLNK(st.st_mode) or bool(getattr(st, 'st_file_attributes', 0) & 0x400)
++
++
++def identity(st):
++    return (st.st_dev, st.st_ino, st.st_mode, st.st_size, st.st_mtime_ns, st.st_ctime_ns)
++
++
++def path_input(value):
++    if not value or len(value) > 4096 or '\x00' in value or '..' in Path(value).parts:
++        raise AuditError('invalid_input')
++    return Path(os.path.abspath(value))
++
++
++def checked_stat(path):
++    """lstat each ancestor before using a path; never deliberately follow a link."""
++    absolute = Path(os.path.abspath(path))
++    current = Path(absolute.anchor)
++    for component in absolute.parts[1:]:
++        current = current / component
++        st = current.lstat()
++        if unsafe(st):
++            raise AuditError('unsafe_path')
++        if current != absolute and not stat.S_ISDIR(st.st_mode):
++            raise AuditError('unsafe_ancestor')
++    return absolute.lstat()
++
++
++def stable_read(path, limit, tail=False):
++    before = checked_stat(path)
++    if not stat.S_ISREG(before.st_mode):
++        raise AuditError('not_regular_file')
++    if before.st_size < 0 or (not tail and before.st_size > limit):
++        raise AuditError('file_budget_exceeded')
++    flags = os.O_RDONLY | getattr(os, 'O_BINARY', 0) | getattr(os, 'O_NOFOLLOW', 0)
++    fd = os.open(path, flags)
++    with os.fdopen(fd, 'rb') as handle:
++        opened = os.fstat(handle.fileno())
++        if identity(before) != identity(opened) or unsafe(opened) or not stat.S_ISREG(opened.st_mode):
++            raise AuditError('file_changed_during_read')
++        if tail:
++            handle.seek(max(0, opened.st_size - limit))
++        data = handle.read(limit + 1)
++        after_fd = os.fstat(handle.fileno())
++    after_path = checked_stat(path)
++    if len(data) > limit or identity(before) != identity(after_fd) or identity(before) != identity(after_path):
++        raise AuditError('file_changed_during_read')
++    expected = min(limit, before.st_size) if tail else before.st_size
++    if len(data) != expected:
++        raise AuditError('file_changed_during_read')
++    return data, before
++
++
++def digest(data):
++    return hashlib.sha256(data).hexdigest()
++
++
++def anonymous(relative):
++    # Discovered names may contain personal data or control characters.
++    return {'relative_path_sha256': digest(relative.encode('utf-8', 'surrogatepass'))}
++
++
++def load_inventory():
++    data, _ = stable_read(Path(__file__).absolute().parent / 'runtime_inventory.json', 256 * 1024)
++    if digest(data) != INVENTORY_SHA256:
++        raise AuditError('inventory_pin_mismatch')
++    value = json.loads(data)
++    if value.get('schema') != 1 or value.get('release') != RELEASE:
++        raise AuditError('invalid_inventory')
++    rows = value.get('runtime_files')
++    if not isinstance(rows, list) or len(rows) != 16:
++        raise AuditError('invalid_inventory')
++    paths = set()
++    for row in rows:
++        path = row.get('path', '')
++        parts = path.split('/')
++        if not path.startswith((LUA_ROOT + '/', REDS_ROOT + '/')) or any(p in ('', '.', '..') for p in parts) or '\\' in path:
++            raise AuditError('invalid_inventory')
++        if path.casefold() in paths or type(row.get('size')) is not int or not 0 <= row['size'] <= MAX_FILE:
++            raise AuditError('invalid_inventory')
++        if not re.fullmatch('[0-9a-f]{64}', row.get('sha256', '')):
++            raise AuditError('invalid_inventory')
++        paths.add(path.casefold())
++    return value
++
++
++def base_report():
++    return {'schema_version': 1, 'release': RELEASE, 'audit_status': 'incomplete',
++            'observed_at_utc': datetime.now(timezone.utc).isoformat(),
++            'audit_host': {'platform': sys.platform, 'python_version': '.'.join(str(n) for n in sys.version_info[:3])},
++            'runtime': {'status': 'incomplete', 'files': []},
++            'archive': {'status': 'not_supported_embedded_tool'}, 'scans': [],
++            'version_labels': {}, 'dependencies': [], 'logs': [], 'issues': [],
++            'limitations': LIMITATIONS}
++
++
++class Auditor:
++    def __init__(self, report, root, inventory):
++        self.report, self.root, self.inventory = report, root, inventory
++        self.incomplete, self.review = False, False
++        self.expected = {r['path']: r for r in inventory['runtime_files']}
++        self.expected_folded = {p.casefold(): p for p in self.expected}
++
++    def issue(self, code, scope, path=None, discovered=None, incomplete=False):
++        self.incomplete |= incomplete
++        self.review |= not incomplete
++        row = {'code': code, 'scope': scope}
++        if path is not None:
++            row['path'] = path
++        if discovered is not None:
++            row.update(anonymous(discovered))
++        if len(self.report['issues']) < 256:
++            self.report['issues'].append(row)
++        else:
++            self.report['issues_omitted'] = self.report.get('issues_omitted', 0) + 1
++
++    def runtime(self):
++        has_drift, incomplete = False, False
++        for path, expected in self.expected.items():
++            row = {'path': path, 'expected_size': expected['size'], 'expected_sha256': expected['sha256']}
++            try:
++                data, st = stable_read(self.root / path, MAX_FILE)
++                row.update(observed_size=st.st_size, observed_sha256=digest(data))
++                row['status'] = 'match' if st.st_size == expected['size'] and row['observed_sha256'] == expected['sha256'] else 'changed'
++                if row['status'] == 'changed':
++                    has_drift = True
++                    self.issue('runtime_changed', 'runtime', path=path)
++            except FileNotFoundError:
++                row['status'] = 'missing'
++                has_drift = True
++                self.issue('runtime_missing', 'runtime', path=path)
++            except (OSError, AuditError) as exc:
++                code = exc.code if isinstance(exc, AuditError) else 'io_error'
++                row['status'] = 'unsafe' if code in ('unsafe_path', 'unsafe_ancestor', 'not_regular_file') else 'unreadable'
++                row['reason'] = code
++                incomplete = True
++                self.issue(code, 'runtime', path=path, incomplete=True)
++            self.report['runtime']['files'].append(row)
++        self.report['runtime']['status'] = 'incomplete' if incomplete else 'drift' if has_drift else 'exact_match'
++
++    def scan(self, relative, kind):
++        result = {'scope': kind, 'status': 'complete', 'entries': 0, 'files': 0,
++                  'bytes_read': 0, 'review_candidates': [], 'candidates_omitted': 0}
++        self.report['scans'].append(result)
++        seen = set()
++
++        def issue(code, rel, incomplete=False):
++            if incomplete:
++                result['status'] = 'incomplete'
++            self.issue(code, kind, discovered=rel, incomplete=incomplete)
++
++        def candidate(code, rel):
++            issue(code, rel)
++            if len(result['review_candidates']) < 64:
++                result['review_candidates'].append(dict(kind=code, **anonymous(rel)))
++            else:
++                result['candidates_omitted'] += 1
++
++        def walk(folder, rel, depth):
++            if depth > MAX_DEPTH:
++                issue('scan_depth_exceeded', rel, True)
++                return
++            try:
++                before = checked_stat(folder)
++                if not stat.S_ISDIR(before.st_mode):
++                    issue('not_directory', rel, True)
++                    return
++                with os.scandir(folder) as entries:
++                    for entry in entries:
++                        result['entries'] += 1
++                        if result['entries'] > MAX_SCAN_ENTRIES:
++                            raise AuditError('scan_entry_budget_exceeded')
++                        child_rel = rel + '/' + entry.name
++                        folded = child_rel.casefold()
++                        if folded in seen:
++                            candidate('case_insensitive_alias', child_rel)
++                        seen.add(folded)
++                        child = folder / entry.name
++                        try:
++                            st = entry.stat(follow_symlinks=False)
++                            if unsafe(st):
++                                issue('unsafe_path', child_rel, True)
++                                continue
++                            if stat.S_ISDIR(st.st_mode):
++                                walk(child, child_rel, depth + 1)
++                                continue
++                            if not stat.S_ISREG(st.st_mode):
++                                issue('not_regular_file', child_rel, True)
++                                continue
++                            result['files'] += 1
++                            suffix = Path(entry.name).suffix.casefold()
++                            if suffix not in ('.lua', '.reds'):
++                                continue
++                            canonical = self.expected_folded.get(folded)
++                            if canonical is not None and child_rel != canonical:
++                                candidate('case_insensitive_alias', child_rel)
++                            if kind != 'redscript_duplicate_candidates':
++                                if child_rel not in self.expected:
++                                    candidate('extra_runtime_script', child_rel)
++                            elif suffix == '.reds' and child_rel not in self.expected:
++                                if result['bytes_read'] + st.st_size > MAX_SCAN_BYTES:
++                                    raise AuditError('scan_byte_budget_exceeded')
++                                data, observed = stable_read(child, MAX_FILE)
++                                result['bytes_read'] += observed.st_size
++                                lower = data.lower()
++                                if b'nlsreborn' in lower or b'neverlocksaves' in lower:
++                                    candidate('duplicate_definition_candidate', child_rel)
++                        except FileNotFoundError:
++                            issue('scan_entry_disappeared', child_rel, True)
++                        except (OSError, AuditError) as exc:
++                            code = exc.code if isinstance(exc, AuditError) else 'io_error'
++                            issue(code, child_rel, True)
++                after = checked_stat(folder)
++                if identity(before) != identity(after):
++                    issue('directory_changed_during_scan', rel, True)
++            except FileNotFoundError:
++                # Missing known roots are definite absence; expected files report drift.
++                if depth:
++                    issue('scan_entry_disappeared', rel, True)
++            except (OSError, AuditError) as exc:
++                code = exc.code if isinstance(exc, AuditError) else 'io_error'
++                issue(code, rel, True)
++
++        walk(self.root / relative, relative, 0)
++
++    def mod_directory_aliases(self):
++        relative = str(Path(LUA_ROOT).parent).replace('\\', '/')
++        scope = 'cet_mod_directory_aliases'
++        result = {'scope': scope, 'status': 'complete', 'entries': 0,
++                  'files': 0, 'bytes_read': 0, 'review_candidates': [], 'candidates_omitted': 0,
++                  'inspection_scope': 'immediate_mod_directories_init_lua_only'}
++        self.report['scans'].append(result)
++        seen = set()
++
++        def candidate(code, rel):
++            self.issue(code, scope, discovered=rel)
++            if len(result['review_candidates']) < 64:
++                result['review_candidates'].append(dict(kind=code, **anonymous(rel)))
++            else:
++                result['candidates_omitted'] += 1
++
++        try:
++            folder = self.root / relative
++            before = checked_stat(folder)
++            if not stat.S_ISDIR(before.st_mode):
++                raise AuditError('not_directory')
++            with os.scandir(folder) as entries:
++                for entry in entries:
++                    result['entries'] += 1
++                    if result['entries'] > MAX_SCAN_ENTRIES:
++                        raise AuditError('scan_entry_budget_exceeded')
++                    rel = relative + '/' + entry.name
++                    if entry.name.casefold() in seen:
++                        candidate('case_insensitive_alias', rel)
++                    seen.add(entry.name.casefold())
++                    try:
++                        st = entry.stat(follow_symlinks=False)
++                        if unsafe(st):
++                            raise AuditError('unsafe_mod_directory')
++                        if stat.S_ISREG(st.st_mode):
++                            continue
++                        if not stat.S_ISDIR(st.st_mode):
++                            raise AuditError('not_directory')
++                        if entry.name.casefold() == 'neverlocksavesreborn' and entry.name != 'NeverLockSavesReborn':
++                            candidate('case_insensitive_alias', rel)
++                        if entry.name == 'NeverLockSavesReborn':
++                            continue
++                        init = folder / entry.name / 'init.lua'
++                        try:
++                            init_st = checked_stat(init)
++                        except FileNotFoundError:
++                            continue
++                        if result['bytes_read'] + init_st.st_size > MAX_SCAN_BYTES:
++                            raise AuditError('scan_byte_budget_exceeded')
++                        data, observed = stable_read(init, MAX_FILE)
++                        result['files'] += 1
++                        result['bytes_read'] += observed.st_size
++                        if b'nlsreborn' in data.lower() or b'neverlocksaves' in data.lower():
++                            candidate('duplicate_cet_mod_candidate', rel + '/init.lua')
++                    except FileNotFoundError:
++                        result['status'] = 'incomplete'
++                        self.issue('scan_entry_disappeared', scope, discovered=rel, incomplete=True)
++                    except (OSError, AuditError) as exc:
++                        result['status'] = 'incomplete'
++                        self.issue(exc.code if isinstance(exc, AuditError) else 'io_error', scope, discovered=rel, incomplete=True)
++            if identity(before) != identity(checked_stat(folder)):
++                raise AuditError('directory_changed_during_scan')
++        except FileNotFoundError:
++            pass
++        except (OSError, AuditError) as exc:
++            result['status'] = 'incomplete'
++            self.issue(exc.code if isinstance(exc, AuditError) else 'io_error', scope, incomplete=True)
++
++    def dependencies(self):
++        for component, relative in DEPENDENCIES:
++            row = {'component': component, 'path': relative, 'evidence_scope': 'file_presence_only', 'version': 'unknown'}
++            try:
++                st = checked_stat(self.root / relative)
++                if not stat.S_ISREG(st.st_mode):
++                    raise AuditError('not_regular_file')
++                row['status'] = 'present'
++            except FileNotFoundError:
++                row['status'] = 'not_found_at_checked_path'
++            except (OSError, AuditError) as exc:
++                row['status'] = 'incomplete'
++                self.issue(exc.code if isinstance(exc, AuditError) else 'io_error', 'dependency_presence', path=relative, incomplete=True)
++            self.report['dependencies'].append(row)
++        self.report['dependencies'].append({'component': 'dark_future', 'status': 'not_measured', 'version': 'unknown',
++                                           'evidence_scope': 'no_pinned_presence_path'})
++
++    def log(self, kind, path):
++        if path is None:
++            return
++        row = {'kind': kind, 'scope': 'unscoped_tail_observation', 'current_compilation': 'unknown'}
++        self.report['logs'].append(row)
++        try:
++            data, st = stable_read(path, LOG_TAIL, tail=True)
++            row.update(status='observed', file_size=st.st_size, observed_bytes=len(data), tail_sha256=digest(data),
++                       truncated=st.st_size > LOG_TAIL,
++                       marker_counts={
++                           'error': len(re.findall(rb'\berror\b', data, re.I)),
++                           'warning': len(re.findall(rb'\bwarn(?:ing)?\b', data, re.I)),
++                           'failed': len(re.findall(rb'\bfailed\b', data, re.I)),
++                           'rc1_label': data.lower().count(b'1.0.0-rc1')})
++        except (OSError, AuditError) as exc:
++            row['status'] = 'incomplete'
++            self.issue(exc.code if isinstance(exc, AuditError) else 'io_error', kind + '_log', incomplete=True)
++
++
++class Parser(argparse.ArgumentParser):
++    def error(self, message):
++        raise AuditError('invalid_input')
++
++
++def main(argv=None):
++    report = base_report()
++    try:
++        parser = Parser(description='Read-only RC1 runtime byte audit. Prints JSON; does not install, repair, run the game or certify save safety.')
++        parser.add_argument('--game-root', required=True, metavar='DIRECTORY', help='Cyberpunk installation directory; never the save directory')
++        parser.add_argument('--version', action='append', default=[], metavar='COMPONENT=VALUE',
++                            help='User-reported label: game,cet,redscript,red4ext,codeware,native_settings,dark_future; repeat per component')
++        parser.add_argument('--redscript-log', metavar='FILE', help='Optional explicit log: observe last 128 KiB only; never establishes current compilation')
++        parser.add_argument('--cet-log', metavar='FILE', help='Optional explicit CET log: counts/digest only; no raw text is exported')
++        args = parser.parse_args(argv)
++        root = path_input(args.game_root)
++        logs = [('redscript', path_input(args.redscript_log) if args.redscript_log else None),
++                ('cet', path_input(args.cet_log) if args.cet_log else None)]
++        if len(args.version) > len(VERSION_KEYS):
++            raise AuditError('invalid_input')
++        for label in args.version:
++            component, separator, value = label.partition('=')
++            if separator != '=' or component not in VERSION_KEYS or component in report['version_labels'] or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9 ._()+-]{0,79}', value):
++                raise AuditError('invalid_input')
++            report['version_labels'][component] = {'value': value, 'source': 'user_reported'}
++        root_st = checked_stat(root)
++        if not stat.S_ISDIR(root_st.st_mode):
++            raise AuditError('invalid_game_root')
++        inventory = load_inventory()
++        report['reference'] = {'inventory_sha256': INVENTORY_SHA256, 'scope': 'runtime_files_only',
++                               'runtime_file_count': len(inventory['runtime_files'])}
++        audit = Auditor(report, root, inventory)
++        audit.runtime()
++        audit.scan(LUA_ROOT, 'reborn_lua_directory')
++        audit.scan(REDS_ROOT, 'reborn_redscript_directory')
++        audit.scan('r6/scripts', 'redscript_duplicate_candidates')
++        audit.mod_directory_aliases()
++        audit.dependencies()
++        for kind, path in logs:
++            audit.log(kind, path)
++        if audit.incomplete:
++            report['audit_status'], exit_code = 'incomplete', 2
++        elif audit.review:
++            report['audit_status'], exit_code = 'drift_or_review', 1
++        else:
++            report['audit_status'], exit_code = 'exact_match', 0
++    except (AuditError, OSError, ValueError, TypeError, KeyError) as exc:
++        code = exc.code if isinstance(exc, AuditError) else 'invalid_or_unreadable_input'
++        report['audit_status'] = 'incomplete'
++        report['issues'].append({'code': code, 'scope': 'input'})
++        exit_code = 2
++    print(json.dumps(report, ensure_ascii=True, indent=2, sort_keys=True))
++    return exit_code
++
++
++if __name__ == '__main__':
++    sys.exit(main())
+--- preRC4/tools/NLSRInstallAudit/tests/test_author.py
++++ RC1/tools/NLSRInstallAudit/tests/test_author.py
+@@ -0,0 +1,397 @@
++"""Real-filesystem public CLI checks for the integrated RC1 installation auditor."""
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++import tempfile
++import unittest
++
++HERE = Path(__file__).absolute().parent
++KIT = HERE.parent if (HERE.parent / 'audit_installation.py').is_file() else HERE.parent / 'kit'
++SCRIPT = KIT / 'audit_installation.py'
++INVENTORY = json.loads((KIT / 'runtime_inventory.json').read_text())
++RELEASE_ROOT = KIT.parent.parent
++RUNTIME_BYTES = {row['path']: (RELEASE_ROOT / row['path']).read_bytes() for row in INVENTORY['runtime_files']}
++LUA = Path('bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn')
++REDS = Path('r6/scripts/NeverLockSavesReborn')
++
++
++class AuditCli(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory(prefix='private-Acceptance-')
++        self.addCleanup(self.temp.cleanup)
++        self.parent = Path(self.temp.name)
++        self.game = self.parent / 'PRIVATE_USERNAME-game'
++        self.game.mkdir()
++        for row in INVENTORY['runtime_files']:
++            target = self.game / row['path']
++            target.parent.mkdir(parents=True, exist_ok=True)
++            target.write_bytes(RUNTIME_BYTES[row['path']])
++
++    def run_audit(self, *args, script=SCRIPT):
++        proc = subprocess.run([sys.executable, '-B', str(script), '--game-root', str(self.game), *map(str, args)], capture_output=True)
++        self.assertEqual(proc.stderr, b'')
++        report = json.loads(proc.stdout)
++        self.assertNotIn(str(self.parent), proc.stdout.decode())
++        self.assertNotIn('PRIVATE_USERNAME', proc.stdout.decode())
++        return proc.returncode, report
++
++    def put(self, rel, data=b'ordinary unrelated data'):
++        path = self.game / rel
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_bytes(data)
++        return path
++
++    def link(self, path, target, directory=False):
++        try:
++            path.symlink_to(target, target_is_directory=directory)
++        except (OSError, NotImplementedError):
++            self.skipTest('Host cannot create this symlink fixture; Windows privileges may be required')
++
++    def require_case_sensitive(self):
++        probe = self.parent / 'CaseProbe'
++        probe.write_bytes(b'probe')
++        if (self.parent / 'CASEPROBE').exists():
++            self.skipTest('Case-collision fixture requires a case-sensitive filesystem')
++
++    def test_clean_exact_runtime(self):
++        code, report = self.run_audit()
++        self.assertEqual(code, 0)
++        self.assertEqual(report['audit_status'], 'exact_match')
++        self.assertEqual(len(report['runtime']['files']), 16)
++        self.assertTrue(all(r['status'] == 'match' for r in report['runtime']['files']))
++        self.assertTrue(all(s['status'] == 'complete' for s in report['scans']))
++        self.assertEqual(report['archive']['status'], 'not_supported_embedded_tool')
++
++    def test_no_source_writes(self):
++        def snapshot():
++            return {p.relative_to(self.game).as_posix(): (p.stat().st_mtime_ns, hashlib.sha256(p.read_bytes()).hexdigest()) for p in self.game.rglob('*') if p.is_file()}
++        before = snapshot()
++        self.assertEqual(self.run_audit()[0], 0)
++        self.assertEqual(snapshot(), before)
++        self.assertEqual(set(p.relative_to(self.game).as_posix() for p in self.game.rglob('*') if p.is_file()), set(before))
++
++    def test_missing_runtime_is_drift(self):
++        (self.game / LUA / 'init.lua').unlink()
++        code, report = self.run_audit()
++        self.assertEqual(code, 1)
++        self.assertIn('missing', [r['status'] for r in report['runtime']['files']])
++
++    def test_changed_runtime_same_length(self):
++        path = self.game / LUA / 'init.lua'
++        data = path.read_bytes()
++        path.write_bytes(b'X' + data[1:])
++        code, report = self.run_audit()
++        self.assertEqual(code, 1)
++        self.assertEqual(report['runtime']['status'], 'drift')
++
++    def test_absent_known_directories_definite_drift(self):
++        shutil.rmtree(self.game / 'r6')
++        self.assertEqual(self.run_audit()[0], 1)
++
++    def test_extra_lua(self):
++        self.put(LUA / 'SECRET-USERNAME-leftover.lua')
++        code, report = self.run_audit()
++        self.assertEqual(code, 1)
++        self.assertNotIn('SECRET-USERNAME', json.dumps(report))
++        self.assertTrue(any(r['code'] == 'extra_runtime_script' for r in report['issues']))
++
++    def test_extra_reds_nested(self):
++        self.put(REDS / 'subdir' / 'old.reds')
++        self.assertEqual(self.run_audit()[0], 1)
++
++    def test_config_report_and_non_script_files_ignored(self):
++        for name in ('config.json', 'profile-settings.json', 'support-report.json', 'notes.txt'):
++            self.put(LUA / name)
++        self.assertEqual(self.run_audit()[0], 0)
++
++    def test_duplicate_token_in_other_folder(self):
++        self.put(Path('r6/scripts/PRIVATE_CHARACTER_oldmod/example.reds'), b'// NLSReborn old definition')
++        code, report = self.run_audit()
++        self.assertEqual(code, 1)
++        self.assertNotIn('PRIVATE_CHARACTER', json.dumps(report))
++        self.assertTrue(any(r['code'] == 'duplicate_definition_candidate' for r in report['issues']))
++
++    def test_duplicate_second_token_case_insensitive(self):
++        self.put(Path('r6/scripts/other/source.REDS'), b'NeverLockSaves')
++        self.assertEqual(self.run_audit()[0], 1)
++
++    def test_unrelated_redscript_not_review(self):
++        self.put(Path('r6/scripts/other/source.reds'), b'public class OtherMod {}')
++        self.assertEqual(self.run_audit()[0], 0)
++
++    def test_case_alias_runtime_file(self):
++        self.require_case_sensitive()
++        self.put(LUA / 'INIT.LUA')
++        code, report = self.run_audit()
++        self.assertEqual(code, 1)
++        self.assertTrue(any(r['code'] == 'case_insensitive_alias' for r in report['issues']))
++
++    def test_case_alias_mod_directory(self):
++        self.require_case_sensitive()
++        self.put(LUA.parent / 'neverlocksavesreborn' / 'init.lua')
++        self.assertEqual(self.run_audit()[0], 1)
++
++    def test_symlink_runtime_file(self):
++        path = self.game / LUA / 'init.lua'
++        target = self.parent / 'original.lua'
++        path.rename(target)
++        self.link(path, target)
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_symlink_runtime_directory(self):
++        path = self.game / LUA
++        target = self.parent / 'original-mod'
++        path.rename(target)
++        self.link(path, target, directory=True)
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_symlink_inside_broad_scan_no_follow(self):
++        target = self.parent / 'outside'
++        target.mkdir()
++        (target / 'source.reds').write_bytes(b'NLSReborn')
++        self.link(self.game / 'r6/scripts/linked', target, directory=True)
++        code, report = self.run_audit()
++        self.assertEqual(code, 2)
++        self.assertTrue(any(r['code'] == 'unsafe_path' for r in report['issues']))
++
++    def test_game_root_ancestor_symlink(self):
++        link = self.parent / 'game-link'
++        self.link(link, self.game, directory=True)
++        self.game = link
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_nonregular_file(self):
++        if not hasattr(os, 'mkfifo'):
++            self.skipTest('FIFO unavailable')
++        os.mkfifo(self.game / LUA / 'pipe')
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_oversize_runtime(self):
++        self.put(LUA / 'init.lua', b'x' * (2 * 1024 * 1024 + 1))
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_oversize_redscript_candidate(self):
++        self.put(Path('r6/scripts/other/huge.reds'), b'x' * (2 * 1024 * 1024 + 1))
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_depth_budget(self):
++        self.put(Path('r6/scripts') / Path(*(['d'] * 18)) / 'source.reds')
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_entry_budget(self):
++        directory = self.game / 'r6/scripts/many'
++        directory.mkdir()
++        for index in range(8200):
++            (directory / str(index)).touch()
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_log_tail_counts_digest_and_privacy(self):
++        path = self.parent / 'PRIVATE_GAME.log'
++        prefix = b'PRIVATE_LOG_CONTENT\nerror\n' * 10000
++        tail = b'warning failed 1.0.0-rc1 ERROR\n'
++        path.write_bytes(prefix + tail)
++        code, report = self.run_audit('--cet-log', path)
++        self.assertEqual(code, 0)
++        log = report['logs'][0]
++        observed = (prefix + tail)[-128 * 1024:]
++        self.assertEqual(log['observed_bytes'], 128 * 1024)
++        self.assertEqual(log['tail_sha256'], hashlib.sha256(observed).hexdigest())
++        self.assertEqual(log['marker_counts']['rc1_label'], 1)
++        self.assertEqual(log['marker_counts']['warning'], 1)
++        self.assertNotIn('PRIVATE_LOG_CONTENT', json.dumps(report))
++        self.assertEqual(log['current_compilation'], 'unknown')
++
++    def test_missing_optional_log_is_incomplete(self):
++        self.assertEqual(self.run_audit('--redscript-log', self.parent / 'absent.log')[0], 2)
++
++    def test_versions_are_user_reported(self):
++        code, report = self.run_audit('--version', 'game=2.31', '--version', 'cet=1.37.0+local (test)')
++        self.assertEqual(code, 0)
++        self.assertEqual(report['version_labels']['game'], {'value': '2.31', 'source': 'user_reported'})
++
++    def test_invalid_version_labels_private_input_not_echoed(self):
++        for value in ('game=C:\\Users\\PRIVATE_USERNAME', 'game=/home/PRIVATE_USERNAME', 'cet=x\nPRIVATE_USERNAME', 'game=abc:123', 'unknown=1', 'game=' + 'a' * 81):
++            with self.subTest(value=value):
++                code, report = self.run_audit('--version', value)
++                self.assertEqual(code, 2)
++                self.assertNotIn('PRIVATE_USERNAME', json.dumps(report))
++                self.assertEqual(report['issues'][0]['code'], 'invalid_input')
++
++    def test_duplicate_version_refused(self):
++        self.assertEqual(self.run_audit('--version', 'game=2.31', '--version', 'game=2.3')[0], 2)
++
++    def test_unknown_argument_sanitized(self):
++        code, report = self.run_audit('--PRIVATE_USERNAME')
++        self.assertEqual(code, 2)
++        self.assertEqual(report['issues'][0]['code'], 'invalid_input')
++
++    def test_archive_changed_and_missing(self):
++        path = self.parent / 'private.zip'
++        path.write_bytes(b'not zip')
++        code, report = self.run_audit('--archive', path)
++        self.assertEqual(code, 2)
++        self.assertEqual(report['issues'][0]['code'], 'invalid_input')
++        path.unlink()
++        self.assertEqual(self.run_audit('--archive', path)[0], 2)
++
++    def test_dependency_presence_not_version(self):
++        self.put(Path('red4ext/RED4ext.dll'), b'pretend bytes')
++        code, report = self.run_audit()
++        self.assertEqual(code, 0)
++        red4ext = next(r for r in report['dependencies'] if r['component'] == 'red4ext')
++        self.assertEqual(red4ext['status'], 'present')
++        self.assertEqual(red4ext['version'], 'unknown')
++        self.assertEqual(red4ext['evidence_scope'], 'file_presence_only')
++        cet = next(r for r in report['dependencies'] if r['component'] == 'cet')
++        self.assertEqual(cet['status'], 'not_found_at_checked_path')
++
++    def test_unsafe_optional_dependency_incomplete(self):
++        target = self.parent / 'dll'
++        target.write_bytes(b'bytes')
++        path = self.game / 'red4ext/RED4ext.dll'
++        path.parent.mkdir()
++        self.link(path, target)
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_inventory_pin(self):
++        folder = self.parent / 'kit'
++        folder.mkdir()
++        shutil.copyfile(SCRIPT, folder / SCRIPT.name)
++        raw = (KIT / 'runtime_inventory.json').read_bytes()
++        (folder / 'runtime_inventory.json').write_bytes(raw + b'\n')
++        code, report = self.run_audit(script=folder / SCRIPT.name)
++        self.assertEqual(code, 2)
++        self.assertEqual(report['issues'][0]['code'], 'inventory_pin_mismatch')
++
++    def test_missing_game_root_and_traversal(self):
++        self.game = self.parent / 'does-not-exist'
++        self.assertEqual(self.run_audit()[0], 2)
++        self.game = self.parent / 'part' / '..' / 'game'
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_renamed_cet_duplicate(self):
++        self.put(LUA.parent / 'PRIVATE_COPY_old' / 'init.lua', b'-- NeverLockSaves copied init')
++        code, report = self.run_audit()
++        self.assertEqual(code, 1)
++        self.assertNotIn('PRIVATE_COPY', json.dumps(report))
++        self.assertTrue(any(row['code'] == 'duplicate_cet_mod_candidate' for row in report['issues']))
++
++    def test_unrelated_cet_mod_init(self):
++        self.put(LUA.parent / 'other' / 'init.lua', b'print("ordinary unrelated mod")')
++        self.assertEqual(self.run_audit()[0], 0)
++
++    def test_other_cet_directory_symlink(self):
++        target = self.parent / 'outside-mod'
++        target.mkdir()
++        self.link(self.game / LUA.parent / 'other', target, directory=True)
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_other_cet_init_symlink(self):
++        target = self.parent / 'outside-init'
++        target.write_bytes(b'no marker')
++        path = self.game / LUA.parent / 'other' / 'init.lua'
++        path.parent.mkdir()
++        self.link(path, target)
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_other_cet_init_oversize(self):
++        self.put(LUA.parent / 'other' / 'init.lua', b'x' * (2 * 1024 * 1024 + 1))
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_other_cet_nested_file_out_of_scope(self):
++        self.put(LUA.parent / 'other' / 'nested' / 'init.lua', b'NLSReborn')
++        self.assertEqual(self.run_audit()[0], 0)
++
++    def test_evidence_environment_and_time(self):
++        from datetime import datetime
++        code, report = self.run_audit()
++        self.assertEqual(code, 0)
++        self.assertEqual(report['audit_host']['platform'], sys.platform)
++        self.assertEqual(report['audit_host']['python_version'], '.'.join(str(n) for n in sys.version_info[:3]))
++        timestamp = datetime.fromisoformat(report['observed_at_utc'])
++        self.assertEqual(timestamp.utcoffset().total_seconds(), 0)
++
++    def test_archive_option_is_explicitly_rejected(self):
++        code, report = self.run_audit('--archive', self.parent / 'PRIVATE_USERNAME.zip')
++        self.assertEqual(code, 2)
++        self.assertEqual(report['archive']['status'], 'not_supported_embedded_tool')
++        self.assertEqual(report['issues'][0]['code'], 'invalid_input')
++
++    def test_new_dependency_collector_missing_is_drift(self):
++        (self.game / LUA / 'dependency_versions.lua').unlink()
++        code, report = self.run_audit()
++        self.assertEqual(code, 1)
++        row = next(r for r in report['runtime']['files'] if r['path'].endswith('/dependency_versions.lua'))
++        self.assertEqual(row['status'], 'missing')
++
++    def test_new_dependency_collector_changed_is_drift(self):
++        path = self.game / LUA / 'dependency_versions.lua'
++        data = path.read_bytes()
++        path.write_bytes(b'X' + data[1:])
++        code, report = self.run_audit()
++        self.assertEqual(code, 1)
++        row = next(r for r in report['runtime']['files'] if r['path'].endswith('/dependency_versions.lua'))
++        self.assertEqual(row['status'], 'changed')
++
++    def test_stable_read_rejects_observed_change(self):
++        import importlib.util
++        from unittest import mock
++        spec = importlib.util.spec_from_file_location('nlsr_audit_author', SCRIPT)
++        module = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(module)
++        target = self.parent / 'changing'
++        target.write_bytes(b'initial bytes')
++        real_fstat = os.fstat
++        calls = [0]
++        def change_before_final_fstat(fd):
++            calls[0] += 1
++            if calls[0] == 2:
++                target.write_bytes(b'changed bytes with a different length')
++            return real_fstat(fd)
++        with mock.patch.object(module.os, 'fstat', side_effect=change_before_final_fstat):
++            with self.assertRaises(module.AuditError) as raised:
++                module.stable_read(target, 1024)
++        self.assertEqual(raised.exception.code, 'file_changed_during_read')
++
++    def test_read_error_fails_closed(self):
++        import importlib.util
++        from unittest import mock
++        spec = importlib.util.spec_from_file_location('nlsr_audit_author_io', SCRIPT)
++        module = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(module)
++        report = module.base_report()
++        auditor = module.Auditor(report, self.game, INVENTORY)
++        real_read = module.stable_read
++        def denied(path, *args, **kwargs):
++            if str(path).endswith('init.lua'):
++                raise PermissionError('PRIVATE_USERNAME must not be reported')
++            return real_read(path, *args, **kwargs)
++        with mock.patch.object(module, 'stable_read', side_effect=denied):
++            auditor.runtime()
++        self.assertTrue(auditor.incomplete)
++        self.assertEqual(report['runtime']['status'], 'incomplete')
++        self.assertNotIn('PRIVATE_USERNAME', json.dumps(report))
++
++    def test_cet_total_byte_budget(self):
++        for index in range(33):
++            self.put(LUA.parent / ('other' + str(index)) / 'init.lua', b'x' * (2 * 1024 * 1024))
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_redscript_total_byte_budget(self):
++        for index in range(33):
++            self.put(Path('r6/scripts/other') / (str(index) + '.reds'), b'x' * (2 * 1024 * 1024))
++        self.assertEqual(self.run_audit()[0], 2)
++
++    def test_help(self):
++        proc = subprocess.run([sys.executable, '-B', str(SCRIPT), '--help'], capture_output=True)
++        self.assertEqual(proc.returncode, 0)
++        self.assertEqual(proc.stderr, b'')
++        self.assertIn(b'--game-root', proc.stdout)
++
++
++if __name__ == '__main__':
++    unittest.main(verbosity=2)
+--- preRC4/tools/NLSRInstallAudit/tests/test_independent.py
++++ RC1/tools/NLSRInstallAudit/tests/test_independent.py
+@@ -0,0 +1,329 @@
++"""Independent public-CLI contract tests using real disposable filesystem inputs."""
++from __future__ import annotations
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++import tempfile
++import unittest
++
++HERE = Path(__file__).resolve().parent
++PROJECT = HERE.parent
++KIT = PROJECT if (PROJECT/'audit_installation.py').is_file() else PROJECT/'kit'
++TOOL = KIT / 'audit_installation.py'
++INVENTORY = json.loads((KIT / 'runtime_inventory.json').read_text())
++PATHS = [item['path'] for item in INVENTORY['runtime_files']]
++RELEASE_ROOT = KIT.parent.parent
++ORIGINAL_BYTES = {relative:(RELEASE_ROOT/relative).read_bytes() for relative in PATHS}
++RUNTIME_PATHS = [p.relative_to(RELEASE_ROOT).as_posix() for directory in
++    ('bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn','r6/scripts/NeverLockSavesReborn')
++    for p in (RELEASE_ROOT/directory).rglob('*') if p.is_file() and p.suffix in ('.lua','.reds')]
++LUA_DIR = 'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn'
++REDS_DIR = 'r6/scripts/NeverLockSavesReborn'
++PRIVATE = 'PRIVATE_PERSON_DONOTPRINT_75349'
++
++
++def supports_symlinks():
++    if not hasattr(os,'symlink'):
++        return False
++    try:
++        with tempfile.TemporaryDirectory(prefix='nlsr-link-probe-') as tmp:
++            root=Path(tmp);source=root/'source';source.write_text('probe')
++            (root/'file_link').symlink_to(source)
++            directory=root/'directory';directory.mkdir()
++            (root/'dir_link').symlink_to(directory,target_is_directory=True)
++            return (root/'file_link').is_symlink() and (root/'dir_link').is_symlink()
++    except (OSError,NotImplementedError):
++        return False
++
++
++def supports_case_distinct_names():
++    try:
++        with tempfile.TemporaryDirectory(prefix='nlsr-case-probe-') as tmp:
++            root=Path(tmp);(root/'CaseProbe').write_text('probe')
++            return not (root/'caseprobe').exists()
++    except OSError:
++        return False
++
++
++SYMLINK_AVAILABLE=supports_symlinks()
++CASE_DISTINCT_NAMES=supports_case_distinct_names()
++
++
++def tree_fingerprint(root):
++    result = {}
++    for path in sorted(root.rglob('*')):
++        s = path.lstat()
++        result[str(path.relative_to(root))] = (s.st_mode, s.st_size, s.st_mtime_ns,
++            hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() and not path.is_symlink() else None)
++    return result
++
++
++class AuditorCLI(unittest.TestCase):
++    def setUp(self):
++        self.tmp = tempfile.TemporaryDirectory(prefix=PRIVATE)
++        self.root = Path(self.tmp.name) / 'game'
++        self.root.mkdir()
++        self.reference = Path(self.tmp.name) / 'reference'
++        for relative in PATHS:
++            for folder in (self.root,self.reference):
++                target = folder / relative
++                target.parent.mkdir(parents=True, exist_ok=True)
++                target.write_bytes(ORIGINAL_BYTES[relative])
++
++    def tearDown(self):
++        self.tmp.cleanup()
++
++    def run_audit(self, *args, root=None, tool=TOOL, expected=None):
++        p = subprocess.run([sys.executable, str(tool), '--game-root', str(root or self.root), *map(str,args)],
++                           capture_output=True, text=True, timeout=20)
++        self.assertNotIn(PRIVATE, p.stdout + p.stderr, 'private input path/name leaked')
++        self.assertEqual(p.stderr, '', 'valid command should return structured stdout, not raw stderr')
++        try:
++            payload = json.loads(p.stdout)
++        except Exception:
++            self.fail(f'one JSON report required, exit={p.returncode}: {p.stdout[:400]!r}')
++        self.assertEqual(payload['schema_version'], 1)
++        if expected is not None:
++            self.assertEqual(p.returncode, expected, payload)
++        self.assertEqual({'exact_match':0, 'drift_or_review':1, 'incomplete':2}[payload['audit_status']], p.returncode)
++        self.assertEqual(payload['release'], '1.0.0-rc1')
++        return payload
++
++    def test_clean_exact_bytes_and_no_input_writes(self):
++        before = tree_fingerprint(self.root)
++        report = self.run_audit(expected=0)
++        self.assertEqual(report['runtime']['status'], 'exact_match')
++        self.assertEqual(len(report['runtime']['files']), 16)
++        self.assertTrue(all(f['status']=='match' for f in report['runtime']['files']))
++        for row in report['runtime']['files']:
++            expected = next(i for i in INVENTORY['runtime_files'] if i['path']==row['path'])
++            self.assertEqual(row['observed_sha256'], expected['sha256'])
++            self.assertEqual(row['observed_size'], expected['size'])
++        self.assertEqual(before, tree_fingerprint(self.root))
++        self.assertEqual(report['archive']['status'], 'not_supported_embedded_tool')
++        self.assertEqual(report['version_labels'], {})
++
++    def test_one_changed_byte_is_drift(self):
++        path=self.root/PATHS[0]
++        data=bytearray(path.read_bytes()); data[0]^=1; path.write_bytes(data)
++        report=self.run_audit(expected=1)
++        self.assertEqual(report['runtime']['status'],'drift')
++        self.assertEqual(next(f for f in report['runtime']['files'] if f['path']==PATHS[0])['status'],'changed')
++
++    def test_missing_file_is_definite_drift(self):
++        (self.root/PATHS[0]).unlink()
++        report=self.run_audit(expected=1)
++        self.assertEqual(next(f for f in report['runtime']['files'] if f['path']==PATHS[0])['status'],'missing')
++
++    def test_extra_lua_requires_review_and_redacts_name(self):
++        (self.root/LUA_DIR/(PRIVATE+'.lua')).write_text('return {}')
++        report=self.run_audit(expected=1)
++        self.assertTrue(report['issues'])
++
++    def test_extra_nested_reds_requires_review(self):
++        p=self.root/REDS_DIR/'nested'/(PRIVATE+'.reds');p.parent.mkdir();p.write_text('module SomethingElse')
++        self.run_audit(expected=1)
++
++    @unittest.skipUnless(CASE_DISTINCT_NAMES,'filesystem does not permit case-distinct aliases')
++    def test_case_alias_lua_requires_review(self):
++        original=self.root/LUA_DIR/'init.lua';alias=original.with_name('INIT.LuA')
++        shutil.copyfile(original,alias)
++        self.run_audit(expected=1)
++
++    def test_duplicate_candidate_outside_reborn_requires_review(self):
++        p=self.root/'r6/scripts'/PRIVATE/'extra.reds';p.parent.mkdir();p.write_text('public class NLSRebornWhatever {}')
++        report=self.run_audit(expected=1)
++        self.assertTrue(any(s['review_candidates'] for s in report['scans']))
++
++    def test_unrelated_redscript_not_a_conflict(self):
++        p=self.root/'r6/scripts/Unrelated/extra.reds';p.parent.mkdir();p.write_text('public class SomethingElse {}')
++        self.run_audit(expected=0)
++
++    def test_user_config_json_ignored_without_contents(self):
++        (self.root/LUA_DIR/'config.json').write_text('{"secret":"'+PRIVATE+'"}')
++        (self.root/LUA_DIR/'profile-settings.json.bak').write_text(PRIVATE)
++        (self.root/LUA_DIR/'support-report.json').write_text(PRIVATE)
++        self.run_audit(expected=0)
++
++    @unittest.skipUnless(SYMLINK_AVAILABLE,'file/directory symlink privileges unavailable')
++    def test_expected_file_symlink_cannot_match(self):
++        p=self.root/PATHS[0];p.unlink();p.symlink_to(self.reference/PATHS[0])
++        report=self.run_audit(expected=2)
++        self.assertEqual(report['runtime']['status'],'incomplete')
++
++    @unittest.skipUnless(SYMLINK_AVAILABLE,'file/directory symlink privileges unavailable')
++    def test_root_symlink_rejected(self):
++        alias=Path(self.tmp.name)/'alias';alias.symlink_to(self.root,target_is_directory=True)
++        self.run_audit(root=alias,expected=2)
++
++    @unittest.skipUnless(SYMLINK_AVAILABLE,'file/directory symlink privileges unavailable')
++    def test_root_ancestor_symlink_rejected(self):
++        alias=Path(self.tmp.name)/'alias';alias.symlink_to(self.root.parent,target_is_directory=True)
++        self.run_audit(root=alias/self.root.name,expected=2)
++
++    @unittest.skipUnless(SYMLINK_AVAILABLE,'file/directory symlink privileges unavailable')
++    def test_extra_symlink_directory_not_followed(self):
++        outside=Path(self.tmp.name)/'outside';outside.mkdir();(outside/'extra.reds').write_text(PRIVATE)
++        (self.root/'r6/scripts/external').symlink_to(outside,target_is_directory=True)
++        self.run_audit(expected=2)
++
++    def test_missing_root_incomplete_no_raw_path(self):
++        self.run_audit(root=Path(self.tmp.name)/'absent',expected=2)
++
++    def test_user_reported_version_source(self):
++        report=self.run_audit('--version','game=2.31','--version','cet=1.37.1',expected=0)
++        self.assertEqual(report['version_labels']['game'],{'value':'2.31','source':'user_reported'})
++        self.assertEqual(report['version_labels']['cet'],{'value':'1.37.1','source':'user_reported'})
++        self.assertNotIn('redscript', report['version_labels'])
++
++    def test_unsupported_version_component_rejected(self):
++        self.run_audit('--version','private_component=123',expected=2)
++
++    def test_oversized_version_label_rejected(self):
++        self.run_audit('--version','game='+'x'*81,expected=2)
++
++    def test_control_character_version_label_rejected(self):
++        self.run_audit('--version','game=hello\nworld',expected=2)
++
++    def test_path_version_label_rejected_without_echo(self):
++        self.run_audit('--version','game=C:/Users/'+PRIVATE,expected=2)
++
++    def test_archive_option_is_not_supported(self):
++        report=self.run_audit('--archive',TOOL,expected=2)
++        self.assertEqual(report['archive']['status'],'not_supported_embedded_tool')
++
++    def test_archive_option_cannot_claim_a_match(self):
++        p=Path(self.tmp.name)/'test.zip';p.write_bytes(b'wrong archive')
++        report=self.run_audit('--archive',p,expected=2)
++        self.assertEqual(report['issues'][0]['code'],'invalid_input')
++
++    @unittest.skipUnless(SYMLINK_AVAILABLE,'file/directory symlink privileges unavailable')
++    def test_archive_option_does_not_follow_symlink(self):
++        p=Path(self.tmp.name)/'test.zip';p.symlink_to(TOOL)
++        self.run_audit('--archive',p,expected=2)
++
++    def test_inventory_tampering_cannot_pass(self):
++        copied=Path(self.tmp.name)/'copied_tool';copied.mkdir()
++        shutil.copyfile(TOOL,copied/TOOL.name)
++        inventory=json.loads((KIT/'runtime_inventory.json').read_text());inventory['release']='modified'
++        (copied/'runtime_inventory.json').write_text(json.dumps(inventory))
++        self.run_audit(tool=copied/TOOL.name,expected=2)
++
++    def test_log_evidence_redacts_private_contents_and_is_unscoped(self):
++        log=Path(self.tmp.name)/'log.txt';log.write_text('[ERROR] '+PRIVATE+'\n[warning] message\n')
++        report=self.run_audit('--redscript-log',log,expected=0)
++        entry=next(e for e in report['logs'] if e['kind']=='redscript')
++        self.assertEqual(entry['scope'],'unscoped_tail_observation')
++        self.assertNotIn(PRIVATE,json.dumps(entry))
++        self.assertIn('sha256',json.dumps(entry))
++        self.assertNotIn('compile_pass',json.dumps(report))
++
++    def test_large_log_tail_bounded(self):
++        log=Path(self.tmp.name)/'log.txt';log.write_bytes((PRIVATE+'\n').encode()*20000+b'[warning] tail\n')
++        report=self.run_audit('--cet-log',log,expected=0)
++        entry=next(e for e in report['logs'] if e['kind']=='cet')
++        self.assertEqual(entry['scope'],'unscoped_tail_observation')
++        # A digest of the observed bounded tail must not claim complete-log coverage.
++        self.assertNotIn(PRIVATE,json.dumps(entry))
++        self.assertTrue(any(isinstance(v,int) and v<=131072 for k,v in entry.items() if 'bytes' in k and 'size' not in k),entry)
++
++    @unittest.skipUnless(SYMLINK_AVAILABLE,'file/directory symlink privileges unavailable')
++    def test_log_symlink_incomplete(self):
++        log=Path(self.tmp.name)/'log.txt';log.symlink_to(TOOL)
++        self.run_audit('--cet-log',log,expected=2)
++
++    def test_overlarge_candidate_scan_cannot_be_green(self):
++        p=self.root/'r6/scripts/large.reds';p.write_bytes(b' '*((2*1024*1024)+1))
++        self.run_audit(expected=2)
++
++    def test_inventory_covers_every_baseline_runtime_file(self):
++        found = sorted(name for name in RUNTIME_PATHS
++                       if any(name.startswith(directory+'/') for directory in (LUA_DIR,REDS_DIR))
++                       and Path(name).suffix in ('.lua','.reds'))
++        self.assertEqual(sorted(PATHS),found)
++        self.assertEqual(len(found),16)
++        for row in INVENTORY['runtime_files']:
++            b=ORIGINAL_BYTES[row['path']]
++            self.assertEqual(len(b),row['size'])
++            self.assertEqual(hashlib.sha256(b).hexdigest(),row['sha256'])
++
++    @unittest.skipUnless(CASE_DISTINCT_NAMES,'filesystem does not permit case-distinct aliases')
++    def test_case_alias_mod_directory_requires_review(self):
++        alias=self.root/LUA_DIR.lower()
++        # Only final directory component differs; retain known parent spelling.
++        alias=(self.root/LUA_DIR).with_name('neverlocksavesreborn')
++        alias.mkdir()
++        self.run_audit(expected=1)
++
++    def test_depth_budget_incomplete(self):
++        p=self.root/'r6/scripts'
++        for i in range(18):
++            p=p/('d'+str(i));p.mkdir()
++        (p/'extra.reds').write_text('public class Other {}')
++        report=self.run_audit(expected=2)
++        self.assertTrue(any(s['status']=='incomplete' for s in report['scans']))
++
++    def test_entry_budget_incomplete(self):
++        p=self.root/'r6/scripts/many';p.mkdir()
++        for i in range(8200):
++            (p/('entry'+str(i)+'.txt')).touch()
++        report=self.run_audit(expected=2)
++        self.assertTrue(any(s['status']=='incomplete' for s in report['scans']))
++
++    @unittest.skipUnless(hasattr(os,'mkfifo'),'FIFO API unavailable')
++    def test_nonregular_entry_incomplete_without_hanging(self):
++        os.mkfifo(self.root/'r6/scripts/fifo')
++        self.run_audit(expected=2)
++
++    def test_missing_requested_log_incomplete(self):
++        self.run_audit('--cet-log',Path(self.tmp.name)/'absent.log',expected=2)
++
++    def test_unknown_argument_is_structured_and_redacted(self):
++        self.run_audit('--unknown-private-argument',PRIVATE,expected=2)
++
++    def test_log_marker_counts_do_not_promote_compilation(self):
++        log=Path(self.tmp.name)/'log.txt'
++        log.write_text('error ERROR errorless\nwarning WARN failed FAILED 1.0.0-rc1\n')
++        report=self.run_audit('--cet-log',log,expected=0)
++        item=next(e for e in report['logs'] if e['kind']=='cet')
++        self.assertEqual(item['current_compilation'],'unknown')
++        self.assertEqual(item['marker_counts'],{'error':2,'warning':2,'failed':2,'rc1_label':1})
++
++    def test_renamed_cet_copy_candidate_requires_review(self):
++        p=(self.root/LUA_DIR).parent/PRIVATE/'init.lua'
++        p.parent.mkdir();p.write_text("local NLSReborn = {} -- old copy")
++        self.run_audit(expected=1)
++
++    def test_unrelated_immediate_cet_init_not_a_conflict(self):
++        p=(self.root/LUA_DIR).parent/'OtherMod'/'init.lua'
++        p.parent.mkdir();p.write_text("return {} -- other mod")
++        self.run_audit(expected=0)
++
++    @unittest.skipUnless(SYMLINK_AVAILABLE,'file/directory symlink privileges unavailable')
++    def test_cet_candidate_symlink_init_incomplete(self):
++        p=(self.root/LUA_DIR).parent/'OtherMod'/'init.lua'
++        p.parent.mkdir();p.symlink_to(self.reference/PATHS[0])
++        self.run_audit(expected=2)
++
++    @unittest.skipUnless(SYMLINK_AVAILABLE,'file/directory symlink privileges unavailable')
++    def test_cet_candidate_symlink_child_directory_incomplete(self):
++        p=(self.root/LUA_DIR).parent/'OtherMod'
++        p.symlink_to(self.reference/LUA_DIR,target_is_directory=True)
++        self.run_audit(expected=2)
++
++    def test_overlarge_cet_candidate_init_incomplete(self):
++        p=(self.root/LUA_DIR).parent/'OtherMod'/'init.lua'
++        p.parent.mkdir();p.write_bytes(b' '*((2*1024*1024)+1))
++        self.run_audit(expected=2)
++
++    def test_help_is_available_without_game_root(self):
++        p=subprocess.run([sys.executable,str(TOOL),'--help'],capture_output=True,text=True,timeout=10)
++        self.assertEqual(p.returncode,0);self.assertIn('--game-root',p.stdout)
++
++
++if __name__=='__main__':
++    unittest.main(verbosity=2)

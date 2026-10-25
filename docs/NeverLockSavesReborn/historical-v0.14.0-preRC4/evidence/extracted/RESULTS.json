@@ -1,0 +1,568 @@
+{
+  "scope": "Fresh offline actual-Lua and constrained REDscript-source boundary tests. No REDscript compiler, CET/game runtime, save creation, reload, or quest progression.",
+  "results": [
+    {
+      "check": "lua_syntax",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/check_lua_syntax.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "lua_syntax.log"
+    },
+    {
+      "check": "guardian_ledger",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_guardian.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "guardian_ledger.log"
+    },
+    {
+      "check": "config_recovery",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_config_store.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check",
+        "/tmp/nlsr-config-test-2jj7ed4r"
+      ],
+      "log": "config_recovery.log"
+    },
+    {
+      "check": "guardian_observers",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_guardian_bridge.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian_bridge.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian.lua"
+      ],
+      "log": "guardian_observers.log"
+    },
+    {
+      "check": "guardian_integration",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_guardian_integration.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "guardian_integration.log"
+    },
+    {
+      "check": "backup_recovery",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/tools/NLSRSaveGuardian",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "log": "backup_recovery.log"
+    },
+    {
+      "check": "retention_journal_review",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/review_post_journal.py",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/tools/NLSRSaveGuardian/save_guardian.py"
+      ],
+      "log": "retention_journal_review.log"
+    },
+    {
+      "check": "retention_protected_review",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/review_protected_journal.py",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/tools/NLSRSaveGuardian/save_guardian.py"
+      ],
+      "log": "retention_protected_review.log"
+    },
+    {
+      "check": "lua_integration",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_lua_integration.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "lua_integration.log"
+    },
+    {
+      "check": "queue_lifecycle",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_queue_fresh.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "queue_lifecycle.log"
+    },
+    {
+      "check": "df_adapter",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_dark_future.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "df_adapter.log"
+    },
+    {
+      "check": "intro_routing",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/reproduce_fresh_intro_fallback.py",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check",
+        "--expect-fixed"
+      ],
+      "log": "intro_routing.log"
+    },
+    {
+      "check": "df_reader",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_df_reader.py",
+        "--release",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check",
+        "--self-check"
+      ],
+      "log": "df_reader.log"
+    },
+    {
+      "check": "notifications",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_notifications.py",
+        "--release",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "notifications.log"
+    },
+    {
+      "check": "smart_policy_independent",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_smart_source.py",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "smart_policy_independent.log"
+    },
+    {
+      "check": "autosave_bridge_independent",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_autosave_source.py",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "autosave_bridge_independent.log"
+    },
+    {
+      "check": "autosave_scheduler",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_autosave_policy.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua"
+      ],
+      "log": "autosave_scheduler.log"
+    },
+    {
+      "check": "autosave_scheduler_independent",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_scheduler_independent.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua"
+      ],
+      "log": "autosave_scheduler_independent.log"
+    },
+    {
+      "check": "support_report",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_support_report.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "support_report.log"
+    },
+    {
+      "check": "profiles_independent",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/review_profiles.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua"
+      ],
+      "log": "profiles_independent.log"
+    },
+    {
+      "check": "support_report_independent",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/review_support_report.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "support_report_independent.log"
+    },
+    {
+      "check": "quest_milestone_events",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_quest_milestones.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua"
+      ],
+      "log": "quest_milestone_events.log"
+    },
+    {
+      "check": "preserved_scope",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/check_preserved_scope.py",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "preserved_scope.log"
+    },
+    {
+      "check": "autosave_init_independent",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_init_priority.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "autosave_init_independent.log"
+    },
+    {
+      "check": "runtime_settings",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_runtime_settings.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "runtime_settings.log"
+    },
+    {
+      "check": "quest_scheduler_independent",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/review_quest_milestones.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua"
+      ],
+      "log": "quest_scheduler_independent.log"
+    },
+    {
+      "check": "quest_reentry_independent",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/review_reentrant_boundaries.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua"
+      ],
+      "log": "quest_reentry_independent.log"
+    },
+    {
+      "check": "quest_bridge_source_independent",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/review_quest_source.py",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds"
+      ],
+      "log": "quest_bridge_source_independent.log"
+    },
+    {
+      "check": "quest_mutation_controls",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/run_quest_checks.py",
+        "--module",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua",
+        "--output",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/extracted_checks/quest_mutation_controls",
+        "--lua",
+        "/usr/bin/texlua"
+      ],
+      "log": "quest_mutation_controls.log"
+    },
+    {
+      "check": "scheduler_mutation_controls",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/run_scheduler_controls.py",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua",
+        "--lua",
+        "/usr/bin/texlua"
+      ],
+      "log": "scheduler_mutation_controls.log"
+    },
+    {
+      "check": "status_messages",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_status_messages.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "status_messages.log"
+    },
+    {
+      "check": "status_mutation_controls",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/run_status_checks.py",
+        "--module-dir",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "--output",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/extracted_checks/status_mutation_controls",
+        "--lua",
+        "/usr/bin/texlua"
+      ],
+      "log": "status_mutation_controls.log"
+    },
+    {
+      "check": "apartment_policy",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_apartment_policy.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua"
+      ],
+      "log": "apartment_policy.log"
+    },
+    {
+      "check": "apartment_mutation_controls",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/run_apartment_checks.py",
+        "--module",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua",
+        "--output",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/extracted_checks/apartment_mutation_controls",
+        "--lua",
+        "/usr/bin/texlua"
+      ],
+      "log": "apartment_mutation_controls.log"
+    },
+    {
+      "check": "observer_diagnostics",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_observer_diagnostics.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "observer_diagnostics.log"
+    },
+    {
+      "check": "support_observers",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_report_observers.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "support_observers.log"
+    },
+    {
+      "check": "runtime_polish_independent",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_runtime_polish_independent.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "runtime_polish_independent.log"
+    },
+    {
+      "check": "status_independent",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_status_public_independent.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "status_independent.log"
+    },
+    {
+      "check": "dependency_export_independent",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/run_dependency_export_independent.py",
+        "--release",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check",
+        "--output",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/extracted_checks/dependency_export_independent",
+        "--lua",
+        "/usr/bin/texlua"
+      ],
+      "log": "dependency_export_independent.log"
+    },
+    {
+      "check": "dependency_scope",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/check_dependency_scope.py",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "dependency_scope.log"
+    },
+    {
+      "check": "dependency_versions",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_dependency_versions.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dependency_versions.lua"
+      ],
+      "log": "dependency_versions.log"
+    },
+    {
+      "check": "dependency_report",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_dependency_report.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "dependency_report.log"
+    },
+    {
+      "check": "dependency_mutation_controls",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/run_dependency_controls.py",
+        "--module-dir",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "--output",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/extracted_checks/dependency_mutation_controls",
+        "--lua",
+        "/usr/bin/texlua"
+      ],
+      "log": "dependency_mutation_controls.log"
+    },
+    {
+      "check": "main_config_scope",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/check_main_config_scope.py",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "main_config_scope.log"
+    },
+    {
+      "check": "main_config_independent",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/run_main_config_independent.py",
+        "--release",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check",
+        "--output",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/extracted_checks/main_config_independent",
+        "--lua",
+        "/usr/bin/texlua"
+      ],
+      "log": "main_config_independent.log"
+    },
+    {
+      "check": "readonly_readers",
+      "exit_code": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_diagnostic_readers.py",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check",
+        "--self-check"
+      ],
+      "log": "readonly_readers.log"
+    },
+    {
+      "check": "profiles_disk",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_profiles.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "/tmp/nlsr-config-test-2jj7ed4r",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/config_store.lua"
+      ],
+      "log": "profiles_disk.log"
+    },
+    {
+      "check": "profiles_disk_faults_independent",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/review_profile_disk_failures.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/config_store.lua",
+        "/tmp/nlsr-config-test-2jj7ed4r"
+      ],
+      "log": "profiles_disk_faults_independent.log"
+    },
+    {
+      "check": "schema_recovery",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_schema_recovery.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "/tmp/nlsr-config-test-2jj7ed4r"
+      ],
+      "log": "schema_recovery.log"
+    },
+    {
+      "check": "main_config_recovery",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_main_settings_recovery.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check",
+        "/tmp/nlsr-config-test-2jj7ed4r"
+      ],
+      "log": "main_config_recovery.log"
+    },
+    {
+      "check": "runtime_polish",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/texlua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check/docs/NeverLockSavesReborn/validation/test_runtime_polish.lua",
+        "/workspace/scratch/ba7d0d23f8da/work/prerc4/package_check"
+      ],
+      "log": "runtime_polish.log"
+    }
+  ],
+  "passed": true
+}

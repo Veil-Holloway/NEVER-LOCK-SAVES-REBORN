@@ -1,0 +1,29 @@
+{
+  "scope": "real filesystem subprocess probes only; no REDscript compiler/game or Windows validation",
+  "results": [
+    {
+      "case": "clean",
+      "exit_code": 0,
+      "audit_status": "exact_match",
+      "runtime_status": "exact_match",
+      "no_input_writes": true,
+      "no_private_path_leak": true
+    },
+    {
+      "case": "stale_rc2_redscript",
+      "exit_code": 1,
+      "audit_status": "drift_or_review",
+      "runtime_status": "drift",
+      "no_input_writes": true,
+      "no_private_path_leak": true
+    },
+    {
+      "case": "stale_rc2_init",
+      "exit_code": 1,
+      "audit_status": "drift_or_review",
+      "runtime_status": "drift",
+      "no_input_writes": true,
+      "no_private_path_leak": true
+    }
+  ]
+}

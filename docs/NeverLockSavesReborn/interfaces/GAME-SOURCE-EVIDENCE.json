@@ -1,0 +1,148 @@
+{
+  "evidence_kind": "Inspected pinned public game script declarations/implementations and original CET utility source, no compilation or runtime execution",
+  "sources": [
+    {
+      "repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+      "commit": "fce9ab7e6a608b0d729290d898003589515900e1",
+      "path": "scripts/cyberpunk/UI/quests/quest_tracker.script",
+      "blob_sha": "889c3e77a2fe8e719e4a8ee4a5448e6385b8cb9f",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/fce9ab7e6a608b0d729290d898003589515900e1/scripts/cyberpunk/UI/quests/quest_tracker.script",
+      "findings": {
+        "registers": {
+          "line": 37,
+          "event": "OnStateChanges",
+          "listenerType": "gameJournalListenerType.State"
+        },
+        "callback": {
+          "line": 51,
+          "signature": "OnStateChanges(hash: Uint32, className: CName, notifyOption: JournalNotifyOption, changeType: JournalChangeType)"
+        },
+        "readsCurrentEntryState": {
+          "line": 59,
+          "via": "JournalManager.GetEntryState(JournalManager.GetEntry(hash))"
+        },
+        "handlesSucceeded": {
+          "line": 89,
+          "outcome": "objective controller SetFinished"
+        }
+      }
+    },
+    {
+      "repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+      "commit": "fce9ab7e6a608b0d729290d898003589515900e1",
+      "path": "scripts/core/systems/gameInstance.script",
+      "blob_sha": "6113815dfcebbc98207a6ec394acff6df34fa1a8",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/fce9ab7e6a608b0d729290d898003589515900e1/scripts/core/systems/gameInstance.script",
+      "findings": {
+        "signatures": [
+          "GetTimeSystem(self: GameInstance) -> TimeSystem",
+          "GetPlaythroughTime(self: GameInstance) -> EngineTime",
+          "IsSavingLocked(self: GameInstance, out locks: array<gameSaveLock>) -> Bool"
+        ]
+      }
+    },
+    {
+      "repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+      "commit": "fce9ab7e6a608b0d729290d898003589515900e1",
+      "path": "scripts/core/systems/safeAreaManager.script",
+      "blob_sha": "bdd762d68aeaab6e7b678260683a4855f2b494a4",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/fce9ab7e6a608b0d729290d898003589515900e1/scripts/core/systems/safeAreaManager.script",
+      "findings": {
+        "signatures": [
+          "IsPointInSafeArea(point: Vector4) -> Bool"
+        ],
+        "limitation": "Safe area membership is not safehouse identity, ownership, entry event or serialization safety."
+      }
+    },
+    {
+      "repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+      "commit": "fce9ab7e6a608b0d729290d898003589515900e1",
+      "path": "scripts/cyberpunk/player/player.script",
+      "blob_sha": "8a7253597f9c95fc68b8baa0b1012c3a08997f91",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/fce9ab7e6a608b0d729290d898003589515900e1/scripts/cyberpunk/player/player.script",
+      "findings": {
+        "signatures": [
+          {
+            "line": 1581,
+            "value": "GetMountedVehicle() -> VehicleObject"
+          },
+          {
+            "line": 6469,
+            "value": "IsInCombat() -> Bool"
+          }
+        ]
+      }
+    },
+    {
+      "repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+      "commit": "fce9ab7e6a608b0d729290d898003589515900e1",
+      "path": "scripts/core/systems/timeSystem.script",
+      "blob_sha": "5d92228818173a99b463b2ff4e120f23b3b520fe",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/fce9ab7e6a608b0d729290d898003589515900e1/scripts/core/systems/timeSystem.script",
+      "findings": {
+        "signatures": [
+          {
+            "line": 35,
+            "value": "IsPausedState() -> Bool"
+          }
+        ]
+      }
+    },
+    {
+      "repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+      "commit": "fce9ab7e6a608b0d729290d898003589515900e1",
+      "path": "scripts/core/systems/journalManager.script",
+      "blob_sha": "d7965c99eb066c37d1f34c5c11154b648ae1ce13",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/fce9ab7e6a608b0d729290d898003589515900e1/scripts/core/systems/journalManager.script",
+      "findings": {
+        "signatures": [
+          "GetEntry(hash: Uint32) -> weak<JournalEntry>",
+          "GetEntryState(entry: weak<JournalEntry>) -> gameJournalEntryState",
+          "RegisterScriptCallback(obj: IScriptable, functionName: CName, type: gameJournalListenerType)",
+          "UnregisterScriptCallback(obj: IScriptable, functionName: CName)"
+        ]
+      }
+    },
+    {
+      "repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+      "commit": "fce9ab7e6a608b0d729290d898003589515900e1",
+      "path": "scripts/core/components/scriptComponents/vehicleComponent.script",
+      "blob_sha": "8a092d85fe7522948008e95b7895bf3ee231e282",
+      "url": "https://github.com/CDPR-Modding-Documentation/Cyberpunk-Scripts/blob/fce9ab7e6a608b0d729290d898003589515900e1/scripts/core/components/scriptComponents/vehicleComponent.script",
+      "findings": {
+        "signatures": [
+          {
+            "line": 236,
+            "value": "static IsMountedToVehicle(gi: GameInstance, owner: weak<GameObject>) -> Bool"
+          },
+          {
+            "line": 245,
+            "value": "static IsMountedToVehicle(gi: GameInstance, ownerID: EntityID) -> Bool"
+          }
+        ]
+      }
+    },
+    {
+      "repository": "psiberx/cp2077-cet-kit",
+      "path": "GameSession.lua",
+      "blob_sha": "5837b08d29d980e8ef340f81f8f0caca741bd7dc",
+      "url": "https://github.com/psiberx/cp2077-cet-kit/blob/main/GameSession.lua",
+      "findings": {
+        "persistentSessionKey": "_psxgs_session_key",
+        "method": "writeSessionKey",
+        "boundary": "writes QuestsSystem.SetFactStr; cannot use persistent identity scheme under no-new-quest-fact-write project constraint"
+      }
+    },
+    {
+      "repository": "psiberx/cp2077-cet-kit",
+      "path": "GameUI.lua",
+      "blob_sha": "747db4ad43f4511afa1bc97401d1d2c4d18261a1",
+      "url": "https://github.com/psiberx/cp2077-cet-kit/blob/main/GameUI.lua",
+      "findings": {
+        "loadingObserver": "LoadingScreenProgressBarController.SetProgress(self,progress)",
+        "fastTravelObserver": "FastTravelSystem.OnLoadingScreenFinished(self,finished)",
+        "boundary": "Observer-derived state; no guarantee hooks attached, callbacks cover every path, or initial loading=false is true."
+      }
+    }
+  ]
+}

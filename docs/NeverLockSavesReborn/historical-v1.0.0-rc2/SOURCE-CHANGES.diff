@@ -1,0 +1,413 @@
+--- RC1/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
++++ RC2/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
+@@ -1,4 +1,4 @@
+--- Never Lock Saves Reborn v1.0.0-rc1 Release Candidate
++-- Never Lock Saves Reborn v1.0.0-rc2 Release Candidate
+ -- Persistent UI settings, runtime bridge, and diagnostics.
+ -- Smart permits only explicit combat locks with combat opt-in; mounted combat also needs vehicle opt-in.
+ -- DF switches control contextual messages only. Optional scheduler defaults OFF.
+@@ -702,7 +702,7 @@
+       end})
+     if ok and type(value)=='table' and getmetatable(value)==nil then versionSnapshot=value end
+   end
+-  local snapshot={build='1.0.0-rc1',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),
++  local snapshot={build='1.0.0-rc2',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),
+     facts={q000_done=read(function() return Game.GetQuestsSystem():GetFactStr('q000_done') end),
+       q001_started=read(function() return Game.GetQuestsSystem():GetFactStr('q001_started') end)},
+     sensors={combatKnown=combatKnown,combatActive=combatActive,vehicleKnown=vehicleKnown,vehicleActive=vehicleActive,
+@@ -733,7 +733,7 @@
+   end
+   registerNativeSettings()
+   deferredStatus = deferredEnabled and 'Live queue enabled (experimental)' or 'Disabled'
+-  log('v1.0.0-rc1 Release Candidate loaded; experimental native save-lock gate required')
++  log('v1.0.0-rc2 Release Candidate loaded; experimental native save-lock gate required')
+ end)
+ registerForEvent('onOverlayOpen', function() show = true; apply() end)
+ registerForEvent('onOverlayClose', function() show = false end)
+@@ -1009,7 +1009,7 @@
+   if not show then return end
+   local visible = ImGui.Begin(title)
+   if visible then
+-    ImGui.Text('v1.0.0-rc1 Release Candidate | Runtime policy')
++    ImGui.Text('v1.0.0-rc2 Release Candidate | Runtime policy')
+     ImGui.TextWrapped('Native menu: '..nativeStatus)
+     ImGui.Separator()
+     for i=0,3 do
+@@ -1168,7 +1168,7 @@
+       ImGui.TextWrapped('Context states: -1 UNKNOWN, 0 inactive/disabled, 1 active. Context: 8 sleep, 11 dehydration, 10 starvation, 9 addiction.')
+       ImGui.TextWrapped('Compatibility is source-reviewed; in-game validation is still required. State samples refresh every two seconds.')
+       if ImGui.Button('Log compatibility snapshot##nls_darkfuture') then
+-        log('v1.0.0-rc1 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)
++        log('v1.0.0-rc2 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)
+         log('Dark Future: '..darkFutureStatus)
+         if darkFutureError then log('Dark Future query error: '..darkFutureError) end
+         if dfOK then log('Last Immersion save check: '..tostring(dfLastCheck)) end
+@@ -1202,7 +1202,7 @@
+       if ImGui.Button('Export Guardian report##nls_guardian_export') then
+         local exported=pcall(function()
+           local report=guardian:report()
+-          report.rebornBuild='1.0.0-rc1'
++          report.rebornBuild='1.0.0-rc2'
+           report.gameBuild='unknown'; report.frameworkVersions='unknown'
+           configStore.save('guardian-report.json',report)
+         end)
+--- RC1/docs/NeverLockSavesReborn/validation/check_autosave_type_contract.py
++++ RC2/docs/NeverLockSavesReborn/validation/check_autosave_type_contract.py
+@@ -0,0 +1,27 @@
++#!/usr/bin/env python3
++"""Regression for the exact unresolved type reported by the user's compiler.
++
++The expected native type is pinned from primary game-script declarations in the
++RC2 interface evidence. This source check cannot establish whole-mod compilation.
++"""
++from pathlib import Path
++import json
++import re
++import sys
++
++here = Path(__file__).parent
++fixture = json.loads((here / 'fixtures/rc2_scope.json').read_text())
++root = Path(sys.argv[1]).resolve()
++spec = fixture['annotation_replacement']
++data = (root / spec['path']).read_text()
++match = re.search(r'public final func NLSRebornDeferredDispatch\(expectedSerial: Int32\) -> Bool \{(.*?)\n\}', data, re.S)
++assert match, 'Deferred dispatch function not found'
++body = match.group(1)
++declarations = re.findall(r'let autosave: ref<([^>]+)> = GameInstance\.GetAutoSaveSystem\(this\.GetGame\(\)\);', body)
++assert declarations == [spec['verified_type']], 'Autosave getter annotation must resolve to verified native gameAutoSaveSystem; found ' + repr(declarations)
++assert 'ref<AutoSaveSystem>' not in data, 'Reported unresolved AutoSaveSystem type remains'
++assert body.count('if !IsDefined(autosave) { return false; };') == 1, 'Service absence must remain fail-closed'
++assert body.count('autosave.RequestForcedCheckpoint();') == 1, 'Expected one checkpoint submission'
++assert body.index('if !IsDefined(autosave) { return false; };') < body.index('this.nlsDeferredPending = false;') < body.index('autosave.RequestForcedCheckpoint();'), 'Service guard/one-shot submission order changed'
++assert body.index('this.NLSRebornDeferredNativeUnlocked()') < body.index('GameInstance.GetAutoSaveSystem'), 'Native dispatch guard must precede service query'
++print('PASS source regression: verified gameAutoSaveSystem annotation, service fail-closed guard and one-shot order retained. Not a REDscript compiler pass.')
+--- RC1/docs/NeverLockSavesReborn/validation/check_preserved_scope.py
++++ RC2/docs/NeverLockSavesReborn/validation/check_preserved_scope.py
+@@ -10,6 +10,7 @@
+ import json
+ from pathlib import Path
+ from bounded_source_runner import body
++from check_rc2_scope import normalized_rc1
+ 
+ def sha(value):
+     return hashlib.sha256(value).hexdigest()
+@@ -21,7 +22,7 @@
+ fixture=json.loads((Path(__file__).parent/'fixtures/preserved_preRC1.json').read_text())
+ for name,expected in fixture['unchanged_files'].items():
+     assert sha((root/name).read_bytes())==expected, 'Changed protected file: '+name
+-source=(root/fixture['redscript_path']).read_text()
++source=normalized_rc1(root,fixture['redscript_path']).decode('utf-8').replace('\r\n','\n')
+ for name,expected in fixture['redscript_functions'].items():
+     assert sha(body(source,name).encode())==expected, 'Changed protected method: '+name
+ for name,expected in fixture['notification_only_hooks'].items():
+--- RC1/docs/NeverLockSavesReborn/validation/check_rc1_scope.py
++++ RC2/docs/NeverLockSavesReborn/validation/check_rc1_scope.py
+@@ -5,6 +5,7 @@
+ The original preRC4->preRC3 and preRC3->preRC2 guards remain in force.
+ """
+ from pathlib import Path
++from check_rc2_scope import normalized_rc1
+ import hashlib
+ import json
+ import sys
+@@ -24,7 +25,7 @@
+     """Normalize only the two reviewed labels; require exact pinned source."""
+     f = fixture()
+     spec = f['label_files'][rel]
+-    data = (root / rel).read_bytes()
++    data = normalized_rc1(root, rel)
+     before = f['baseline_version'].encode()
+     after = f['candidate_version'].encode()
+     title_before = f['baseline_title'].encode()
+--- RC1/docs/NeverLockSavesReborn/validation/check_rc2_scope.py
++++ RC2/docs/NeverLockSavesReborn/validation/check_rc2_scope.py
+@@ -0,0 +1,72 @@
++#!/usr/bin/env python3
++"""Exact RC1 preservation outside the reported autosave type and RC2 labels.
++
++This is a byte-identity/source-contract check, not a REDscript compilation.
++Only complete pinned RC2 files may be normalized for earlier preservation guards.
++"""
++from pathlib import Path
++import hashlib
++import json
++import sys
++
++FIXTURE = Path(__file__).parent / 'fixtures/rc2_scope.json'
++
++
++def fixture():
++    return json.loads(FIXTURE.read_text())
++
++
++def sha(value):
++    return hashlib.sha256(value).hexdigest()
++
++
++def exact_candidate_to_rc1(root, rel):
++    f = fixture()
++    spec = f['label_files'][rel]
++    data = (root / rel).read_bytes()
++    old = f['baseline_version'].encode()
++    new = f['candidate_version'].encode()
++    assert data.count(new) == spec['version_count'], 'Unexpected RC2 version count: ' + rel
++    assert data.count(old) == 0, 'Mixed RC1/RC2 labels: ' + rel
++    replacement = f['annotation_replacement']
++    if rel == replacement['path']:
++        assert data.count(replacement['after'].encode()) == replacement['count'], 'Verified autosave type declaration missing'
++        assert data.count(replacement['before'].encode()) == 0, 'Unresolved autosave type declaration retained'
++    assert sha(data) == spec['candidate_sha256'], 'RC2 source differs outside exact type/labels: ' + rel
++    data = data.replace(new, old)
++    if rel == replacement['path']:
++        data = data.replace(replacement['after'].encode(), replacement['before'].encode())
++    assert sha(data) == spec['baseline_sha256'], 'Unrelated RC1 runtime source changed: ' + rel
++    return data
++
++
++def normalized_rc1(root, rel):
++    """Adapt exact reviewed RC2 files only; all other bytes reach the old guard."""
++    f = fixture()
++    data = (root / rel).read_bytes()
++    if sha(data) == f['label_files'][rel]['candidate_sha256']:
++        return exact_candidate_to_rc1(root, rel)
++    return data
++
++
++def check(root):
++    f = fixture()
++    for rel in f['label_files']:
++        exact_candidate_to_rc1(root, rel)
++    actual = set()
++    for top in f['protected_roots']:
++        for p in (root / top).rglob('*'):
++            if p.is_file() and '__pycache__' not in p.parts and p.suffix not in ('.pyc', '.pyo'):
++                assert not p.is_symlink(), 'Unexpected source symlink'
++                actual.add(p.relative_to(root).as_posix())
++    expected = set(f['label_files']) | set(f['unchanged_files'])
++    assert actual == expected, 'RC2 runtime/helper file inventory changed'
++    for rel, expected_hash in f['unchanged_files'].items():
++        assert sha((root / rel).read_bytes()) == expected_hash, 'Changed protected RC2 file: ' + rel
++    print('PASS exact RC1 preservation: one autosave type annotation and eight version labels only; '
++          + str(len(f['unchanged_files'])) + ' whole runtime/helper files unchanged; '
++          + str(len(actual)) + ' exact protected paths. Source identity only.')
++
++
++if __name__ == '__main__':
++    check(Path(sys.argv[1]).resolve())
+--- RC1/docs/NeverLockSavesReborn/validation/run_checks.py
++++ RC2/docs/NeverLockSavesReborn/validation/run_checks.py
+@@ -70,6 +70,9 @@
+  ('dependency_export_independent',[sys.executable,str(HERE/'run_dependency_export_independent.py'),'--release',str(root),'--output',str(out/'dependency_export_independent'),'--lua',lua[0]]+['--lua-arg='+value for value in lua[1:]]),
+  ('dependency_scope',[sys.executable,str(HERE/'check_dependency_scope.py'),str(root)]),
+  ('rc1_source_freeze',[sys.executable,str(HERE/'check_rc1_scope.py'),str(root)]),
++ ('autosave_type_contract',[sys.executable,str(HERE/'check_autosave_type_contract.py'),str(root)]),
++ ('rc2_source_freeze',[sys.executable,str(HERE/'check_rc2_scope.py'),str(root)]),
++ ('rc2_scope_controls',[sys.executable,str(HERE/'run_rc2_scope_controls.py'),str(root)]),
+  ('rc1_scope_controls',[sys.executable,str(HERE/'run_rc1_scope_controls.py'),str(root)]),
+  ('installation_auditor',[sys.executable,'-B','-m','unittest','discover','-s',str(root/'tools/NLSRInstallAudit/tests'),'-p','test_*.py','-v']),
+  ('dependency_versions',lua+[str(HERE/'test_dependency_versions.lua'),str(module_dir/'dependency_versions.lua')]),
+--- RC1/docs/NeverLockSavesReborn/validation/run_rc1_scope_controls.py
++++ RC2/docs/NeverLockSavesReborn/validation/run_rc1_scope_controls.py
+@@ -2,6 +2,7 @@
+ """Exercise RC1 source-freeze rejection using independent, temporary byte edits."""
+ import json
+ from pathlib import Path
++from check_rc2_scope import normalized_rc1
+ import shutil
+ import subprocess
+ import sys
+@@ -36,6 +37,9 @@
+         candidate = Path(tmp) / name
+         for top in fixture['protected_roots']:
+             shutil.copytree(root / top, candidate / top, ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.pyo'))
++        # Exercise the original nine RC1 controls against exact RC1-normalized fixtures.
++        for label_rel in fixture['label_files']:
++            (candidate / label_rel).write_bytes(normalized_rc1(root, label_rel))
+         p = candidate / rel
+         if before == b'__REMOVE_FILE__':
+             p.unlink()
+--- RC1/docs/NeverLockSavesReborn/validation/run_rc2_scope_controls.py
++++ RC2/docs/NeverLockSavesReborn/validation/run_rc2_scope_controls.py
+@@ -0,0 +1,67 @@
++#!/usr/bin/env python3
++"""Require RC2's source contract and exact-preservation guard to reject edits.
++
++Temporary source mutations are not game or REDscript compiler executions.
++"""
++import json
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++import tempfile
++
++root = Path(sys.argv[1]).resolve()
++here = Path(__file__).resolve().parent
++fixture = json.loads((here / 'fixtures/rc2_scope.json').read_text())
++init, reds = tuple(fixture['label_files'])
++module = 'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua'
++helper = 'tools/NLSRSaveGuardian/save_guardian.py'
++
++
++def run(candidate, script='check_rc2_scope.py'):
++    return subprocess.run([sys.executable, str(here / script), str(candidate)], capture_output=True, text=True)
++
++
++for script in ('check_rc2_scope.py', 'check_autosave_type_contract.py'):
++    result = run(root, script)
++    assert result.returncode == 0, 'Unmodified candidate failed ' + script + ': ' + result.stdout + result.stderr
++
++cases = [
++    ('reported_type_regression', reds, b'ref<gameAutoSaveSystem>', b'ref<AutoSaveSystem>', 'Verified autosave type declaration missing'),
++    ('guessed_type_regression', reds, b'ref<gameAutoSaveSystem>', b'ref<AutosaveSystem>', 'Verified autosave type declaration missing'),
++    ('getter_spelling_changed', reds, b'GameInstance.GetAutoSaveSystem(this.GetGame());', b'GameInstance.GetAutosaveSystem(this.GetGame());', 'Verified autosave type declaration missing'),
++    ('service_guard_removed', reds, b'  if !IsDefined(autosave) { return false; };\r\n', b'', 'RC2 source differs outside exact type/labels'),
++    ('pending_clear_removed', reds, b'  this.nlsDeferredPending = false; // clear before dispatch to prevent duplicates\r\n', b'', 'RC2 source differs outside exact type/labels'),
++    ('checkpoint_submit_changed', reds, b'autosave.RequestForcedCheckpoint();', b'autosave.RequestCheckpoint();', 'RC2 source differs outside exact type/labels'),
++    ('mixed_init_version', init, b'1.0.0-rc2', b'1.0.0-rc1', 'Unexpected RC2 version count'),
++    ('init_nonlabel_change', init, None, b'\n-- unreviewed source edit\n', 'RC2 source differs outside exact type/labels'),
++    ('module_changed', module, None, b'\n-- unreviewed source edit\n', 'Changed protected RC2 file'),
++    ('companion_changed', helper, None, b'\n# unreviewed helper edit\n', 'Changed protected RC2 file'),
++    ('extra_runtime_file', 'r6/scripts/NeverLockSavesReborn/unreviewed.reds', None, b'// unexpected runtime file\n', 'RC2 runtime/helper file inventory changed'),
++    ('missing_runtime_file', module, b'__REMOVE_FILE__', b'', 'RC2 runtime/helper file inventory changed'),
++]
++results = []
++with tempfile.TemporaryDirectory(prefix='nlsr-rc2-source-') as tmp:
++    for name, rel, before, after, expected in cases:
++        candidate = Path(tmp) / name
++        for top in fixture['protected_roots']:
++            shutil.copytree(root / top, candidate / top, ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.pyo'))
++        p = candidate / rel
++        if before == b'__REMOVE_FILE__':
++            p.unlink()
++        elif before is None:
++            p.parent.mkdir(parents=True, exist_ok=True)
++            p.write_bytes((p.read_bytes() if p.exists() else b'') + after)
++        else:
++            data = p.read_bytes()
++            assert data.count(before) >= 1, 'Control anchor missing: ' + name
++            p.write_bytes(data.replace(before, after, 1))
++        result = run(candidate)
++        assert result.returncode != 0 and expected in result.stderr, 'Control did not fail for intended reason: ' + name + '\n' + result.stdout + result.stderr
++        if name in ('reported_type_regression', 'guessed_type_regression'):
++            contract = run(candidate, 'check_autosave_type_contract.py')
++            assert contract.returncode != 0 and 'must resolve to verified native gameAutoSaveSystem' in contract.stderr, 'Type contract missed ' + name
++        results.append({'control': name, 'rejected': True, 'reason': expected})
++print(json.dumps({'scope': 'RC2 source/identity checks only; no compiler or game runtime.',
++                  'unmodified_candidate': 'passed', 'negative_controls': results}, indent=2))
++print('PASS twelve intended RC2 source-scope mutation controls; reported and guessed type regressions also fail focused contract')
+--- RC1/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
++++ RC2/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
+@@ -1,4 +1,4 @@
+-// v1.0.0-rc1 Release Candidate. Deferred/autosave lanes are opt-in.
++// v1.0.0-rc2 Release Candidate. Deferred/autosave lanes are opt-in.
+ // Engine native saving-unlocked state is the release gate; this does not
+ // guarantee that a quest or phone conversation serializes correctly.
+ @addField(PlayerPuppet) public let nlsDeferredEnabled: Bool = false;
+@@ -167,7 +167,7 @@
+   } else {
+     if !this.nlsDeferredEnabled || (this.nlsDeferredSource != 1 && this.nlsDeferredSource != 2) { return false; };
+   };
+-  let autosave: ref<AutoSaveSystem> = GameInstance.GetAutoSaveSystem(this.GetGame());
++  let autosave: ref<gameAutoSaveSystem> = GameInstance.GetAutoSaveSystem(this.GetGame());
+   if !IsDefined(autosave) { return false; };
+   this.nlsDeferredPending = false; // clear before dispatch to prevent duplicates
+   autosave.RequestForcedCheckpoint();
+@@ -437,7 +437,7 @@
+ public final func NLSRebornGetNotificationCategory() -> Int32 { return NLSRebornPolicy.NotificationContext(this.GetGame()); }
+ 
+ public class NLSRebornPolicy {
+-  public static func Version() -> String { return "1.0.0-rc1"; }
++  public static func Version() -> String { return "1.0.0-rc2"; }
+   public static func ShuffleSlot(index: Int32, seed: Int32) -> Int32 {
+     let cycle: Int32 = index / 20;
+     let turn: Int32 = index % 20;
+--- RC1/tools/NLSRInstallAudit/audit_installation.py
++++ RC2/tools/NLSRInstallAudit/audit_installation.py
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""Read-only, bounded RC1 installation observations; standard library only."""
++"""Read-only, bounded RC2 installation observations; standard library only."""
+ import argparse
+ from datetime import datetime, timezone
+ import hashlib
+@@ -10,8 +10,8 @@
+ import stat
+ import sys
+ 
+-RELEASE = '1.0.0-rc1'
+-INVENTORY_SHA256 = '34df536f27eabaff08bdd6d066552467f28099caa3d0c9c1c0286ff16850d392'
++RELEASE = '1.0.0-rc2'
++INVENTORY_SHA256 = 'c8a9d0804b49a45078264f6201a5a613cc21c091a40cd4bf1f70b77cfb5d4aff'
+ LUA_ROOT = 'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn'
+ REDS_ROOT = 'r6/scripts/NeverLockSavesReborn'
+ MAX_FILE = 2 * 1024 * 1024
+@@ -364,7 +364,8 @@
+                            'error': len(re.findall(rb'\berror\b', data, re.I)),
+                            'warning': len(re.findall(rb'\bwarn(?:ing)?\b', data, re.I)),
+                            'failed': len(re.findall(rb'\bfailed\b', data, re.I)),
+-                           'rc1_label': data.lower().count(b'1.0.0-rc1')})
++                           'rc1_label': data.lower().count(b'1.0.0-rc1'),
++                           'rc2_label': data.lower().count(b'1.0.0-rc2')})
+         except (OSError, AuditError) as exc:
+             row['status'] = 'incomplete'
+             self.issue(exc.code if isinstance(exc, AuditError) else 'io_error', kind + '_log', incomplete=True)
+@@ -378,7 +379,7 @@
+ def main(argv=None):
+     report = base_report()
+     try:
+-        parser = Parser(description='Read-only RC1 runtime byte audit. Prints JSON; does not install, repair, run the game or certify save safety.')
++        parser = Parser(description='Read-only RC2 runtime byte audit. Prints JSON; does not install, repair, run the game or certify save safety.')
+         parser.add_argument('--game-root', required=True, metavar='DIRECTORY', help='Cyberpunk installation directory; never the save directory')
+         parser.add_argument('--version', action='append', default=[], metavar='COMPONENT=VALUE',
+                             help='User-reported label: game,cet,redscript,red4ext,codeware,native_settings,dark_future; repeat per component')
+--- RC1/tools/NLSRInstallAudit/tests/test_author.py
++++ RC2/tools/NLSRInstallAudit/tests/test_author.py
+@@ -1,4 +1,4 @@
+-"""Real-filesystem public CLI checks for the integrated RC1 installation auditor."""
++"""Real-filesystem public CLI checks for the integrated RC2 installation auditor."""
+ import hashlib
+ import json
+ import os
+@@ -192,7 +192,7 @@
+     def test_log_tail_counts_digest_and_privacy(self):
+         path = self.parent / 'PRIVATE_GAME.log'
+         prefix = b'PRIVATE_LOG_CONTENT\nerror\n' * 10000
+-        tail = b'warning failed 1.0.0-rc1 ERROR\n'
++        tail = b'warning failed 1.0.0-rc1 1.0.0-rc2 ERROR\n'
+         path.write_bytes(prefix + tail)
+         code, report = self.run_audit('--cet-log', path)
+         self.assertEqual(code, 0)
+@@ -201,6 +201,7 @@
+         self.assertEqual(log['observed_bytes'], 128 * 1024)
+         self.assertEqual(log['tail_sha256'], hashlib.sha256(observed).hexdigest())
+         self.assertEqual(log['marker_counts']['rc1_label'], 1)
++        self.assertEqual(log['marker_counts']['rc2_label'], 1)
+         self.assertEqual(log['marker_counts']['warning'], 1)
+         self.assertNotIn('PRIVATE_LOG_CONTENT', json.dumps(report))
+         self.assertEqual(log['current_compilation'], 'unknown')
+--- RC1/tools/NLSRInstallAudit/tests/test_independent.py
++++ RC2/tools/NLSRInstallAudit/tests/test_independent.py
+@@ -90,7 +90,7 @@
+         if expected is not None:
+             self.assertEqual(p.returncode, expected, payload)
+         self.assertEqual({'exact_match':0, 'drift_or_review':1, 'incomplete':2}[payload['audit_status']], p.returncode)
+-        self.assertEqual(payload['release'], '1.0.0-rc1')
++        self.assertEqual(payload['release'], '1.0.0-rc2')
+         return payload
+ 
+     def test_clean_exact_bytes_and_no_input_writes(self):
+@@ -287,11 +287,11 @@
+ 
+     def test_log_marker_counts_do_not_promote_compilation(self):
+         log=Path(self.tmp.name)/'log.txt'
+-        log.write_text('error ERROR errorless\nwarning WARN failed FAILED 1.0.0-rc1\n')
++        log.write_text('error ERROR errorless\nwarning WARN failed FAILED 1.0.0-rc1 1.0.0-rc2\n')
+         report=self.run_audit('--cet-log',log,expected=0)
+         item=next(e for e in report['logs'] if e['kind']=='cet')
+         self.assertEqual(item['current_compilation'],'unknown')
+-        self.assertEqual(item['marker_counts'],{'error':2,'warning':2,'failed':2,'rc1_label':1})
++        self.assertEqual(item['marker_counts'],{'error':2,'warning':2,'failed':2,'rc1_label':1,'rc2_label':1})
+ 
+     def test_renamed_cet_copy_candidate_requires_review(self):
+         p=(self.root/LUA_DIR).parent/PRIVATE/'init.lua'
