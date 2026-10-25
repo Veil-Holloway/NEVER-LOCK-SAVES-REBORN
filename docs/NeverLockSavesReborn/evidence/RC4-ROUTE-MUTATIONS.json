@@ -1,0 +1,99 @@
+{
+  "assertions": 9641,
+  "failed": 0,
+  "boundary_errors": 0,
+  "first_failures": [],
+  "source_sha256": "ffc6864b69f2fc2c8f3b940a8ff9ef516368de1d7afe2224782c7ed20fc3a4a1",
+  "scope": "RC4 Unrestricted user-request routing through bounded actual REDscript.\n\nCompiles actual hooks, mode setter, queue, introduction and automatic/deferred\nmethods. Only external game services, scalar observations and the existing large\nCheckpointMessage library use boundary doubles. No REDscript compiler, CET/native\nruntime, UI rendering, engine acceptance, save write/reload or progression proof.",
+  "negative_control": false,
+  "mutation_controls": {
+    "Unrestricted returns to deferred admission": {
+      "detected": true,
+      "failed": 2625,
+      "first_failure": [
+        {
+          "label": "Unrestricted attempts exactly one immediate checkpoint",
+          "details": {
+            "hook": "HandlePressToSaveGame",
+            "deferred": true,
+            "mounted": false,
+            "combat": false,
+            "allow_combat": false,
+            "allow_vehicle": false,
+            "master": false,
+            "status": false,
+            "locks": [
+              "Combat"
+            ]
+          }
+        }
+      ]
+    },
+    "immediate request fails to consume stale work": {
+      "detected": true,
+      "failed": 30,
+      "first_failure": [
+        {
+          "label": "fresh immediate user request consumes old pending work",
+          "details": {
+            "hook": "HandlePressToSaveGame",
+            "deferred": false,
+            "old_source": 1
+          }
+        }
+      ]
+    },
+    "mode selection carries stale player work": {
+      "detected": true,
+      "failed": 17,
+      "first_failure": [
+        {
+          "label": "mode setter keeps selection and queue ownership contract",
+          "details": {
+            "old_mode": 0,
+            "new_mode": 2,
+            "source": 1
+          }
+        }
+      ]
+    },
+    "mode selection cancels independent automatic work": {
+      "detected": true,
+      "failed": 16,
+      "first_failure": [
+        {
+          "label": "mode setter keeps selection and queue ownership contract",
+          "details": {
+            "old_mode": 0,
+            "new_mode": 2,
+            "source": 3
+          }
+        }
+      ]
+    },
+    "introduction guard removed from admission": {
+      "detected": true,
+      "failed": 6,
+      "first_failure": [
+        {
+          "label": "direct intro refusal leaves unrelated work unchanged",
+          "details": {
+            "done": null,
+            "protected": false,
+            "source": 1
+          }
+        }
+      ]
+    },
+    "automatic native lock gate removed": {
+      "detected": true,
+      "failed": 4,
+      "first_failure": [
+        {
+          "label": "automatic work still waits for native permission",
+          "details": false
+        }
+      ]
+    }
+  }
+}

@@ -2,7 +2,7 @@
 
 I took Never Lock Saves by RalphModding and started updating and expanding it.. added CET controls.. Native Settings support.. and a bridge so CET and redscript can communicate..
 
-**current version is 1.0.0-rc3.. this is a release candidate for testing. actual ingame acceptance is still NOT RUN..** the offline checks passed but save creation.. reloading and quest progression still need to be checked in the game..
+**current version is 1.0.0-rc4.. this is a release candidate for testing. actual ingame acceptance is still NOT RUN..** the offline checks passed but save creation.. reloading and quest progression still need to be checked in the game..
 
 ## thanks Ralph
 
@@ -18,7 +18,7 @@ credit stays with Ralph for the original.. Reborn changes are by Veil Ashen Holl
 
 **Immersion** keeps normal requests and uses the existing checkpoint fallback when one of the four supported Dark future contexts is positively observed.. compatibility still needs actual testing..
 
-**Unrestricted** attempts checkpoint requests after the introduction.. its experimental.. a request doesnt mean the game accepted it or wrote a usable save..
+**Unrestricted** sends user checkpoint requests straight to the existing fallback after the introduction.. even with Deferred Save ON.. switching into it clears old manual queued work.. its experimental.. a request doesnt mean the game accepted it or wrote a usable save..
 
 **smart mode** respects normal save locks.. with Deferred Save enabled it remembers one request and waits until normal saving unlocks.. optional combat exceptions require combat-only lock reasons.. mounted combat also needs the vehicle switch.. quest and scene locks dont become combat exceptions..
 
@@ -39,18 +39,18 @@ automatic character profiles.. every owned safehouse and automatic live backups 
 you need **Cyber Engine Tweaks and redscript** for the two runtime halves.. **Native Settings** is optional for its menu.. **Dark Future** is optional for its integration.. install any dependencies those frameworks require separately.. no framework binaries are bundled and no exact supported version combination is claimed yet..
 
 1. close the game.. keep external save copies and your existing Reborn settings..
-2. download `Never_Lock_Saves_Reborn_v1.0.0-rc3_RUNTIME_ONLY.zip` from [Releases](https://github.com/rbucknell484-ai/NEVER-LOCK-SAVES-REBORN/releases) or the [packages folder](packages/)..
+2. download `Never_Lock_Saves_Reborn_v1.0.0-rc4_RUNTIME_ONLY.zip` from the [packages folder](packages/) on this fix branch.. [Releases](https://github.com/rbucknell484-ai/NEVER-LOCK-SAVES-REBORN/releases) still holds the published RC3..
 3. install with Vortex.. enable one Reborn installation and Deploy.. or copy the complete `bin/` and `r6/` trees to the game root..
-4. launch.. check fresh logs and confirm the panel says `1.0.0-rc3`.. stop at compilation errors before testing saves..
+4. launch.. check fresh logs and confirm the panel says `1.0.0-rc4`.. stop at compilation errors before testing saves..
 
 ## testing and issues
 
-RC3 corrects smart interaction requests skipping the queue.. and includes RC2's autosave-system type correction.. the 60 integrated and 60 extracted-package offline groups passed for these same runtime/source bytes.. those use controlled boundaries.. they are not game tests..
+RC4 corrects Unrestricted requests getting trapped in the deferred queue during vehicle combat.. it retains RC3s Smart interaction fix and RC2s autosave-system type correction.. offline checks cover the Unrestricted routing change and retained features.. see the current validation report for the actual results.. those use controlled boundaries.. they are not game tests..
 
 start with an ordinary save.. confirm a new save exists.. reload it and continue gameplay.. then test Smart with Deferred Save ON during an interaction.. wait for native unlock and exactly one checkpoint request before checking save creation and reload separately..
 
-use the [testing checklist](docs/NeverLockSavesReborn/TESTING-CHECKLIST-RC3.md) and record each result.. current ingame cases start NOT RUN..
+use the [testing checklist](docs/NeverLockSavesReborn/TESTING-CHECKLIST-RC4.md) and record each result.. current ingame cases start NOT RUN..
 
 for an [issue](https://github.com/rbucknell484-ai/NEVER-LOCK-SAVES-REBORN/issues).. include version.. game/framework versions.. relevant mods.. steps.. expected and actual behavior.. fresh logs and a reviewed support report.. dont post private paths or personal information..
 
-public downloads add the MIT and current credit/testing notes.. all 16 runtime files match the tested RC3 candidate.. use the checksum sidecars for these public ZIPs..
+MIT permission and Ralphs credit stay included.. use the new checksum sidecars for RC4.. the current vehicle-combat fix still needs actual save creation.. reload and progression testing..

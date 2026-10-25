@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "/workspace/scratch/ba7d0d23f8da/work/rc4_audit/output/test_release/tools/NLSRInstallAudit/tests",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "tests": 89,
+  "skips": 0,
+  "all_test_names_preserved": true,
+  "inventory_sha256": "f67def925f898924dcfe7cd2b9d0d485b8dd894033add0f334ae67b428402350",
+  "tool_sha256": "7a0ebf660e876efe95c17ce4a97bcb902349c3a906adc30acb80f5f7f63dcf35"
+}

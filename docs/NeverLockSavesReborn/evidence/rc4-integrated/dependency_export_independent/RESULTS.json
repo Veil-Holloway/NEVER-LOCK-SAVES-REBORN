@@ -1,0 +1,46 @@
+{
+  "scope": "Actual Lua init/report/collector; doubled external CET/Game/UI/store APIs. No actual game, CET, REDscript compiler or Windows runtime.",
+  "source_hashes": {
+    "init.lua": "f3beda44cac722df64c3bed6381ac2990d6dbd5b967d447d340896e0b12b74df",
+    "dependency_versions.lua": "32c132404062f25594684567b4a50acdbc61687e6eb59fee8a25fbee2393b53a",
+    "support_report.lua": "0dfdd44ae3baa6a5a20b0a2121e2844b52e1be4ae6f4b0db366aa061e6c838c6"
+  },
+  "test_sha256": "ed55b1d893f3a2b1f81c940c8985486a3cb14384b8642fbad1d44dfe6d022eec",
+  "results": [
+    {
+      "case": "actual_init_export",
+      "exit_code": 0,
+      "passed": true,
+      "log": "runtime.log"
+    },
+    {
+      "case": "omit_versions_snapshot",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "NLSR-DEPENDENCY-EXPORT",
+      "log": "omit_versions_snapshot.log"
+    },
+    {
+      "case": "cache_first_sample",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "each export samples current values without cache",
+      "log": "cache_first_sample.log"
+    },
+    {
+      "case": "remove_reader_isolation",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "expected evidence status cet read_failed",
+      "log": "remove_reader_isolation.log"
+    },
+    {
+      "case": "unsafe_collector_lookup",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "actual draw/export must not throw",
+      "log": "unsafe_collector_lookup.log"
+    }
+  ],
+  "passed": true
+}

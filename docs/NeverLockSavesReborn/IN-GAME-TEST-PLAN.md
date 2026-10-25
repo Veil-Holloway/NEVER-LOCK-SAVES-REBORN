@@ -1,3 +1,3 @@
-# RC3 actual-game test plan
+# RC4 game acceptance
 
-Use [TESTING-CHECKLIST-RC3.md](TESTING-CHECKLIST-RC3.md). All current game cases start NOT RUN. Source/boundary results are separate.
+Start with TESTING-RC4.md, then TESTING-CHECKLIST-RC4.md. A submission is not a confirmed write/reload.

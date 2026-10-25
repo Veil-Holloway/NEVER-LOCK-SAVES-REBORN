@@ -1,0 +1,92 @@
+{
+  "scope": "Pure Lua5.3 execution and boundary callbacks; no CET/game/save-file evidence",
+  "source_sha256": {
+    "status_messages.lua": "a271bac7f36417815d673bf0c176e7fe64c73b5da77b8c41c815c10fd0b3ecea",
+    "status_message_library.lua": "67f090e136d54ed7580518eb4f0b48601d582f23fe3f55015b7ca4fba7a0ba7c"
+  },
+  "positive": {
+    "exit_code": 0,
+    "stdout": "PASS status messages: 22554 assertions; 54 pools, 1080 entries, pure Lua only; UI acceptance is not save evidence.\n",
+    "stderr": ""
+  },
+  "negative_controls": [
+    {
+      "exit_code": 1,
+      "stdout": "...NeverLockSavesReborn/validation/test_status_messages.lua:7: disabled intake ignored: true != false\n",
+      "stderr": "",
+      "name": "disabled_intake",
+      "detected_for_intended_reason": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "...NeverLockSavesReborn/validation/test_status_messages.lua:7: rejected UI handoff: emitter_accepted != emitter_failed\n",
+      "stderr": "",
+      "name": "truthy_emit",
+      "detected_for_intended_reason": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "...NeverLockSavesReborn/validation/test_status_messages.lua:7: failed emit never advances RNG: 1913030442 != 91\n",
+      "stderr": "",
+      "name": "advance_rng_on_failure",
+      "detected_for_intended_reason": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "...NeverLockSavesReborn/validation/test_status_messages.lua:7: no adjacent repeat across cycle boundary\n",
+      "stderr": "",
+      "name": "cycle_boundary",
+      "detected_for_intended_reason": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "...NeverLockSavesReborn/validation/test_status_messages.lua:7: same event deduplicated: true != false\n",
+      "stderr": "",
+      "name": "duplicate_event",
+      "detected_for_intended_reason": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "...NeverLockSavesReborn/validation/test_status_messages.lua:7: TTL exact boundary expires: emitter_failed != idle\n",
+      "stderr": "",
+      "name": "expired_event",
+      "detected_for_intended_reason": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "...NeverLockSavesReborn/validation/test_status_messages.lua:7: failure attempts throttled: emitter_failed != throttled\n",
+      "stderr": "",
+      "name": "unthrottled_failures",
+      "detected_for_intended_reason": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "...NeverLockSavesReborn/validation/test_status_messages.lua:7: low-priority intake cannot displace full high-priority buffer: true != false\n",
+      "stderr": "",
+      "name": "capacity_priority",
+      "detected_for_intended_reason": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "...NeverLockSavesReborn/validation/test_status_messages.lua:7: other session cannot be adopted: true != false\n",
+      "stderr": "",
+      "name": "cross_session",
+      "detected_for_intended_reason": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "...NeverLockSavesReborn/validation/test_status_messages.lua:7: disable during emit prevents unpublished commit: emitter_accepted != interrupted\n",
+      "stderr": "",
+      "name": "reentrant_commit",
+      "detected_for_intended_reason": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "...NeverLockSavesReborn/validation/test_status_messages.lua:7: body pool progress is independent: Request queued. Waiting for native saving permission. != Request queued. It will expire if the dispatch gate stays closed.\n",
+      "stderr": "",
+      "name": "shared_body_progress",
+      "detected_for_intended_reason": true
+    }
+  ],
+  "passed": true
+}

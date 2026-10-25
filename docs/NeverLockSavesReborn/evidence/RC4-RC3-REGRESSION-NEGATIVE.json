@@ -1,0 +1,410 @@
+{
+  "assertions": 9641,
+  "failed": 2639,
+  "boundary_errors": 0,
+  "first_failures": [
+    {
+      "label": "Unrestricted attempts exactly one immediate checkpoint",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": false,
+        "locks": [
+          "Combat"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted never creates deferred user work",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": false,
+        "locks": [
+          "Combat"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted attempts exactly one immediate checkpoint",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": false,
+        "locks": [
+          "Combat",
+          "PlayerStateMachine"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted never creates deferred user work",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": false,
+        "locks": [
+          "Combat",
+          "PlayerStateMachine"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted attempts exactly one immediate checkpoint",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": false,
+        "locks": [
+          "Combat",
+          "Scene"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted never creates deferred user work",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": false,
+        "locks": [
+          "Combat",
+          "Scene"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted attempts exactly one immediate checkpoint",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": false,
+        "locks": [
+          "Tier"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted never creates deferred user work",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": false,
+        "locks": [
+          "Tier"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted attempts exactly one immediate checkpoint",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": false,
+        "locks": [
+          999
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted never creates deferred user work",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": false,
+        "locks": [
+          999
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted attempts exactly one immediate checkpoint",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": false,
+        "locks": []
+      }
+    },
+    {
+      "label": "Unrestricted never creates deferred user work",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": false,
+        "locks": []
+      }
+    },
+    {
+      "label": "Unrestricted attempts exactly one immediate checkpoint",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": true,
+        "locks": [
+          "Combat"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted never creates deferred user work",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": true,
+        "locks": [
+          "Combat"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted attempts exactly one immediate checkpoint",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": true,
+        "locks": [
+          "Combat",
+          "PlayerStateMachine"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted never creates deferred user work",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": true,
+        "locks": [
+          "Combat",
+          "PlayerStateMachine"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted attempts exactly one immediate checkpoint",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": true,
+        "locks": [
+          "Combat",
+          "Scene"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted never creates deferred user work",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": true,
+        "locks": [
+          "Combat",
+          "Scene"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted attempts exactly one immediate checkpoint",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": true,
+        "locks": [
+          "Tier"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted never creates deferred user work",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": true,
+        "locks": [
+          "Tier"
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted attempts exactly one immediate checkpoint",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": true,
+        "locks": [
+          999
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted never creates deferred user work",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": true,
+        "locks": [
+          999
+        ]
+      }
+    },
+    {
+      "label": "Unrestricted attempts exactly one immediate checkpoint",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": true,
+        "locks": []
+      }
+    },
+    {
+      "label": "Unrestricted never creates deferred user work",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": false,
+        "status": true,
+        "locks": []
+      }
+    },
+    {
+      "label": "Unrestricted attempts exactly one immediate checkpoint",
+      "details": {
+        "hook": "HandlePressToSaveGame",
+        "deferred": true,
+        "mounted": false,
+        "combat": false,
+        "allow_combat": false,
+        "allow_vehicle": false,
+        "master": true,
+        "status": false,
+        "locks": [
+          "Combat"
+        ]
+      }
+    }
+  ],
+  "source_sha256": "f2953b6903bb09da3bdec5eb7ee991a51928817ac2b527d9e816e9fc591c48d1",
+  "scope": "RC4 Unrestricted user-request routing through bounded actual REDscript.\n\nCompiles actual hooks, mode setter, queue, introduction and automatic/deferred\nmethods. Only external game services, scalar observations and the existing large\nCheckpointMessage library use boundary doubles. No REDscript compiler, CET/native\nruntime, UI rendering, engine acceptance, save write/reload or progression proof.",
+  "negative_control": true
+}

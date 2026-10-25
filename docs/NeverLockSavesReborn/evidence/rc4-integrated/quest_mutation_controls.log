@@ -1,0 +1,61 @@
+{
+  "scope": "Lua 5.3 module execution; CET/game and REDscript unverified",
+  "module_sha256": "023c995c24e0c3c941861557bbe92c9caa7c3e3fe14ee5f0bfc19eaee1598547",
+  "test_sha256": "aec12419f56f41cc181b3af2d681566ac7a67e233bbfd75a64a6538cd12c8eca",
+  "positive": {
+    "exit_code": 0,
+    "stdout": "quest_milestones: 113 assertions passed\n",
+    "stderr": ""
+  },
+  "negative_controls": {
+    "cross_session_event_transfer": {
+      "exit_code": 1,
+      "stdout": "...everLockSavesReborn/validation/test_quest_milestones.lua:6: session change discards old event: expected 0, got 1\n",
+      "stderr": "",
+      "detected": true
+    },
+    "accept_incomplete_entry": {
+      "exit_code": 1,
+      "stdout": "...everLockSavesReborn/validation/test_quest_milestones.lua:6: unknown/incomplete/wrong actual type rejected: expected 0, got 1\n",
+      "stderr": "",
+      "detected": true
+    },
+    "disable_deduplication": {
+      "exit_code": 1,
+      "stdout": "...everLockSavesReborn/validation/test_quest_milestones.lua:6: duplicate callbacks deduplicated: expected 0, got 2\n",
+      "stderr": "",
+      "detected": true
+    },
+    "allow_buffer_overflow": {
+      "exit_code": 1,
+      "stdout": "...everLockSavesReborn/validation/test_quest_milestones.lua:6: 65th event invalidates entire batch: expected 0, got 64\n",
+      "stderr": "",
+      "detected": true
+    },
+    "forget_dedup_on_interrupt": {
+      "exit_code": 1,
+      "stdout": "...everLockSavesReborn/validation/test_quest_milestones.lua:6: pause clear preserves session dedup: expected 0, got 1\n",
+      "stderr": "",
+      "detected": true
+    },
+    "trust_callback_class_without_actual_type": {
+      "exit_code": 1,
+      "stdout": "...everLockSavesReborn/validation/test_quest_milestones.lua:6: unknown/incomplete/wrong actual type rejected: expected 0, got 1\n",
+      "stderr": "",
+      "detected": true
+    },
+    "publish_after_reentrant_clear": {
+      "exit_code": 1,
+      "stdout": "...everLockSavesReborn/validation/test_quest_milestones.lua:6: reentrant clear invalidates in-flight resolution: expected 0, got 1\n",
+      "stderr": "",
+      "detected": true
+    },
+    "publish_after_mid_resolution_disable": {
+      "exit_code": 1,
+      "stdout": "...everLockSavesReborn/validation/test_quest_milestones.lua:6: disabled during resolution cannot publish: expected 0, got 1\n",
+      "stderr": "",
+      "detected": true
+    }
+  },
+  "passed": true
+}

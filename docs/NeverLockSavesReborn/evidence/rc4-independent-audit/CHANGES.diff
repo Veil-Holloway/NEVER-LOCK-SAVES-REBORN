@@ -1,0 +1,222 @@
+--- RC3/tools/NLSRInstallAudit/README.md
++++ RC4/tools/NLSRInstallAudit/README.md
+@@ -1,8 +1,8 @@
+-# RC3 installation audit
++# RC4 installation audit
+ 
+-This optional Python 3.10+ tool checks the installed **1.0.0-rc3** runtime against
++This optional Python 3.10+ tool checks the installed **1.0.0-rc4** runtime against
+ 16 pinned files: 13 CET Lua files and 3 REDscript files. Python is not required
+-for the mod itself. Run this tool from the extracted RC3 package, outside the
++for the mod itself. Run this tool from the extracted RC4 package, outside the
+ game directory. In PowerShell, replace the example with your game root:
+ 
+ ```powershell
+@@ -34,13 +34,13 @@
+ 
+ Optional `--redscript-log "C:\Path\To\redscript.log"` and `--cet-log
+ "C:\Path\To\cyber_engine_tweaks.log"` return a bounded tail's digest and
+-marker counts, with no log text. RC1, RC2 and RC3 labels have separate counters. These observations are unscoped: old logs and
++marker counts, with no log text. RC1, RC2, RC3 and RC4 labels have separate counters. These observations are unscoped: old logs and
+ zero error markers do not pass current compilation. Inspect fresh logs from an
+ actual launch separately.
+ 
+ This embedded tool pins runtime bytes only. It does not accept the earlier
+ acceptance kit's `--archive` option: a package cannot contain its own final ZIP
+-hash. Verify the downloaded RC3 ZIP separately with its accompanying `.sha256`
++hash. Verify the downloaded RC4 ZIP separately with its accompanying `.sha256`
+ sidecar, for example `Get-FileHash -Algorithm SHA256 <ZIP path>`, and compare the
+ full digest. Neither a ZIP match nor an installation match supplies a gameplay
+ pass.
+@@ -52,7 +52,7 @@
+ omitted; unexpected names use digest identifiers. A review candidate may require
+ manual local directory inspection to locate it.
+ 
+-The included regression tests use temporary directories and the extracted RC3
++The included regression tests use temporary directories and the extracted RC4
+ runtime as fixture input. Run from the extracted package root:
+ 
+ ```powershell
+@@ -61,5 +61,5 @@
+ 
+ These tests do not launch the game or establish Windows-specific behavior. Record
+ actual outcomes in `docs/NeverLockSavesReborn/TEST-MATRIX.csv`; preserve untested
+-and deferred rows. Prior preRC4 broad working feedback remains attributed to
+-preRC4. The retained RC2 type-declaration fix and the RC3 Smart interaction-queue fix still need actual game compilation and gameplay tests.
++and deferred rows. Earlier broad gameplay working reports were withdrawn; current game acceptance
++remains untested. The retained RC2 native-type and RC3 Smart interaction fixes, plus RC4's Unrestricted immediate-request routing, still need actual game compilation and gameplay tests.
+--- RC3/tools/NLSRInstallAudit/VALIDATION.md
++++ RC4/tools/NLSRInstallAudit/VALIDATION.md
+@@ -1,25 +1,36 @@
+-# RC3 installation auditor refresh — offline validation
++# RC4 installation auditor refresh — offline validation
+ 
+-The embedded checker pins all 16 finalized **1.0.0-rc3** runtime files (13 CET Lua files and three REDscript files). This refresh changes the release label, exact runtime sizes/hashes, embedded inventory digest and descriptive text. It adds a separate `rc3_label` log counter and retains the earlier `rc1_label` and `rc2_label` counters. The filesystem scan, link handling, limits, read-only behavior, result statuses and privacy behavior are unchanged.
++The checker pins all 16 finalized **1.0.0-rc4** runtime files (13 CET Lua files
++and three REDscript files). It refreshes exact runtime sizes/hashes, the embedded
++inventory digest, release labels and descriptive text. It adds `rc4_label` while
++retaining the separate RC1, RC2 and RC3 counters. Filesystem scanning, link checks,
++limits, read-only behavior, statuses and privacy rules remain unchanged.
+ 
+-The runtime inventory is byte-specific. Clean file matches establish installed source identity only, and do not establish REDscript compilation or successful saving.
+-
+-Fresh command on a mirrored RC3 package:
++## Fresh verification
+ 
+ ```sh
+-python3 -B -m unittest discover -s work/rc3_audit/test_release/tools/NLSRInstallAudit/tests -p 'test_*.py' -v
++python3 -B -m unittest discover -s work/rc4_audit/output/test_release/tools/NLSRInstallAudit/tests -p 'test_*.py' -v
+ ```
+ 
+-Result: **89 tests passed, no skips**. All earlier test names remain. Log fixtures now check RC1, RC2 and RC3 counters independently, including mixed-case RC3 text. These tests use real temporary filesystem inputs and CLI subprocesses; the game is not launched.
++**89 tests passed, no skips.** All original test names remain. Added assertions
++inside the existing log tests check RC1–RC4 independently, including mixed-case
++RC4 text. Inputs are real disposable filesystem trees; the game is not launched.
+ 
+-Three additional disposable game-root probes gave the expected results:
++Independent CLI probes: clean RC4 runtime returns 0/exact_match; stale RC3 main
++REDscript and stale RC3 init separately return 1/drift_or_review. Every probe
++preserves input bytes, file sets and modification times. Private path/name/log
++poison markers do not leak, and log-derived compilation remains Unknown.
+ 
+-| Probe | Exit | Observation |
+-| --- | --- | --- |
+-| All 16 RC3 runtime files | 0 | Exact runtime match |
+-| Main REDscript replaced by retained RC2 source | 1 | Runtime drift |
+-| CET init replaced by retained RC2 source | 1 | Runtime drift |
++Independent bounded execution performs **6864 assertions** against the actual
++changed queue and mode-setter methods, with zero failures. Source comparison
++confirms 15 existing native/automatic/Smart/notification/request-hook methods
++match RC3 exactly. Those checks establish source behavior, not engine acceptance.
+ 
+-Each probe preserved its input file set, byte hashes and modification timestamps, and emitted no private path or raw-error leak. Optional log observations remain unscoped and do not claim current compilation.
++RC4 makes Unrestricted user requests attempt immediately after introduction
++protection instead of being intercepted by the manual queue. Mode changes clear
++old manual work while retaining the separately enabled automatic lane; a fresh
++Unrestricted user request takes priority over prior pending work. Actual vehicle
++combat save creation, native compilation, reload and progression remain untested.
+ 
+-No Windows-specific runtime, Cyberpunk launch, REDscript compilation, actual save creation, reload, restoration or quest progression is verified. The RC3 Smart interaction-queue behavior still requires an actual game test.
++No Windows-specific runtime, Cyberpunk launch, actual save writing, restore or
++stable release is established by this tool or its offline tests.
+--- RC3/tools/NLSRInstallAudit/audit_installation.py
++++ RC4/tools/NLSRInstallAudit/audit_installation.py
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""Read-only, bounded RC3 installation observations; standard library only."""
++"""Read-only, bounded RC4 installation observations; standard library only."""
+ import argparse
+ from datetime import datetime, timezone
+ import hashlib
+@@ -10,8 +10,8 @@
+ import stat
+ import sys
+ 
+-RELEASE = '1.0.0-rc3'
+-INVENTORY_SHA256 = 'f2247af5195e9d0932a2bbc13fed52f3cafd2e60b65e4e80819fba47b2c8aef2'
++RELEASE = '1.0.0-rc4'
++INVENTORY_SHA256 = 'f67def925f898924dcfe7cd2b9d0d485b8dd894033add0f334ae67b428402350'
+ LUA_ROOT = 'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn'
+ REDS_ROOT = 'r6/scripts/NeverLockSavesReborn'
+ MAX_FILE = 2 * 1024 * 1024
+@@ -366,7 +366,8 @@
+                            'failed': len(re.findall(rb'\bfailed\b', data, re.I)),
+                            'rc1_label': data.lower().count(b'1.0.0-rc1'),
+                            'rc2_label': data.lower().count(b'1.0.0-rc2'),
+-                           'rc3_label': data.lower().count(b'1.0.0-rc3')})
++                           'rc3_label': data.lower().count(b'1.0.0-rc3'),
++                           'rc4_label': data.lower().count(b'1.0.0-rc4')})
+         except (OSError, AuditError) as exc:
+             row['status'] = 'incomplete'
+             self.issue(exc.code if isinstance(exc, AuditError) else 'io_error', kind + '_log', incomplete=True)
+@@ -380,7 +381,7 @@
+ def main(argv=None):
+     report = base_report()
+     try:
+-        parser = Parser(description='Read-only RC3 runtime byte audit. Prints JSON; does not install, repair, run the game or certify save safety.')
++        parser = Parser(description='Read-only RC4 runtime byte audit. Prints JSON; does not install, repair, run the game or certify save safety.')
+         parser.add_argument('--game-root', required=True, metavar='DIRECTORY', help='Cyberpunk installation directory; never the save directory')
+         parser.add_argument('--version', action='append', default=[], metavar='COMPONENT=VALUE',
+                             help='User-reported label: game,cet,redscript,red4ext,codeware,native_settings,dark_future; repeat per component')
+--- RC3/tools/NLSRInstallAudit/runtime_inventory.json
++++ RC4/tools/NLSRInstallAudit/runtime_inventory.json
+@@ -1,6 +1,6 @@
+ {
+   "schema": 1,
+-  "release": "1.0.0-rc3",
++  "release": "1.0.0-rc4",
+   "scope": "runtime_files_only",
+   "runtime_files": [
+     {
+@@ -40,8 +40,8 @@
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
+-      "size": 74299,
+-      "sha256": "58f1295871e29b5a0b5d15e78670f481669461242e49c628efa31dc1be4dedd5"
++      "size": 74336,
++      "sha256": "f3beda44cac722df64c3bed6381ac2990d6dbd5b967d447d340896e0b12b74df"
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua",
+@@ -80,8 +80,8 @@
+     },
+     {
+       "path": "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds",
+-      "size": 156837,
+-      "sha256": "f2953b6903bb09da3bdec5eb7ee991a51928817ac2b527d9e816e9fc591c48d1"
++      "size": 157435,
++      "sha256": "ffc6864b69f2fc2c8f3b940a8ff9ef516368de1d7afe2224782c7ed20fc3a4a1"
+     }
+   ]
+ }
+--- RC3/tools/NLSRInstallAudit/tests/test_author.py
++++ RC4/tools/NLSRInstallAudit/tests/test_author.py
+@@ -1,4 +1,4 @@
+-"""Real-filesystem public CLI checks for the integrated RC3 installation auditor."""
++"""Real-filesystem public CLI checks for the integrated RC4 installation auditor."""
+ import hashlib
+ import json
+ import os
+@@ -192,7 +192,7 @@
+     def test_log_tail_counts_digest_and_privacy(self):
+         path = self.parent / 'PRIVATE_GAME.log'
+         prefix = b'PRIVATE_LOG_CONTENT\nerror\n' * 10000
+-        tail = b'warning failed 1.0.0-rc1 1.0.0-rc2 1.0.0-RC3 ERROR\n'
++        tail = b'warning failed 1.0.0-rc1 1.0.0-rc2 1.0.0-RC3 1.0.0-RC4 ERROR\n'
+         path.write_bytes(prefix + tail)
+         code, report = self.run_audit('--cet-log', path)
+         self.assertEqual(code, 0)
+@@ -203,6 +203,7 @@
+         self.assertEqual(log['marker_counts']['rc1_label'], 1)
+         self.assertEqual(log['marker_counts']['rc2_label'], 1)
+         self.assertEqual(log['marker_counts']['rc3_label'], 1)
++        self.assertEqual(log['marker_counts']['rc4_label'], 1)
+         self.assertEqual(log['marker_counts']['warning'], 1)
+         self.assertNotIn('PRIVATE_LOG_CONTENT', json.dumps(report))
+         self.assertEqual(log['current_compilation'], 'unknown')
+--- RC3/tools/NLSRInstallAudit/tests/test_independent.py
++++ RC4/tools/NLSRInstallAudit/tests/test_independent.py
+@@ -90,7 +90,7 @@
+         if expected is not None:
+             self.assertEqual(p.returncode, expected, payload)
+         self.assertEqual({'exact_match':0, 'drift_or_review':1, 'incomplete':2}[payload['audit_status']], p.returncode)
+-        self.assertEqual(payload['release'], '1.0.0-rc3')
++        self.assertEqual(payload['release'], '1.0.0-rc4')
+         return payload
+ 
+     def test_clean_exact_bytes_and_no_input_writes(self):
+@@ -287,11 +287,11 @@
+ 
+     def test_log_marker_counts_do_not_promote_compilation(self):
+         log=Path(self.tmp.name)/'log.txt'
+-        log.write_text('error ERROR errorless\nwarning WARN failed FAILED 1.0.0-rc1 1.0.0-rc2 1.0.0-rc3\n')
++        log.write_text('error ERROR errorless\nwarning WARN failed FAILED 1.0.0-rc1 1.0.0-rc2 1.0.0-rc3 1.0.0-rc4\n')
+         report=self.run_audit('--cet-log',log,expected=0)
+         item=next(e for e in report['logs'] if e['kind']=='cet')
+         self.assertEqual(item['current_compilation'],'unknown')
+-        self.assertEqual(item['marker_counts'],{'error':2,'warning':2,'failed':2,'rc1_label':1,'rc2_label':1,'rc3_label':1})
++        self.assertEqual(item['marker_counts'],{'error':2,'warning':2,'failed':2,'rc1_label':1,'rc2_label':1,'rc3_label':1,'rc4_label':1})
+ 
+     def test_renamed_cet_copy_candidate_requires_review(self):
+         p=(self.root/LUA_DIR).parent/PRIVATE/'init.lua'

@@ -1,0 +1,24 @@
+{
+  "scope": "bounded execution of actual changed REDscript methods with quest service double; no native compiler/game/save proof",
+  "assertions": 6864,
+  "failed": 0,
+  "first_failures": [],
+  "preserved_methods": {
+    "NLSRebornDeferredIntroComplete": "a6aa6820fb11b7a98198bf5416b6ba9ce960e728a32975d9826afd4c108d53ae",
+    "NLSRebornDeferredDispatch": "51d315b0ce81c941e31429ba0f49693d2f457b2a6764ff4728dc2fccf9fd793e",
+    "NLSRebornDeferredNativeUnlocked": "cc3c1e9f9464e7a7c49bfe5b53387d0bda1a6f39bb3f6f7c06c1e32b28aa19ba",
+    "NLSRebornAutosaveReady": "bf66da497271edbefe6f690144ad61be486b0e952e61ab98bab88a5f9f2713d5",
+    "NLSRebornAutosaveQueue": "ebb23d926aa4ac5bddcbd5996a33dd23ad3b3725208c2f2fa1ea41140ddbed57",
+    "NLSRebornAutosaveSetEnabled": "0f718eeadb5f4d7427415032e37bd523e6bbf9c40416d11b1b0f9584e131dbd5",
+    "NLSRebornDeferredSetEnabled": "e535244e657221f6bfad38ae4b101b6cfa80690cdd91a5b94d7572e13ceae7c3",
+    "HandleSmartBlockedSave": "d1ed9b91b8b3c79da8b4d34ade844e18898162cd06d6752896f325c64e7cea76",
+    "SmartCombatFallback": "a989a635ab3a8c42c2f01fe06c186e18018aed036f08d92b82871b9e412e58c5",
+    "AllowForcedCheckpointFallback": "8ac15718d984093ab28efad10c8fb027e78afe910d4766d2c55fb857444a0dfc",
+    "HandlePressToSaveGame": "3509510969634b07cbaffe6a99a6c791ec7fec66716ee0d6f667984440ebcd1b",
+    "HandlePressToQuickSaveGame": "6b23eed7684ee950acd185157ebd84f0097336b8252f7c1e087add5e0e9c0437",
+    "HandleQuickSave": "b14fa8e007f9d15989c73b509f7b46b9c33e443932519878ae19647191be87cf",
+    "CheckpointMessage": "1ad71d1915fdc1cfa610942a1001db2c38bfdde3a9f077587765ea6e02e913b9",
+    "NotificationContext": "311de7f8e2e5ad851809d3217e6f0dcc43275485f3a81e628a9a846e75ddfe89"
+  },
+  "source_sha256": "ffc6864b69f2fc2c8f3b940a8ff9ef516368de1d7afe2224782c7ed20fc3a4a1"
+}

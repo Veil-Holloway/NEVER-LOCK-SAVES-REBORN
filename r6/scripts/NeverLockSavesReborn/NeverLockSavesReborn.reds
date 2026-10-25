@@ -1,4 +1,4 @@
-// v1.0.0-rc3 Release Candidate. Deferred/autosave lanes are opt-in.
+// v1.0.0-rc4 Release Candidate. Deferred/autosave lanes are opt-in.
 // Engine native saving-unlocked state is the release gate; this does not
 // guarantee that a quest or phone conversation serializes correctly.
 @addField(PlayerPuppet) public let nlsDeferredEnabled: Bool = false;
@@ -40,7 +40,14 @@ public final func NLSRebornDeferredSetEnabled(enabled: Bool) -> Void {
 }
 @addMethod(PlayerPuppet)
 public final func NLSRebornDeferredQueue(source: Int32) -> Bool {
-  if !this.nlsDeferredEnabled || (source != 1 && source != 2) || this.nlsRebornSafetyBlock || !this.NLSRebornDeferredIntroComplete() { return false; };
+  if (source != 1 && source != 2) || this.nlsRebornSafetyBlock || !this.NLSRebornDeferredIntroComplete() { return false; };
+  // Unrestricted user requests attempt immediately; the manual queue must not intercept them.
+  // A fresh user request also cancels older automatic/player work before that attempt.
+  if this.NLSRebornGetMode() == 2 {
+    this.nlsDeferredPending = false;
+    return false;
+  };
+  if !this.nlsDeferredEnabled { return false; };
   this.nlsDeferredSerial += 1;
   this.nlsDeferredSource = source;
   this.nlsDeferredPending = true;
@@ -380,7 +387,12 @@ public let nlsRebornTone: Int32;
 
 @addMethod(PlayerPuppet)
 public final func NLSRebornSetMode(mode: Int32) -> Void {
-  if mode >= 0 && mode <= 3 { this.nlsRebornMode = mode; };
+  if mode >= 0 && mode <= 3 {
+    // Do not carry an old manual queue into Unrestricted and dispatch it later.
+    // Source 3 belongs to the separately enabled, native-gated automatic lane.
+    if mode == 2 && (this.nlsDeferredSource == 1 || this.nlsDeferredSource == 2) { this.nlsDeferredPending = false; };
+    this.nlsRebornMode = mode;
+  };
 }
 
 @addMethod(PlayerPuppet)
@@ -437,7 +449,7 @@ public final func NLSRebornGetNotificationDiagnostics() -> String { return this.
 public final func NLSRebornGetNotificationCategory() -> Int32 { return NLSRebornPolicy.NotificationContext(this.GetGame()); }
 
 public class NLSRebornPolicy {
-  public static func Version() -> String { return "1.0.0-rc3"; }
+  public static func Version() -> String { return "1.0.0-rc4"; }
   public static func ShuffleSlot(index: Int32, seed: Int32) -> Int32 {
     let cycle: Int32 = index / 20;
     let turn: Int32 = index % 20;

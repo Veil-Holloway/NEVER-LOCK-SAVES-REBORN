@@ -31,12 +31,12 @@ names=('NLSRebornDeferredIntroComplete','NLSRebornDeferredSetEnabled','NLSReborn
 methods={n:compile_function(source,n,ns,instance=True) for n in names}
 
 def fixture(**changes):
-    state.clear();state.update(enabled=True,manual=False,done=1,locked=False,paused=False,menu=False,phone=0,
+    state.clear();state.update(mode=3,enabled=True,manual=False,done=1,locked=False,paused=False,menu=False,phone=0,
                                mounted=False,combat=False,protected=False,autosave_service=True,reenter=False)
     state.update(changes);calls.clear()
     player=O(GetGame=lambda:game,nlsAutosaveEnabled=state['enabled'],nlsDeferredEnabled=state['manual'],
              nlsRebornSafetyBlock=state['protected'],nlsDeferredPending=False,nlsDeferredSerial=42,
-             nlsDeferredSource=0,IsInCombat=lambda:state['combat'],
+             nlsDeferredSource=0,NLSRebornGetMode=lambda:state['mode'],IsInCombat=lambda:state['combat'],
              NLSRebornNotificationPhoneState=lambda:state['phone'])
     state['player']=player
     for n,fn in methods.items():

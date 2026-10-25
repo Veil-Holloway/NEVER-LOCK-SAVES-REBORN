@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Exact RC2 preservation outside reviewed Smart blocked-request routing and labels.
 
-This proves byte identity only. Normalization requires a complete pinned RC3 file,
+This proves byte identity only. Exact RC4 is first recovered to pinned RC3 bytes.
+Normalization requires a complete pinned RC3 file,
 then reconstructs and hashes the pinned RC2 source. It is not a compiler/runtime.
 """
 from pathlib import Path
+from check_rc4_scope import normalized_rc3
 import hashlib
 import json
 import sys
@@ -22,7 +24,7 @@ def sha(value):
 
 def exact_candidate_to_rc2(root, rel):
     spec = fixture()['changed_files'][rel]
-    data = (root / rel).read_bytes()
+    data = normalized_rc3(root, rel)
     assert sha(data) == spec['candidate_sha256'], 'RC3 source differs outside reviewed Smart routing/labels: ' + rel
     lines = data.decode('utf-8').splitlines(keepends=True)
     for splice in reversed(spec['splices']):
@@ -37,7 +39,7 @@ def exact_candidate_to_rc2(root, rel):
 def normalized_rc2(root, rel):
     """Only a complete exact RC3 source is adapted; mutations reach prior guards."""
     spec = fixture()['changed_files'].get(rel)
-    data = (root / rel).read_bytes()
+    data = normalized_rc3(root, rel)
     if spec and sha(data) == spec['candidate_sha256']:
         return exact_candidate_to_rc2(root, rel)
     return data

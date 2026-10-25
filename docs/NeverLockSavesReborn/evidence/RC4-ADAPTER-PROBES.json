@@ -1,0 +1,57 @@
+[
+  {
+    "check": "check_rc4_scope.py",
+    "exit_code": 0,
+    "log": "check_rc4_scope.py.probe.log"
+  },
+  {
+    "check": "check_rc3_scope.py",
+    "exit_code": 0,
+    "log": "check_rc3_scope.py.probe.log"
+  },
+  {
+    "check": "check_rc2_scope.py",
+    "exit_code": 0,
+    "log": "check_rc2_scope.py.probe.log"
+  },
+  {
+    "check": "check_rc1_scope.py",
+    "exit_code": 0,
+    "log": "check_rc1_scope.py.probe.log"
+  },
+  {
+    "check": "check_dependency_scope.py",
+    "exit_code": 0,
+    "log": "check_dependency_scope.py.probe.log"
+  },
+  {
+    "check": "check_main_config_scope.py",
+    "exit_code": 0,
+    "log": "check_main_config_scope.py.probe.log"
+  },
+  {
+    "check": "check_preserved_scope.py",
+    "exit_code": 0,
+    "log": "check_preserved_scope.py.probe.log"
+  },
+  {
+    "check": "run_rc4_scope_controls.py",
+    "exit_code": 0,
+    "log": "run_rc4_scope_controls.py.probe.log"
+  },
+  {
+    "check": "run_rc3_scope_controls.py",
+    "exit_code": 0,
+    "log": "run_rc3_scope_controls.py.probe.log"
+  },
+  {
+    "check": "run_rc2_scope_controls.py",
+    "exit_code": 0,
+    "log": "run_rc2_scope_controls.py.probe.log"
+  },
+  {
+    "check": "run_rc1_scope_controls.py",
+    "exit_code": 0,
+    "log": "run_rc1_scope_controls.py.probe.log"
+  }
+]

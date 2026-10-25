@@ -1,17 +1,26 @@
---- RC2/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
-+++ RC3/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
+--- RC3/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
++++ RC4/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
 @@ -1,4 +1,4 @@
---- Never Lock Saves Reborn v1.0.0-rc2 Release Candidate
-+-- Never Lock Saves Reborn v1.0.0-rc3 Release Candidate
+--- Never Lock Saves Reborn v1.0.0-rc3 Release Candidate
++-- Never Lock Saves Reborn v1.0.0-rc4 Release Candidate
  -- Persistent UI settings, runtime bridge, and diagnostics.
  -- Smart permits only explicit combat locks with combat opt-in; mounted combat also needs vehicle opt-in.
  -- DF switches control contextual messages only. Optional scheduler defaults OFF.
+@@ -418,7 +418,7 @@
+         lastApplied=-1
+       end)
+     nativeOptions.deferred=ns.addSwitch('/nlsreborn/save', 'Deferred Save (preview)',
+-      'Memory-only queue. Native save-lock gate and two-second stable window; quest safety and save completion unverified.',
++      'Memory-only queue for eligible Smart/Immersion requests. Unrestricted attempts immediately. Native gate and stable window remain; completion unverified.',
+       deferredEnabled, false, function(v)
+         if syncingNative then return end
+         setDeferredEnabled(v)
 @@ -702,7 +702,7 @@
        end})
      if ok and type(value)=='table' and getmetatable(value)==nil then versionSnapshot=value end
    end
--  local snapshot={build='1.0.0-rc2',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),
-+  local snapshot={build='1.0.0-rc3',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),
+-  local snapshot={build='1.0.0-rc3',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),
++  local snapshot={build='1.0.0-rc4',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),
      facts={q000_done=read(function() return Game.GetQuestsSystem():GetFactStr('q000_done') end),
        q001_started=read(function() return Game.GetQuestsSystem():GetFactStr('q001_started') end)},
      sensors={combatKnown=combatKnown,combatActive=combatActive,vehicleKnown=vehicleKnown,vehicleActive=vehicleActive,
@@ -19,8 +28,8 @@
    end
    registerNativeSettings()
    deferredStatus = deferredEnabled and 'Live queue enabled (experimental)' or 'Disabled'
--  log('v1.0.0-rc2 Release Candidate loaded; experimental native save-lock gate required')
-+  log('v1.0.0-rc3 Release Candidate loaded; experimental native save-lock gate required')
+-  log('v1.0.0-rc3 Release Candidate loaded; experimental native save-lock gate required')
++  log('v1.0.0-rc4 Release Candidate loaded; experimental native save-lock gate required')
  end)
  registerForEvent('onOverlayOpen', function() show = true; apply() end)
  registerForEvent('onOverlayClose', function() show = false end)
@@ -28,8 +37,8 @@
    if not show then return end
    local visible = ImGui.Begin(title)
    if visible then
--    ImGui.Text('v1.0.0-rc2 Release Candidate | Runtime policy')
-+    ImGui.Text('v1.0.0-rc3 Release Candidate | Runtime policy')
+-    ImGui.Text('v1.0.0-rc3 Release Candidate | Runtime policy')
++    ImGui.Text('v1.0.0-rc4 Release Candidate | Runtime policy')
      ImGui.TextWrapped('Native menu: '..nativeStatus)
      ImGui.Separator()
      for i=0,3 do
@@ -37,8 +46,8 @@
        ImGui.TextWrapped('Context states: -1 UNKNOWN, 0 inactive/disabled, 1 active. Context: 8 sleep, 11 dehydration, 10 starvation, 9 addiction.')
        ImGui.TextWrapped('Compatibility is source-reviewed; in-game validation is still required. State samples refresh every two seconds.')
        if ImGui.Button('Log compatibility snapshot##nls_darkfuture') then
--        log('v1.0.0-rc2 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)
-+        log('v1.0.0-rc3 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)
+-        log('v1.0.0-rc3 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)
++        log('v1.0.0-rc4 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)
          log('Dark Future: '..darkFutureStatus)
          if darkFutureError then log('Dark Future query error: '..darkFutureError) end
          if dfOK then log('Last Immersion save check: '..tostring(dfLastCheck)) end
@@ -46,163 +55,175 @@
        if ImGui.Button('Export Guardian report##nls_guardian_export') then
          local exported=pcall(function()
            local report=guardian:report()
--          report.rebornBuild='1.0.0-rc2'
-+          report.rebornBuild='1.0.0-rc3'
+-          report.rebornBuild='1.0.0-rc3'
++          report.rebornBuild='1.0.0-rc4'
            report.gameBuild='unknown'; report.frameworkVersions='unknown'
            configStore.save('guardian-report.json',report)
          end)
---- RC2/docs/NeverLockSavesReborn/validation/check_rc2_scope.py
-+++ RC3/docs/NeverLockSavesReborn/validation/check_rc2_scope.py
-@@ -2,9 +2,11 @@
- """Exact RC1 preservation outside the reported autosave type and RC2 labels.
+--- RC3/docs/NeverLockSavesReborn/validation/check_rc3_scope.py
++++ RC4/docs/NeverLockSavesReborn/validation/check_rc3_scope.py
+@@ -1,10 +1,12 @@
+ #!/usr/bin/env python3
+ """Exact RC2 preservation outside reviewed Smart blocked-request routing and labels.
  
- This is a byte-identity/source-contract check, not a REDscript compilation.
--Only complete pinned RC2 files may be normalized for earlier preservation guards.
-+Only complete pinned RC3/RC2 files may be normalized for earlier preservation guards.
-+The RC3 adapter first proves exact reviewed Smart routing and recovers pinned RC2 bytes.
+-This proves byte identity only. Normalization requires a complete pinned RC3 file,
++This proves byte identity only. Exact RC4 is first recovered to pinned RC3 bytes.
++Normalization requires a complete pinned RC3 file,
+ then reconstructs and hashes the pinned RC2 source. It is not a compiler/runtime.
  """
  from pathlib import Path
-+from check_rc3_scope import normalized_rc2
++from check_rc4_scope import normalized_rc3
  import hashlib
  import json
  import sys
-@@ -23,7 +25,7 @@
- def exact_candidate_to_rc1(root, rel):
-     f = fixture()
-     spec = f['label_files'][rel]
+@@ -22,7 +24,7 @@
+ 
+ def exact_candidate_to_rc2(root, rel):
+     spec = fixture()['changed_files'][rel]
 -    data = (root / rel).read_bytes()
-+    data = normalized_rc2(root, rel)
-     old = f['baseline_version'].encode()
-     new = f['candidate_version'].encode()
-     assert data.count(new) == spec['version_count'], 'Unexpected RC2 version count: ' + rel
-@@ -43,7 +45,7 @@
- def normalized_rc1(root, rel):
-     """Adapt exact reviewed RC2 files only; all other bytes reach the old guard."""
-     f = fixture()
++    data = normalized_rc3(root, rel)
+     assert sha(data) == spec['candidate_sha256'], 'RC3 source differs outside reviewed Smart routing/labels: ' + rel
+     lines = data.decode('utf-8').splitlines(keepends=True)
+     for splice in reversed(spec['splices']):
+@@ -37,7 +39,7 @@
+ def normalized_rc2(root, rel):
+     """Only a complete exact RC3 source is adapted; mutations reach prior guards."""
+     spec = fixture()['changed_files'].get(rel)
 -    data = (root / rel).read_bytes()
-+    data = normalized_rc2(root, rel)
-     if sha(data) == f['label_files'][rel]['candidate_sha256']:
-         return exact_candidate_to_rc1(root, rel)
++    data = normalized_rc3(root, rel)
+     if spec and sha(data) == spec['candidate_sha256']:
+         return exact_candidate_to_rc2(root, rel)
      return data
---- RC2/docs/NeverLockSavesReborn/validation/check_rc3_scope.py
-+++ RC3/docs/NeverLockSavesReborn/validation/check_rc3_scope.py
-@@ -0,0 +1,66 @@
+--- RC3/docs/NeverLockSavesReborn/validation/check_rc4_scope.py
++++ RC4/docs/NeverLockSavesReborn/validation/check_rc4_scope.py
+@@ -0,0 +1,68 @@
 +#!/usr/bin/env python3
-+"""Exact RC2 preservation outside reviewed Smart blocked-request routing and labels.
++"""Exact RC3 preservation outside reviewed Unrestricted admission/cleanup and labels.
 +
-+This proves byte identity only. Normalization requires a complete pinned RC3 file,
-+then reconstructs and hashes the pinned RC2 source. It is not a compiler/runtime.
++Only complete pinned RC4 files may be normalized. Line splices recover exact
++pinned RC3 bytes; mutations must reach and fail previous preservation guards.
++This verifies source identity, not compilation, checkpoint acceptance or gameplay.
 +"""
 +from pathlib import Path
 +import hashlib
 +import json
 +import sys
 +
-+FIXTURE = Path(__file__).parent / 'fixtures/rc3_scope.json'
++FIXTURE = Path(__file__).parent / 'fixtures/rc4_scope.json'
 +
 +
 +def fixture():
 +    return json.loads(FIXTURE.read_text())
 +
 +
-+def sha(value):
-+    return hashlib.sha256(value).hexdigest()
++def sha(data):
++    return hashlib.sha256(data).hexdigest()
 +
 +
-+def exact_candidate_to_rc2(root, rel):
++def exact_candidate_to_rc3(root, rel):
 +    spec = fixture()['changed_files'][rel]
 +    data = (root / rel).read_bytes()
-+    assert sha(data) == spec['candidate_sha256'], 'RC3 source differs outside reviewed Smart routing/labels: ' + rel
++    assert sha(data) == spec['candidate_sha256'], 'RC4 source differs outside reviewed Unrestricted routing/cleanup: ' + rel
 +    lines = data.decode('utf-8').splitlines(keepends=True)
 +    for splice in reversed(spec['splices']):
 +        start, end = splice['candidate_start_line'], splice['candidate_end_line']
-+        assert ''.join(lines[start:end]) == splice['after'], 'RC3 approved splice mismatch: ' + rel
++        assert ''.join(lines[start:end]) == splice['after'], 'RC4 approved splice mismatch: ' + rel
 +        lines[start:end] = splice['before'].splitlines(keepends=True)
 +    baseline = ''.join(lines).encode('utf-8')
-+    assert sha(baseline) == spec['baseline_sha256'], 'Unrelated RC2 bytes changed: ' + rel
++    assert sha(baseline) == spec['baseline_sha256'], 'Unrelated RC3 bytes changed: ' + rel
 +    return baseline
 +
 +
-+def normalized_rc2(root, rel):
-+    """Only a complete exact RC3 source is adapted; mutations reach prior guards."""
++def normalized_rc3(root, rel):
++    """Only complete exact RC4 files are adapted; every other edit stays visible."""
 +    spec = fixture()['changed_files'].get(rel)
 +    data = (root / rel).read_bytes()
 +    if spec and sha(data) == spec['candidate_sha256']:
-+        return exact_candidate_to_rc2(root, rel)
++        return exact_candidate_to_rc3(root, rel)
 +    return data
 +
 +
 +def check(root):
 +    f = fixture()
 +    for rel in f['changed_files']:
-+        exact_candidate_to_rc2(root, rel)
++        exact_candidate_to_rc3(root, rel)
 +    actual = set()
 +    for top in f['protected_roots']:
 +        for path in (root / top).rglob('*'):
 +            if path.is_file() and '__pycache__' not in path.parts and path.suffix not in ('.pyc', '.pyo'):
-+                assert not path.is_symlink(), 'Unexpected RC3 source symlink'
++                assert not path.is_symlink(), 'Unexpected RC4 source symlink'
 +                actual.add(path.relative_to(root).as_posix())
 +    expected = set(f['changed_files']) | set(f['unchanged_files'])
-+    assert actual == expected, 'RC3 runtime/helper file inventory changed'
++    assert actual == expected, 'RC4 runtime/helper file inventory changed'
 +    for rel, expected_hash in f['unchanged_files'].items():
-+        assert sha((root / rel).read_bytes()) == expected_hash, 'Changed protected RC3 file: ' + rel
-+    print('PASS exact RC3 scope: one Smart request helper, three guarded call sites and eight version labels; '
++        assert sha((root / rel).read_bytes()) == expected_hash, 'Changed protected RC4 file: ' + rel
++    print('PASS exact RC4 scope: Unrestricted manual admission/cleanup and valid-mode manual cancellation; '
++          'eight version labels and one CET help string; '
 +          + str(len(f['unchanged_files'])) + ' complete runtime/helper files unchanged; '
-+          + str(len(actual)) + ' exact paths. Source identity only.')
++          + str(len(actual)) + ' exact protected paths. Source identity only.')
 +
 +
 +if __name__ == '__main__':
 +    check(Path(sys.argv[1]).resolve())
---- RC2/docs/NeverLockSavesReborn/validation/reproduce_fresh_intro_fallback.py
-+++ RC3/docs/NeverLockSavesReborn/validation/reproduce_fresh_intro_fallback.py
-@@ -18,6 +18,8 @@
- r=m.Runtime(source)
- intro=m.compile_subset(source,'NLSRebornDeferredIntroComplete',r.namespace,instance=True)
- queue=m.compile_subset(source,'NLSRebornDeferredQueue',r.namespace,instance=True)
-+if 'func HandleSmartBlockedSave(' in source:
-+ r.namespace['NLSRebornPolicy'].HandleSmartBlockedSave=m.compile_subset(source,'HandleSmartBlockedSave',r.namespace)
- results=[]
- for mode in (0,1,2,3):
-  for hook in m.HOOKS:
---- RC2/docs/NeverLockSavesReborn/validation/run_checks.py
-+++ RC3/docs/NeverLockSavesReborn/validation/run_checks.py
-@@ -71,6 +71,9 @@
-  ('dependency_scope',[sys.executable,str(HERE/'check_dependency_scope.py'),str(root)]),
+--- RC3/docs/NeverLockSavesReborn/validation/reproduce_fresh_intro_fallback.py
++++ RC4/docs/NeverLockSavesReborn/validation/reproduce_fresh_intro_fallback.py
+@@ -37,10 +37,11 @@
+       try:r.invoke(hook)
+       except AttributeError as exc:error=type(exc).__name__+': '+str(exc)
+       # All fixture DF states are active, so all three non-Vanilla modes
+-      # have the pre-existing fallback when fresh completion is positive.
++      # have fallback eligibility when fresh completion is positive. RC4 mode2 attempts
++      # immediately; other eligible modes keep their deferred preference.
+       eligible=(mode in (1,2,3) and not protected and done is not None and done>0)
+-      expected_forced=int(eligible and not enabled)
+-      expected_queued=bool(eligible and enabled)
++      expected_forced=int(eligible and (mode==2 or not enabled))
++      expected_queued=bool(eligible and enabled and mode!=2)
+       row={'mode':mode,'hook':hook,'cached_protection':protected,'q000_done':done,'deferred_enabled':enabled,'notifications':notifications,
+            'queued':player.nlsDeferredPending,'forced_checkpoint_attempts':r.state['forced'],'boundary_error':error,
+            'expected_forced_checkpoint_attempts':expected_forced,'expected_queued':expected_queued,
+--- RC3/docs/NeverLockSavesReborn/validation/run_checks.py
++++ RC4/docs/NeverLockSavesReborn/validation/run_checks.py
+@@ -72,6 +72,9 @@
   ('rc1_source_freeze',[sys.executable,str(HERE/'check_rc1_scope.py'),str(root)]),
   ('autosave_type_contract',[sys.executable,str(HERE/'check_autosave_type_contract.py'),str(root)]),
-+ ('smart_queue_routes',[sys.executable,str(HERE/'test_smart_queue_routes.py'),str(root)]),
-+ ('rc3_source_freeze',[sys.executable,str(HERE/'check_rc3_scope.py'),str(root)]),
-+ ('rc3_scope_controls',[sys.executable,str(HERE/'run_rc3_scope_controls.py'),str(root)]),
+  ('smart_queue_routes',[sys.executable,str(HERE/'test_smart_queue_routes.py'),str(root)]),
++ ('unrestricted_routes',[sys.executable,str(HERE/'test_unrestricted_routes.py'),str(root)]),
++ ('rc4_source_freeze',[sys.executable,str(HERE/'check_rc4_scope.py'),str(root)]),
++ ('rc4_scope_controls',[sys.executable,str(HERE/'run_rc4_scope_controls.py'),str(root)]),
+  ('rc3_source_freeze',[sys.executable,str(HERE/'check_rc3_scope.py'),str(root)]),
+  ('rc3_scope_controls',[sys.executable,str(HERE/'run_rc3_scope_controls.py'),str(root)]),
   ('rc2_source_freeze',[sys.executable,str(HERE/'check_rc2_scope.py'),str(root)]),
-  ('rc2_scope_controls',[sys.executable,str(HERE/'run_rc2_scope_controls.py'),str(root)]),
-  ('rc1_scope_controls',[sys.executable,str(HERE/'run_rc1_scope_controls.py'),str(root)]),
---- RC2/docs/NeverLockSavesReborn/validation/run_rc2_scope_controls.py
-+++ RC3/docs/NeverLockSavesReborn/validation/run_rc2_scope_controls.py
+--- RC3/docs/NeverLockSavesReborn/validation/run_rc3_scope_controls.py
++++ RC4/docs/NeverLockSavesReborn/validation/run_rc3_scope_controls.py
 @@ -4,6 +4,7 @@
- Temporary source mutations are not game or REDscript compiler executions.
+ Temporary byte edits do not execute REDscript, CET or the game.
  """
  import json
-+from check_rc3_scope import normalized_rc2
++from check_rc4_scope import exact_candidate_to_rc3, fixture as rc4_fixture, sha as rc4_sha
  from pathlib import Path
  import shutil
  import subprocess
-@@ -46,6 +47,9 @@
-         candidate = Path(tmp) / name
+@@ -47,6 +48,12 @@
+         candidate = Path(temporary) / name
          for top in fixture['protected_roots']:
              shutil.copytree(root / top, candidate / top, ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.pyo'))
-+        # Retain the original twelve RC2 mutations on exact RC2-normalized fixtures.
-+        for label_rel in fixture['label_files']:
-+            (candidate / label_rel).write_bytes(normalized_rc2(root, label_rel))
-         p = candidate / rel
++        # Run the original fourteen controls against an exact recovered RC3 view.
++        # No normalization is permitted for partial or modified RC4 files.
++        for reviewed_rel, reviewed in rc4_fixture()['changed_files'].items():
++            staged = candidate / reviewed_rel
++            if staged.is_file() and rc4_sha(staged.read_bytes()) == reviewed['candidate_sha256']:
++                staged.write_bytes(exact_candidate_to_rc3(candidate, reviewed_rel))
+         path = candidate / rel
          if before == b'__REMOVE_FILE__':
-             p.unlink()
---- RC2/docs/NeverLockSavesReborn/validation/run_rc3_scope_controls.py
-+++ RC3/docs/NeverLockSavesReborn/validation/run_rc3_scope_controls.py
-@@ -0,0 +1,65 @@
+             path.unlink()
+--- RC3/docs/NeverLockSavesReborn/validation/run_rc4_scope_controls.py
++++ RC4/docs/NeverLockSavesReborn/validation/run_rc4_scope_controls.py
+@@ -0,0 +1,67 @@
 +#!/usr/bin/env python3
-+"""Require RC3 exact-preservation checks to reject mutations and inventory drift.
++"""Require exact RC4 preservation checks to reject routing/guard/inventory mutations.
 +
-+Temporary byte edits do not execute REDscript, CET or the game.
++These temporary byte edits do not execute REDscript, CET, or Cyberpunk.
 +"""
 +import json
 +from pathlib import Path
@@ -213,37 +234,39 @@
 +
 +root = Path(sys.argv[1]).resolve()
 +here = Path(__file__).resolve().parent
-+fixture = json.loads((here / 'fixtures/rc3_scope.json').read_text())
++fixture = json.loads((here / 'fixtures/rc4_scope.json').read_text())
 +init, reds = tuple(fixture['changed_files'])
 +module = 'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua'
 +helper = 'tools/NLSRSaveGuardian/save_guardian.py'
++source_reason = 'RC4 source differs outside reviewed Unrestricted routing/cleanup'
 +
 +
 +def run(candidate):
-+    return subprocess.run([sys.executable, str(here / 'check_rc3_scope.py'), str(candidate)], capture_output=True, text=True)
++    return subprocess.run([sys.executable, str(here / 'check_rc4_scope.py'), str(candidate)], capture_output=True, text=True)
 +
 +
 +baseline = run(root)
-+assert baseline.returncode == 0, 'Unmodified RC3 failed: ' + baseline.stdout + baseline.stderr
-+source_reason = 'RC3 source differs outside reviewed Smart routing/labels'
++assert baseline.returncode == 0, 'Unmodified RC4 failed: ' + baseline.stdout + baseline.stderr
 +cases = [
-+    ('smart_mode_scope_changed', reds, b'player.NLSRebornGetMode() != 3 ||', b'player.NLSRebornGetMode() != 0 ||', source_reason),
-+    ('smart_queue_admission_removed', reds, b'if player.NLSRebornDeferredQueue(source) {', b'if false {', source_reason),
-+    ('manual_smart_call_removed', reds, b'    if NLSRebornPolicy.HandleSmartBlockedSave(this.m_gameInstance, 1) { return; };\r\n', b'', source_reason),
-+    ('pause_smart_call_removed', reds, b'    if NLSRebornPolicy.HandleSmartBlockedSave(this.m_gameInstance, 2) { return; };\r\n', b'', source_reason),
-+    ('gameplay_smart_call_removed', reds, b'    if NLSRebornPolicy.HandleSmartBlockedSave(this.GetPlayerControlledObject().GetGame(), 2) { return; };\r\n', b'', source_reason),
++    ('unrestricted_admission_guard_removed', reds, b'  if this.NLSRebornGetMode() == 2 {\r\n', b'  if false {\r\n', source_reason),
++    ('unrestricted_fresh_request_cleanup_removed', reds, b'  if this.NLSRebornGetMode() == 2 {\r\n    this.nlsDeferredPending = false;\r\n', b'  if this.NLSRebornGetMode() == 2 {\r\n', source_reason),
++    ('mode_switch_manual_cleanup_removed', reds, b'    if mode == 2 && (this.nlsDeferredSource == 1 || this.nlsDeferredSource == 2) { this.nlsDeferredPending = false; };\r\n', b'', source_reason),
++    ('mode_switch_cancels_automatic_work', reds, b'if mode == 2 && (this.nlsDeferredSource == 1 || this.nlsDeferredSource == 2)', b'if mode == 2', source_reason),
++    ('intro_queue_guard_removed', reds, b' || !this.NLSRebornDeferredIntroComplete() { return false; };', b' { return false; };', source_reason),
++    ('smart_admission_removed', reds, b'if player.NLSRebornDeferredQueue(source) {', b'if false {', source_reason),
 +    ('native_unlock_dispatch_guard_removed', reds, b' || !this.NLSRebornDeferredNativeUnlocked()', b'', source_reason),
-+    ('pending_clear_removed', reds, b'  this.nlsDeferredPending = false; // clear before dispatch to prevent duplicates\r\n', b'', source_reason),
++    ('checkpoint_pending_clear_removed', reds, b'  this.nlsDeferredPending = false; // clear before dispatch to prevent duplicates\r\n', b'', source_reason),
 +    ('reported_autosave_type_regression', reds, b'ref<gameAutoSaveSystem>', b'ref<AutoSaveSystem>', source_reason),
-+    ('mixed_init_version', init, b'1.0.0-rc3', b'1.0.0-rc2', source_reason),
-+    ('init_nonlabel_change', init, None, b'\n-- unreviewed source edit\n', source_reason),
-+    ('module_changed', module, None, b'\n-- unreviewed source edit\n', 'Changed protected RC3 file'),
-+    ('companion_changed', helper, None, b'\n# unreviewed helper edit\n', 'Changed protected RC3 file'),
-+    ('extra_runtime_file', 'r6/scripts/NeverLockSavesReborn/unreviewed.reds', None, b'// unreviewed\n', 'RC3 runtime/helper file inventory changed'),
-+    ('missing_runtime_file', module, b'__REMOVE_FILE__', b'', 'RC3 runtime/helper file inventory changed'),
++    ('mixed_init_version', init, b'1.0.0-rc4', b'1.0.0-rc3', source_reason),
++    ('queue_help_drift', init, b'Unrestricted attempts immediately.', b'Unrestricted always queues.', source_reason),
++    ('unrelated_init_change', init, None, b'\n-- unreviewed code\n', source_reason),
++    ('module_changed', module, None, b'\n-- unreviewed module\n', 'Changed protected RC4 file'),
++    ('companion_changed', helper, None, b'\n# unreviewed helper\n', 'Changed protected RC4 file'),
++    ('extra_runtime_file', 'r6/scripts/NeverLockSavesReborn/unreviewed.reds', None, b'// unexpected runtime\n', 'RC4 runtime/helper file inventory changed'),
++    ('missing_runtime_file', module, b'__REMOVE_FILE__', b'', 'RC4 runtime/helper file inventory changed'),
 +]
 +results = []
-+with tempfile.TemporaryDirectory(prefix='nlsr-rc3-scope-') as temporary:
++with tempfile.TemporaryDirectory(prefix='nlsr-rc4-scope-') as temporary:
 +    for name, rel, before, after, expected in cases:
 +        candidate = Path(temporary) / name
 +        for top in fixture['protected_roots']:
@@ -261,19 +284,56 @@
 +        result = run(candidate)
 +        assert result.returncode != 0 and expected in result.stderr, 'Mutation was not rejected for intended reason: ' + name + '\n' + result.stdout + result.stderr
 +        results.append({'control': name, 'rejected': True, 'reason': expected})
-+print(json.dumps({'scope': 'Exact source/identity controls only; no game/runtime/compiler.',
++print(json.dumps({'scope': 'Exact source/identity controls only; not compiler/runtime/gameplay.',
 +                  'unmodified_candidate': 'passed', 'negative_controls': results}, indent=2))
-+print('PASS fourteen intended RC3 source-scope mutation controls')
---- RC2/docs/NeverLockSavesReborn/validation/test_smart_queue_routes.py
-+++ RC3/docs/NeverLockSavesReborn/validation/test_smart_queue_routes.py
-@@ -0,0 +1,274 @@
++print('PASS sixteen intended RC4 source-scope mutation controls')
+--- RC3/docs/NeverLockSavesReborn/validation/test_autosave_source.py
++++ RC4/docs/NeverLockSavesReborn/validation/test_autosave_source.py
+@@ -31,12 +31,12 @@
+ methods={n:compile_function(source,n,ns,instance=True) for n in names}
+ 
+ def fixture(**changes):
+-    state.clear();state.update(enabled=True,manual=False,done=1,locked=False,paused=False,menu=False,phone=0,
++    state.clear();state.update(mode=3,enabled=True,manual=False,done=1,locked=False,paused=False,menu=False,phone=0,
+                                mounted=False,combat=False,protected=False,autosave_service=True,reenter=False)
+     state.update(changes);calls.clear()
+     player=O(GetGame=lambda:game,nlsAutosaveEnabled=state['enabled'],nlsDeferredEnabled=state['manual'],
+              nlsRebornSafetyBlock=state['protected'],nlsDeferredPending=False,nlsDeferredSerial=42,
+-             nlsDeferredSource=0,IsInCombat=lambda:state['combat'],
++             nlsDeferredSource=0,NLSRebornGetMode=lambda:state['mode'],IsInCombat=lambda:state['combat'],
+              NLSRebornNotificationPhoneState=lambda:state['phone'])
+     state['player']=player
+     for n,fn in methods.items():
+--- RC3/docs/NeverLockSavesReborn/validation/test_smart_queue_routes.py
++++ RC4/docs/NeverLockSavesReborn/validation/test_smart_queue_routes.py
+@@ -191,14 +191,14 @@
+               dict(hook=hook, busy=busy, failed=failed, saved=saved))
+ 
+     # Do not extend deferred behavior to Vanilla or ordinary Immersion. Keep
+-    # Unrestricted's existing queue and queue-off forced request behavior.
++    # RC4 Unrestricted user requests attempt immediately, independent of the manual deferred toggle.
+     for hook, mode, enabled in itertools.product(HOOKS, (0, 1, 2), (False, True)):
+         p = invoke(hook, mode=mode, enabled=enabled)
+-        expected_queue = mode == 2 and enabled
++        expected_queue = False
+         check('other modes retain queue scope', p.nlsDeferredPending == expected_queue,
+               dict(hook=hook, mode=mode, enabled=enabled))
+         check('other modes retain native/fallback routes',
+-              runtime.state['forced'] == int(mode == 2 and not enabled) and runtime.state['wrapped'] == int(mode in (0, 1)),
++              runtime.state['forced'] == int(mode == 2) and runtime.state['wrapped'] == int(mode in (0, 1)),
+               dict(hook=hook, mode=mode, enabled=enabled))
+ 
+     # Exercise the actual REDscript dispatch guard after a real wrapper queued a
+--- RC3/docs/NeverLockSavesReborn/validation/test_unrestricted_routes.py
++++ RC4/docs/NeverLockSavesReborn/validation/test_unrestricted_routes.py
+@@ -0,0 +1,293 @@
 +#!/usr/bin/env python3
-+"""Smart user-request routing regression against bounded actual REDscript source.
++"""RC4 Unrestricted user-request routing through bounded actual REDscript.
 +
-+The tested methods, route branches, queue admission and dispatch are translated
-+from the supplied release. Only game/service boundaries and the large existing
-+CheckpointMessage library are doubled. This is not REDscript compilation, CET,
-+notification rendering, scheduler stability or actual save/reload evidence.
++Compiles actual hooks, mode setter, queue, introduction and automatic/deferred
++methods. Only external game services, scalar observations and the existing large
++CheckpointMessage library use boundary doubles. No REDscript compiler, CET/native
++runtime, UI rendering, engine acceptance, save write/reload or progression proof.
 +"""
 +import argparse
 +import hashlib
@@ -283,349 +343,336 @@
 +from pathlib import Path
 +from types import SimpleNamespace as O
 +
-+REDS = Path('r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds')
++REDS = 'r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds'
 +HOOKS = ('HandlePressToSaveGame', 'HandlePressToQuickSaveGame', 'HandleQuickSave')
 +
 +
-+class Runtime:
-+    def __init__(self, source, compiler):
-+        self.state = {}
-+        self.game = O()
-+        self.ns = {'__builtins__': {}, 'IsDefined': lambda x: x is not None,
-+                   'ArraySize': len, 'Equals': lambda a, b: a == b,
-+                   'NotEquals': lambda a, b: a != b,
-+                   'gameSaveLockReason': O(Combat='Combat')}
-+        self.ns['GameInstance'] = O(
-+            GetPlayerSystem=lambda game: O(GetLocalPlayerControlledGameObject=lambda: self.state['player']),
-+            GetQuestsSystem=lambda game: None if self.state['done'] is None else O(GetFact=lambda fact: self.state['done']),
-+            IsSavingLocked=self.locked,
-+            GetAutoSaveSystem=lambda game: O(RequestForcedCheckpoint=self.force) if self.state['service'] else None)
-+        self.ns['VehicleComponent'] = O(IsMountedToVehicle=lambda game, player: self.state['mounted'])
-+        self.ns['NLSRebornDFPolicy'] = O(Read=lambda player: O(
-+            vehicleSleep=0, addiction=0, starvation=0, dehydration=0, status='boundary: no DF context'))
-+        self.ns['NLSRebornDFMessages'] = O(Message=lambda *args: 'DF request')
-+        self.ns['PauseMenuGameController'] = O(NLSRebornNotify=self.notify)
-+        self.ns['wrappedMethod'] = self.wrapped
-+        self.controller = O(m_gameInstance=self.game, m_quickSaveInProgress=False,
-+                            IsSaveFailedNotificationActive=lambda: self.state['failed'],
-+                            IsGameSavedNotificationActive=lambda: self.state['saved'],
-+                            GetPlayerControlledObject=lambda: self.state['player'])
-+        self.ns['this'] = self.controller
-+        self.policy = O()
-+        self.ns['NLSRebornPolicy'] = self.policy
-+        for name in ('GetImmersionSaveContext', 'NotifyImmersionSaveRequest',
-+                     'IsProtectedIntroduction', 'SmartCombatFallback', 'AllowForcedCheckpointFallback'):
-+            setattr(self.policy, name, compiler(source, name, self.ns))
-+        if 'func HandleSmartBlockedSave(' in source:
-+            self.policy.HandleSmartBlockedSave = compiler(source, 'HandleSmartBlockedSave', self.ns)
-+        self.policy.CheckpointMessage = lambda game, context: 'existing contextual request' if self.state['master'] else ''
-+        self.methods = {name: compiler(source, name, self.ns, instance=True) for name in (
-+            'NLSRebornDeferredIntroComplete', 'NLSRebornDeferredQueue',
-+            'NLSRebornDeferredNativeUnlocked', 'NLSRebornDeferredDispatch',
-+            'NLSRebornGetDFNotificationContext')}
-+        self.hooks = {name: compiler(source, name, self.ns) for name in HOOKS}
-+
-+    def locked(self, game, locks):
-+        locks[:] = [O(reason=x) for x in self.state['reasons']]
-+        return self.state['locked']
-+
-+    def force(self):
-+        self.state['forced'] += 1
-+        if self.state['reenter']:
-+            p = self.state['player']
-+            self.state['reentry_result'] = p.NLSRebornDeferredDispatch(p.nlsDeferredSerial)
-+        return True
-+
-+    def notify(self, game, message):
-+        if message:
-+            self.state['notices'].append(message)
-+
-+    def wrapped(self, *args):
-+        self.state['wrapped'] += 1
-+
-+    def fixture(self, **changes):
-+        self.state.clear()
-+        self.state.update(mode=3, enabled=True, locked=True, reasons=('Scene',), combat=False,
-+                          allow_combat=False, mounted=False, allow_vehicle=False, done=1,
-+                          protected=False, master=True, status=False, tone=0, busy=False,
-+                          failed=False, saved=False, service=True, reenter=False,
-+                          forced=0, wrapped=0, notices=[])
-+        self.state.update(changes)
-+        s = self.state
-+        p = O(nlsDeferredEnabled=s['enabled'], nlsDeferredPending=False,
-+              nlsDeferredSerial=17, nlsDeferredSource=0, nlsRebornSafetyBlock=s['protected'],
-+              nlsRebornDFNotifyVehicleSleep=True, nlsRebornDFNotifyAddiction=True,
-+              nlsRebornDFNotifyStarvation=True, nlsRebornDFNotifyDehydration=True,
-+              GetGame=lambda: self.game, NLSRebornGetMode=lambda: s['mode'],
-+              NLSRebornGetCombat=lambda: s['allow_combat'], NLSRebornGetVehicle=lambda: s['allow_vehicle'],
-+              IsInCombat=lambda: s['combat'], NLSRebornGetNotificationsEnabled=lambda: s['master'],
-+              NLSRebornGetStatusNotificationsEnabled=lambda: s['status'], NLSRebornGetTone=lambda: s['tone'],
-+              NLSRebornEnsureDFStateInitialized=lambda: None)
-+        s['player'] = p
-+        for name, fn in self.methods.items():
-+            setattr(p, name, lambda *args, _fn=fn: _fn(p, *args))
-+        self.controller.m_quickSaveInProgress = s['busy']
-+        return p
-+
-+    def invoke(self, hook):
-+        if hook == HOOKS[0]:
-+            self.hooks[hook](None)
-+        else:
-+            self.hooks[hook]()
++def load_module(name, path):
++    spec = importlib.util.spec_from_file_location(name, path)
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
 +
 +
-+def evaluate(source, compiler):
-+    runtime = Runtime(source, compiler)
++def make_runtime_class(base, compiler):
++    class Runtime(base.Runtime):
++        def __init__(self, source):
++            super().__init__(source, compiler)
++            self.ns['GameInstance'].GetTimeSystem = lambda game: None if self.state['paused'] is None else O(IsPausedState=lambda: self.state['paused'])
++            self.ns['GameInstance'].GetBlackboardSystem = lambda game: None if self.state['menu'] is None else O(Get=lambda key: O(GetBool=lambda field: self.state['menu']))
++            self.ns['GetAllBlackboardDefs'] = lambda: O(UI_System=O(IsInMenu='native menu observation'))
++            for name in ('NLSRebornGetMode', 'NLSRebornSetMode', 'NLSRebornPausedState',
++                         'NLSRebornMenuState', 'NLSRebornMountedState', 'NLSRebornAutosaveSetEnabled',
++                         'NLSRebornAutosaveReady', 'NLSRebornAutosaveQueue'):
++                self.methods[name] = compiler(source, name, self.ns, instance=True)
++
++        def fixture(self, **changes):
++            defaults = dict(paused=False, menu=False, phone=0, auto_enabled=True)
++            defaults.update(changes)
++            player = super().fixture(**defaults)
++            player.nlsRebornMode = self.state['mode']
++            player.nlsAutosaveEnabled = self.state['auto_enabled']
++            player.NLSRebornNotificationPhoneState = lambda: self.state['phone']
++            return player
++    return Runtime
++
++
++def evaluate(source, runtime_class):
++    runtime = runtime_class(source)
 +    failures = []
-+    count = 0
++    assertions = 0
 +
 +    def check(label, condition, details=None):
-+        nonlocal count
-+        count += 1
++        nonlocal assertions
++        assertions += 1
 +        if not condition:
 +            failures.append({'label': label, 'details': details})
 +
 +    def invoke(hook, **fixture):
-+        p = runtime.fixture(**fixture)
++        player = runtime.fixture(**fixture)
 +        try:
 +            runtime.invoke(hook)
 +            error = None
 +        except Exception as exc:
 +            error = type(exc).__name__ + ': ' + str(exc)
-+        check('route executes without boundary error', error is None, dict(hook=hook, fixture=fixture, error=error))
-+        return p
++        check('actual route executes without boundary error', error is None,
++              dict(hook=hook, fixture=fixture, error=error))
++        return player
 +
-+    # Queue admission waits for native permission regardless of the lock reason,
-+    # combat exception toggle or notification presentation toggles.
-+    reason_sets = [('Scene',), ('Quest',), ('Script',), ('Combat', 'Scene'), (999,), (), ('Combat',)]
-+    for hook, reasons, master, status, allow_combat in itertools.product(
-+            HOOKS, reason_sets, (False, True), (False, True), (False, True)):
-+        p = invoke(hook, reasons=reasons, master=master, status=status, allow_combat=allow_combat,
-+                   combat='Combat' in reasons)
-+        details = dict(hook=hook, reasons=reasons, master=master, status=status, allow_combat=allow_combat)
-+        check('blocked Smart request enters one queue', p.nlsDeferredPending and p.nlsDeferredSerial == 18, details)
-+        check('request source survives real wrapper', p.nlsDeferredSource == (1 if hook == HOOKS[0] else 2), details)
-+        check('queue admission never forces or delegates', runtime.state['forced'] == runtime.state['wrapped'] == 0, details)
-+        check('legacy notice or status-lane handoff follows switches',
-+              len(runtime.state['notices']) == int(master and not status), details)
++    reasons = [('Combat',), ('Combat', 'PlayerStateMachine'), ('Combat', 'Scene'),
++               ('Tier',), (999,), ()]
++    for hook, enabled, mounted, combat, allow_combat, allow_vehicle, master, status, locks in itertools.product(
++            HOOKS, (False, True), (False, True), (False, True), (False, True),
++            (False, True), (False, True), (False, True), reasons):
++        player = invoke(hook, mode=2, enabled=enabled, mounted=mounted, combat=combat,
++                        allow_combat=allow_combat, allow_vehicle=allow_vehicle,
++                        master=master, status=status, reasons=locks)
++        detail = dict(hook=hook, deferred=enabled, mounted=mounted, combat=combat,
++                      allow_combat=allow_combat, allow_vehicle=allow_vehicle,
++                      master=master, status=status, locks=locks)
++        check('Unrestricted attempts exactly one immediate checkpoint',
++              runtime.state['forced'] == 1 and runtime.state['wrapped'] == 0, detail)
++        check('Unrestricted never creates deferred user work',
++              not player.nlsDeferredPending and player.nlsDeferredSerial == 17 and player.nlsDeferredSource == 0, detail)
++        check('immediate request feedback respects master switch',
++              len(runtime.state['notices']) == int(master), detail)
 +
-+    # A disabled queue cannot create a checkpoint during a protected interaction.
-+    # A custom refusal is required with the master notification switch on; tone
-+    # selection must not affect permission or claim a save was queued/written.
-+    tone_messages = {}
-+    for hook, reasons, master, status, tone in itertools.product(
-+            HOOKS, reason_sets[:-1], (False, True), (False, True), range(3)):
-+        p = invoke(hook, enabled=False, reasons=reasons, master=master, status=status, tone=tone)
-+        details = dict(hook=hook, reasons=reasons, master=master, status=status, tone=tone)
-+        check('disabled queue remains empty', not p.nlsDeferredPending and p.nlsDeferredSerial == 17, details)
-+        check('blocked interaction never forces or delegates', runtime.state['forced'] == runtime.state['wrapped'] == 0, details)
-+        check('blocked custom notice follows master switch', len(runtime.state['notices']) == int(master), details)
-+        if master and runtime.state['notices']:
-+            text = runtime.state['notices'][0].lower()
-+            check('refusal truthfully says no request queued', 'no save' in text and 'queu' in text, details)
-+            check('refusal makes no completion claim', all(x not in text for x in ('saved successfully', 'save complete', 'save written')), details)
-+            tone_messages.setdefault(tone, runtime.state['notices'][0])
-+    check('three tones have distinct refusal wording', len(set(tone_messages.values())) == 3, tone_messages)
++    # Native-unlocked requests still use the original native route in every mode.
++    for hook, mode, enabled in itertools.product(HOOKS, (0, 1, 2, 3), (False, True)):
++        player = invoke(hook, mode=mode, enabled=enabled, locked=False, reasons=())
++        check('native unlocked behavior is retained',
++              runtime.state['wrapped'] == 1 and runtime.state['forced'] == 0 and not player.nlsDeferredPending,
++              dict(hook=hook, mode=mode, enabled=enabled))
 +
-+    # Keep the existing explicitly opted-in pure-combat immediate exception.
-+    for hook, master in itertools.product(HOOKS, (False, True)):
-+        p = invoke(hook, enabled=False, reasons=('Combat',), combat=True, allow_combat=True, master=master)
-+        check('queue-off combat exception remains immediate',
-+              not p.nlsDeferredPending and runtime.state['forced'] == 1 and runtime.state['wrapped'] == 0,
-+              dict(hook=hook, master=master))
-+        check('combat request notification follows master', len(runtime.state['notices']) == int(master))
-+
-+    # Incomplete/unknown fresh introduction or active cached protection must never
-+    # be admitted or forced. Cached wording may still delegate to vanilla.
-+    for hook, done, protected in itertools.product(HOOKS, (None, -1, 0, 1), (False, True)):
++    # Current introduction facts always gate forced and queued work.
++    for hook, done, protected, enabled in itertools.product(
++            HOOKS, (None, -1, 0, 1), (False, True), (False, True)):
 +        if done == 1 and not protected:
 +            continue
-+        p = invoke(hook, done=done, protected=protected)
-+        check('introduction gate remains closed', not p.nlsDeferredPending and runtime.state['forced'] == 0,
-+              dict(hook=hook, done=done, protected=protected))
++        player = invoke(hook, mode=2, enabled=enabled, done=done, protected=protected,
++                        mounted=True, combat=True, reasons=('Combat',))
++        check('intro protection prevents immediate and queued requests',
++              runtime.state['forced'] == 0 and not player.nlsDeferredPending,
++              dict(hook=hook, done=done, protected=protected, enabled=enabled))
 +
-+    for hook, master in itertools.product(HOOKS, (False, True)):
-+        p = invoke(hook, locked=False, reasons=(), master=master)
-+        check('unlocked Smart request retains native path',
-+              not p.nlsDeferredPending and runtime.state['forced'] == 0 and runtime.state['wrapped'] == 1 and not runtime.state['notices'],
-+              dict(hook=hook, master=master))
++    # Direct invalid/source/intro refusals cannot erase another pending request.
++    for mode, pending_source, requested_source in itertools.product(
++            (0, 1, 2, 3), (1, 2, 3), (-1, 0, 3, 999)):
++        player = runtime.fixture(mode=mode)
++        player.nlsDeferredPending = True
++        player.nlsDeferredSource = pending_source
++        serial = player.nlsDeferredSerial
++        accepted = player.NLSRebornDeferredQueue(requested_source)
++        check('invalid user source preserves existing queue',
++              accepted is False and player.nlsDeferredPending and
++              player.nlsDeferredSource == pending_source and player.nlsDeferredSerial == serial,
++              dict(mode=mode, pending_source=pending_source, source=requested_source))
++    for done, protected, source in itertools.product((None, -1, 0, 1), (False, True), (1, 2)):
++        if done == 1 and not protected:
++            continue
++        player = runtime.fixture(mode=2, done=done, protected=protected)
++        player.nlsDeferredPending = True
++        player.nlsDeferredSource = 3
++        accepted = player.NLSRebornDeferredQueue(source)
++        check('direct intro refusal leaves unrelated work unchanged',
++              accepted is False and player.nlsDeferredPending and player.nlsDeferredSource == 3,
++              dict(done=done, protected=protected, source=source))
 +
-+    # Original quicksave debounce guards must remain ahead of Smart admission.
++    # A deliberately accepted user action wins over old automatic/manual work,
++    # and it consumes that work before the immediate service call can reenter.
++    for hook, enabled, pending_source in itertools.product(HOOKS, (False, True), (1, 2, 3)):
++        player = runtime.fixture(mode=2, enabled=enabled, reenter=True,
++                                 mounted=True, combat=True, reasons=('Combat',))
++        player.nlsDeferredPending = True
++        player.nlsDeferredSource = pending_source
++        serial = player.nlsDeferredSerial
++        runtime.invoke(hook)
++        check('fresh immediate user request consumes old pending work',
++              runtime.state['forced'] == 1 and not player.nlsDeferredPending and
++              player.nlsDeferredSerial == serial and runtime.state.get('reentry_result') is False,
++              dict(hook=hook, deferred=enabled, old_source=pending_source))
++        runtime.state['locked'] = False
++        runtime.state['reasons'] = ()
++        runtime.state['combat'] = False
++        runtime.state['mounted'] = False
++        check('old request cannot dispatch later or duplicate',
++              player.NLSRebornDeferredDispatch(serial) is False and runtime.state['forced'] == 1,
++              dict(hook=hook, old_source=pending_source))
++
++    # Busy/notification debounce guards stay before any new user action.
 +    for hook, busy, failed, saved in (
 +            (HOOKS[1], True, False, False), (HOOKS[1], False, True, False),
 +            (HOOKS[1], False, False, True), (HOOKS[2], True, False, False)):
-+        p = invoke(hook, busy=busy, failed=failed, saved=saved)
-+        check('busy quicksave does not enter new lane',
-+              not p.nlsDeferredPending and runtime.state['forced'] == 0 and not runtime.state['notices'],
++        player = runtime.fixture(mode=2, busy=busy, failed=failed, saved=saved)
++        player.nlsDeferredPending = True
++        player.nlsDeferredSource = 3
++        runtime.invoke(hook)
++        check('debounced input neither attempts nor consumes work',
++              runtime.state['forced'] == 0 and player.nlsDeferredPending and
++              player.nlsDeferredSource == 3 and not runtime.state['notices'],
 +              dict(hook=hook, busy=busy, failed=failed, saved=saved))
 +
-+    # Do not extend deferred behavior to Vanilla or ordinary Immersion. Keep
-+    # Unrestricted's existing queue and queue-off forced request behavior.
-+    for hook, mode, enabled in itertools.product(HOOKS, (0, 1, 2), (False, True)):
-+        p = invoke(hook, mode=mode, enabled=enabled)
-+        expected_queue = mode == 2 and enabled
-+        check('other modes retain queue scope', p.nlsDeferredPending == expected_queue,
-+              dict(hook=hook, mode=mode, enabled=enabled))
-+        check('other modes retain native/fallback routes',
-+              runtime.state['forced'] == int(mode == 2 and not enabled) and runtime.state['wrapped'] == int(mode in (0, 1)),
-+              dict(hook=hook, mode=mode, enabled=enabled))
++    # Valid mode changes have explicit queue ownership semantics; bad modes do
++    # not change either the selected mode or pending state.
++    for old_mode, new_mode, pending_source in itertools.product(
++            (0, 1, 2, 3), (-10, -1, 0, 1, 2, 3, 4, 999), (1, 2, 3, 999)):
++        player = runtime.fixture(mode=old_mode)
++        player.nlsDeferredPending = True
++        player.nlsDeferredSource = pending_source
++        serial = player.nlsDeferredSerial
++        player.NLSRebornSetMode(new_mode)
++        valid = 0 <= new_mode <= 3
++        expected_pending = not (new_mode == 2 and pending_source in (1, 2))
++        check('mode setter keeps selection and queue ownership contract',
++              player.NLSRebornGetMode() == (new_mode if valid else old_mode) and
++              player.nlsDeferredPending == expected_pending and
++              player.nlsDeferredSource == pending_source and player.nlsDeferredSerial == serial and
++              runtime.state['forced'] == 0,
++              dict(old_mode=old_mode, new_mode=new_mode, source=pending_source))
 +
-+    # Exercise the actual REDscript dispatch guard after a real wrapper queued a
-+    # request. Lua's separate stable-window scheduling is outside this test.
 +    for hook in HOOKS:
-+        p = invoke(hook)
-+        serial = p.nlsDeferredSerial
-+        check('native lock prevents dispatch', p.NLSRebornDeferredDispatch(serial) is False and runtime.state['forced'] == 0 and p.nlsDeferredPending, hook)
++        player = invoke(hook, mode=3, reasons=('Scene',))
++        serial = player.nlsDeferredSerial
++        check('Smart initially owns one real queued request', player.nlsDeferredPending, hook)
++        player.NLSRebornSetMode(2)
++        check('entering Unrestricted cancels old manual queue without saving',
++              not player.nlsDeferredPending and runtime.state['forced'] == 0, hook)
 +        runtime.state['locked'] = False
 +        runtime.state['reasons'] = ()
-+        check('wrong token never dispatches', p.NLSRebornDeferredDispatch(serial + 1) is False and runtime.state['forced'] == 0, hook)
++        check('mode change cannot revive old manual token on unlock',
++              player.NLSRebornDeferredDispatch(serial) is False and runtime.state['forced'] == 0, hook)
 +        runtime.state['locked'] = True
-+        runtime.state['reasons'] = ('Quest',)
-+        check('renewed lock keeps request pending', p.NLSRebornDeferredDispatch(serial) is False and runtime.state['forced'] == 0 and p.nlsDeferredPending, hook)
++        runtime.state['reasons'] = ('Combat',)
++        runtime.state['combat'] = True
++        runtime.state['mounted'] = True
++        runtime.invoke(hook)
++        check('next user request after mode transition attempts once',
++              runtime.state['forced'] == 1 and not player.nlsDeferredPending, hook)
++
++    # The independent automatic lane still works in mode2 and stays gated.
++    for enabled in (False, True):
++        player = runtime.fixture(mode=2, enabled=enabled, locked=False, reasons=(), combat=False, mounted=False)
++        check('automatic readiness remains available in Unrestricted', player.NLSRebornAutosaveReady() is True, enabled)
++        check('automatic queue remains separate from manual preference',
++              player.NLSRebornAutosaveQueue() is True and player.nlsDeferredSource == 3 and player.nlsDeferredPending, enabled)
++        serial = player.nlsDeferredSerial
++        player.NLSRebornSetMode(2)
++        check('reapplying Unrestricted preserves automatic pending work', player.nlsDeferredPending, enabled)
++        runtime.state['locked'] = True
++        runtime.state['reasons'] = ('Scene',)
++        check('automatic work still waits for native permission',
++              player.NLSRebornDeferredDispatch(serial) is False and runtime.state['forced'] == 0 and player.nlsDeferredPending, enabled)
 +        runtime.state['locked'] = False
 +        runtime.state['reasons'] = ()
-+        runtime.state['done'] = 0
-+        check('fresh introduction regression prevents dispatch', p.NLSRebornDeferredDispatch(serial) is False and runtime.state['forced'] == 0 and p.nlsDeferredPending, hook)
-+        runtime.state['done'] = 1
-+        runtime.state['service'] = False
-+        check('absent service preserves queued request', p.NLSRebornDeferredDispatch(serial) is False and runtime.state['forced'] == 0 and p.nlsDeferredPending, hook)
-+        runtime.state['service'] = True
-+        runtime.state['reenter'] = True
-+        check('unlocked request dispatches once and consumes queue', p.NLSRebornDeferredDispatch(serial) is True and runtime.state['forced'] == 1 and not p.nlsDeferredPending, hook)
-+        check('reentrant callback cannot dispatch again', runtime.state.get('reentry_result') is False and runtime.state['forced'] == 1, hook)
-+        check('repeat dispatch stays consumed', p.NLSRebornDeferredDispatch(serial) is False and runtime.state['forced'] == 1, hook)
++        check('eligible automatic work dispatches exactly once',
++              player.NLSRebornDeferredDispatch(serial) is True and runtime.state['forced'] == 1 and not player.nlsDeferredPending, enabled)
++        check('automatic token stays consumed', player.NLSRebornDeferredDispatch(serial) is False and runtime.state['forced'] == 1, enabled)
 +
-+    return {'assertions': count, 'failed': len(failures), 'first_failures': failures[:30]}
++    # Other modes retain their existing routing, including known DF Immersion.
++    for hook, mode, enabled, df_active in itertools.product(HOOKS, (0, 1, 3), (False, True), (False, True)):
++        player = runtime.fixture(mode=mode, enabled=enabled, reasons=('Scene',), combat=False)
++        runtime.ns['NLSRebornDFPolicy'].Read = lambda p, active=df_active: O(
++            vehicleSleep=int(active), addiction=0, starvation=0, dehydration=0, status='external DF observation')
++        runtime.invoke(hook)
++        expected_queue = enabled and (mode == 3 or (mode == 1 and df_active))
++        expected_forced = mode == 1 and df_active and not enabled
++        expected_wrapped = mode == 0 or (mode == 1 and not df_active)
++        check('other mode routing remains scoped',
++              player.nlsDeferredPending == expected_queue and
++              runtime.state['forced'] == int(expected_forced) and runtime.state['wrapped'] == int(expected_wrapped),
++              dict(hook=hook, mode=mode, deferred=enabled, df=df_active))
++
++    return {'assertions': assertions, 'failed': len(failures),
++            'boundary_errors': sum(item['label'] == 'actual route executes without boundary error' for item in failures),
++            'first_failures': failures[:25]}
 +
 +
-+def replace_body(source, subset, name, replacement):
-+    fn = subset.body(source, name)
-+    mutated = fn[:fn.index('{') + 1] + replacement + '\n}'
-+    return source.replace(fn, mutated, 1)
++def mutate_method(source, subset, name, transform):
++    before = subset.body(source, name)
++    after = transform(before)
++    assert before != after, 'Mutation anchor missing: ' + name
++    return source.replace(before, after, 1)
 +
 +
 +def main():
-+    p = argparse.ArgumentParser()
-+    p.add_argument('release', type=Path)
-+    p.add_argument('--expect-gap', action='store_true', help='Baseline negative control: succeeds only when requirements fail')
-+    p.add_argument('--mutations', action='store_true')
-+    args = p.parse_args()
-+    subset_path = args.release / 'docs/NeverLockSavesReborn/validation/source_subset.py'
-+    spec = importlib.util.spec_from_file_location('candidate_source_subset', subset_path)
-+    subset = importlib.util.module_from_spec(spec)
-+    spec.loader.exec_module(subset)
-+    source_path = args.release / REDS
-+    source = source_path.read_text()
-+    result = evaluate(source, subset.compile_function)
-+    result.update(scope=__doc__.strip(), source_sha256=hashlib.sha256(source_path.read_bytes()).hexdigest(),
-+                  negative_control=args.expect_gap)
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('release', type=Path)
++    parser.add_argument('--expect-gap', action='store_true')
++    parser.add_argument('--mutations', action='store_true')
++    args = parser.parse_args()
++    validation = args.release / 'docs/NeverLockSavesReborn/validation'
++    subset = load_module('rc4_source_subset', validation / 'source_subset.py')
++    base = load_module('rc4_existing_route_boundaries', validation / 'test_smart_queue_routes.py')
++    runtime_class = make_runtime_class(base, subset.compile_function)
++    path = args.release / REDS
++    source = path.read_text()
++    result = evaluate(source, runtime_class)
++    result.update(source_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
++                  scope=__doc__.strip(), negative_control=args.expect_gap)
 +    if args.mutations and not result['failed']:
-+        controls = {}
++        queue_fn = subset.body(source, 'NLSRebornDeferredQueue')
++        setter_fn = subset.body(source, 'NLSRebornSetMode')
 +        mutants = {
-+            'smart route disabled': replace_body(source, subset, 'HandleSmartBlockedSave', '\n return false;'),
-+            'native unlock guard removed': replace_body(source, subset, 'NLSRebornDeferredNativeUnlocked',
-+                '\n return !this.nlsRebornSafetyBlock && this.NLSRebornDeferredIntroComplete();')}
-+        for name, mutant in mutants.items():
-+            outcome = evaluate(mutant, subset.compile_function)
-+            controls[name] = dict(detected=outcome['failed'] > 0, failed=outcome['failed'], first_failure=outcome['first_failures'][:1])
++            'Unrestricted returns to deferred admission': mutate_method(source, subset, 'NLSRebornDeferredQueue',
++                lambda text: text.replace('if this.NLSRebornGetMode() == 2 {', 'if false {', 1)),
++            'immediate request fails to consume stale work': mutate_method(source, subset, 'NLSRebornDeferredQueue',
++                lambda text: text.replace('this.nlsDeferredPending = false;', 'this.nlsDeferredPending = this.nlsDeferredPending;', 1)),
++            'mode selection carries stale player work': mutate_method(source, subset, 'NLSRebornSetMode',
++                lambda text: text.replace('this.nlsDeferredPending = false;', 'this.nlsDeferredPending = this.nlsDeferredPending;', 1)),
++            'mode selection cancels independent automatic work': mutate_method(source, subset, 'NLSRebornSetMode',
++                lambda text: text.replace('mode == 2 && (this.nlsDeferredSource == 1 || this.nlsDeferredSource == 2)', 'mode == 2', 1)),
++            'introduction guard removed from admission': mutate_method(source, subset, 'NLSRebornDeferredQueue',
++                lambda text: text.replace(' || !this.NLSRebornDeferredIntroComplete()', '', 1)),
++            'automatic native lock gate removed': mutate_method(source, subset, 'NLSRebornDeferredNativeUnlocked',
++                lambda text: text.replace(' && !GameInstance.IsSavingLocked(this.GetGame(), locks)', '', 1)),
++        }
++        controls = {}
++        for label, mutated in mutants.items():
++            outcome = evaluate(mutated, runtime_class)
++            controls[label] = {'detected': outcome['failed'] > 0, 'failed': outcome['failed'],
++                               'first_failure': outcome['first_failures'][:1]}
 +        result['mutation_controls'] = controls
 +    print(json.dumps(result, indent=2))
 +    if args.expect_gap:
 +        return 0 if result['failed'] else 1
-+    if result['failed']:
-+        return 1
-+    if args.mutations and not all(x['detected'] for x in result.get('mutation_controls', {}).values()):
-+        return 1
-+    return 0
++    return int(result['failed'] > 0 or (args.mutations and not all(x['detected'] for x in result.get('mutation_controls', {}).values())))
 +
 +
 +if __name__ == '__main__':
 +    raise SystemExit(main())
---- RC2/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
-+++ RC3/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
+--- RC3/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
++++ RC4/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
 @@ -1,4 +1,4 @@
--// v1.0.0-rc2 Release Candidate. Deferred/autosave lanes are opt-in.
-+// v1.0.0-rc3 Release Candidate. Deferred/autosave lanes are opt-in.
+-// v1.0.0-rc3 Release Candidate. Deferred/autosave lanes are opt-in.
++// v1.0.0-rc4 Release Candidate. Deferred/autosave lanes are opt-in.
  // Engine native saving-unlocked state is the release gate; this does not
  // guarantee that a quest or phone conversation serializes correctly.
  @addField(PlayerPuppet) public let nlsDeferredEnabled: Bool = false;
-@@ -437,7 +437,7 @@
+@@ -40,7 +40,14 @@
+ }
+ @addMethod(PlayerPuppet)
+ public final func NLSRebornDeferredQueue(source: Int32) -> Bool {
+-  if !this.nlsDeferredEnabled || (source != 1 && source != 2) || this.nlsRebornSafetyBlock || !this.NLSRebornDeferredIntroComplete() { return false; };
++  if (source != 1 && source != 2) || this.nlsRebornSafetyBlock || !this.NLSRebornDeferredIntroComplete() { return false; };
++  // Unrestricted user requests attempt immediately; the manual queue must not intercept them.
++  // A fresh user request also cancels older automatic/player work before that attempt.
++  if this.NLSRebornGetMode() == 2 {
++    this.nlsDeferredPending = false;
++    return false;
++  };
++  if !this.nlsDeferredEnabled { return false; };
+   this.nlsDeferredSerial += 1;
+   this.nlsDeferredSource = source;
+   this.nlsDeferredPending = true;
+@@ -380,7 +387,12 @@
+ 
+ @addMethod(PlayerPuppet)
+ public final func NLSRebornSetMode(mode: Int32) -> Void {
+-  if mode >= 0 && mode <= 3 { this.nlsRebornMode = mode; };
++  if mode >= 0 && mode <= 3 {
++    // Do not carry an old manual queue into Unrestricted and dispatch it later.
++    // Source 3 belongs to the separately enabled, native-gated automatic lane.
++    if mode == 2 && (this.nlsDeferredSource == 1 || this.nlsDeferredSource == 2) { this.nlsDeferredPending = false; };
++    this.nlsRebornMode = mode;
++  };
+ }
+ 
+ @addMethod(PlayerPuppet)
+@@ -437,7 +449,7 @@
  public final func NLSRebornGetNotificationCategory() -> Int32 { return NLSRebornPolicy.NotificationContext(this.GetGame()); }
  
  public class NLSRebornPolicy {
--  public static func Version() -> String { return "1.0.0-rc2"; }
-+  public static func Version() -> String { return "1.0.0-rc3"; }
+-  public static func Version() -> String { return "1.0.0-rc3"; }
++  public static func Version() -> String { return "1.0.0-rc4"; }
    public static func ShuffleSlot(index: Int32, seed: Int32) -> Int32 {
      let cycle: Int32 = index / 20;
      let turn: Int32 = index % 20;
-@@ -1871,6 +1871,33 @@
-     let player: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(game).GetLocalPlayerControlledGameObject() as PlayerPuppet;
-     return IsDefined(player) && player.nlsRebornSafetyBlock;
-   }
-+  // Smart queue admission is independent of permission to force a checkpoint.
-+  // Called only for a native-locked user request, after quicksave busy guards.
-+  public static func HandleSmartBlockedSave(game: GameInstance, source: Int32) -> Bool {
-+    let players: ref<PlayerSystem> = GameInstance.GetPlayerSystem(game);
-+    if !IsDefined(players) { return false; };
-+    let player: ref<PlayerPuppet> = players.GetLocalPlayerControlledGameObject() as PlayerPuppet;
-+    if !IsDefined(player) || player.NLSRebornGetMode() != 3 || player.nlsRebornSafetyBlock || !player.NLSRebornDeferredIntroComplete() { return false; };
-+    if player.NLSRebornDeferredQueue(source) {
-+      if player.NLSRebornGetNotificationsEnabled() && !player.NLSRebornGetStatusNotificationsEnabled() {
-+        if source == 1 {
-+          PauseMenuGameController.NLSRebornNotify(game, "Save queued until normal saving is available.");
-+        } else {
-+          PauseMenuGameController.NLSRebornNotify(game, "Quicksave queued until normal saving is available.");
-+        };
-+      };
-+      return true;
-+    };
-+    // Preserve the existing explicit combat exception when the queue is off.
-+    if NLSRebornPolicy.AllowForcedCheckpointFallback(game) { return false; };
-+    if player.NLSRebornGetNotificationsEnabled() {
-+      let message: String = "Saving is blocked by the current game state. No save was queued.";
-+      if player.NLSRebornGetTone() == 1 { message = "The game still has the save button hostage. No save queued."; };
-+      if player.NLSRebornGetTone() == 2 { message = "The game is still blocking this damn save. No save queued."; };
-+      PauseMenuGameController.NLSRebornNotify(game, message);
-+    };
-+    return true;
-+  }
-   // Combat is the only explicit native lock exception. No native Vehicle reason exists.
-   public static func SmartCombatFallback(game: GameInstance) -> Bool {
-     let players: ref<PlayerSystem> = GameInstance.GetPlayerSystem(game);
-@@ -1941,6 +1968,7 @@
-   let dfContext: Int32 = NLSRebornPolicy.GetImmersionSaveContext(this.m_gameInstance);
-   let locks: array<gameSaveLock>;
-   if GameInstance.IsSavingLocked(this.m_gameInstance, locks) {
-+    if NLSRebornPolicy.HandleSmartBlockedSave(this.m_gameInstance, 1) { return; };
-     if NLSRebornPolicy.AllowForcedCheckpointFallback(this.m_gameInstance) || dfContext > 0 {
-       let queuePlayer: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.m_gameInstance).GetLocalPlayerControlledGameObject() as PlayerPuppet;
-       if IsDefined(queuePlayer) && queuePlayer.NLSRebornDeferredQueue(1) {
-@@ -1970,6 +1998,9 @@
- private final func HandlePressToQuickSaveGame() -> Void {
-   let dfContext: Int32 = NLSRebornPolicy.GetImmersionSaveContext(this.m_gameInstance);
-   let locks: array<gameSaveLock>;
-+  if GameInstance.IsSavingLocked(this.m_gameInstance, locks) && !this.m_quickSaveInProgress && !this.IsSaveFailedNotificationActive() && !this.IsGameSavedNotificationActive() {
-+    if NLSRebornPolicy.HandleSmartBlockedSave(this.m_gameInstance, 2) { return; };
-+  };
-   if GameInstance.IsSavingLocked(this.m_gameInstance, locks) && (NLSRebornPolicy.AllowForcedCheckpointFallback(this.m_gameInstance) || dfContext > 0) {
-     if !this.m_quickSaveInProgress && !this.IsSaveFailedNotificationActive() && !this.IsGameSavedNotificationActive() {
-       let queuePlayer: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.m_gameInstance).GetLocalPlayerControlledGameObject() as PlayerPuppet;
-@@ -2002,6 +2033,9 @@
-     dfContext = NLSRebornPolicy.GetImmersionSaveContext(this.GetPlayerControlledObject().GetGame());
-   };
-   let locks: array<gameSaveLock>;
-+  if IsDefined(this.GetPlayerControlledObject()) && GameInstance.IsSavingLocked(this.GetPlayerControlledObject().GetGame(), locks) && !this.m_quickSaveInProgress {
-+    if NLSRebornPolicy.HandleSmartBlockedSave(this.GetPlayerControlledObject().GetGame(), 2) { return; };
-+  };
-   if IsDefined(this.GetPlayerControlledObject()) && GameInstance.IsSavingLocked(this.GetPlayerControlledObject().GetGame(), locks) && (NLSRebornPolicy.AllowForcedCheckpointFallback(this.GetPlayerControlledObject().GetGame()) || dfContext > 0) {
-     if !this.m_quickSaveInProgress {
-       let queuePlayer: ref<PlayerPuppet> = this.GetPlayerControlledObject() as PlayerPuppet;
---- RC2/tools/NLSRInstallAudit/audit_installation.py
-+++ RC3/tools/NLSRInstallAudit/audit_installation.py
+--- RC3/tools/NLSRInstallAudit/audit_installation.py
++++ RC4/tools/NLSRInstallAudit/audit_installation.py
 @@ -1,5 +1,5 @@
  #!/usr/bin/env python3
--"""Read-only, bounded RC2 installation observations; standard library only."""
-+"""Read-only, bounded RC3 installation observations; standard library only."""
+-"""Read-only, bounded RC3 installation observations; standard library only."""
++"""Read-only, bounded RC4 installation observations; standard library only."""
  import argparse
  from datetime import datetime, timezone
  import hashlib
@@ -633,37 +680,37 @@
  import stat
  import sys
  
--RELEASE = '1.0.0-rc2'
--INVENTORY_SHA256 = 'c8a9d0804b49a45078264f6201a5a613cc21c091a40cd4bf1f70b77cfb5d4aff'
-+RELEASE = '1.0.0-rc3'
-+INVENTORY_SHA256 = 'f2247af5195e9d0932a2bbc13fed52f3cafd2e60b65e4e80819fba47b2c8aef2'
+-RELEASE = '1.0.0-rc3'
+-INVENTORY_SHA256 = 'f2247af5195e9d0932a2bbc13fed52f3cafd2e60b65e4e80819fba47b2c8aef2'
++RELEASE = '1.0.0-rc4'
++INVENTORY_SHA256 = 'f67def925f898924dcfe7cd2b9d0d485b8dd894033add0f334ae67b428402350'
  LUA_ROOT = 'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn'
  REDS_ROOT = 'r6/scripts/NeverLockSavesReborn'
  MAX_FILE = 2 * 1024 * 1024
-@@ -365,7 +365,8 @@
-                            'warning': len(re.findall(rb'\bwarn(?:ing)?\b', data, re.I)),
+@@ -366,7 +366,8 @@
                             'failed': len(re.findall(rb'\bfailed\b', data, re.I)),
                             'rc1_label': data.lower().count(b'1.0.0-rc1'),
--                           'rc2_label': data.lower().count(b'1.0.0-rc2')})
-+                           'rc2_label': data.lower().count(b'1.0.0-rc2'),
-+                           'rc3_label': data.lower().count(b'1.0.0-rc3')})
+                            'rc2_label': data.lower().count(b'1.0.0-rc2'),
+-                           'rc3_label': data.lower().count(b'1.0.0-rc3')})
++                           'rc3_label': data.lower().count(b'1.0.0-rc3'),
++                           'rc4_label': data.lower().count(b'1.0.0-rc4')})
          except (OSError, AuditError) as exc:
              row['status'] = 'incomplete'
              self.issue(exc.code if isinstance(exc, AuditError) else 'io_error', kind + '_log', incomplete=True)
-@@ -379,7 +380,7 @@
+@@ -380,7 +381,7 @@
  def main(argv=None):
      report = base_report()
      try:
--        parser = Parser(description='Read-only RC2 runtime byte audit. Prints JSON; does not install, repair, run the game or certify save safety.')
-+        parser = Parser(description='Read-only RC3 runtime byte audit. Prints JSON; does not install, repair, run the game or certify save safety.')
+-        parser = Parser(description='Read-only RC3 runtime byte audit. Prints JSON; does not install, repair, run the game or certify save safety.')
++        parser = Parser(description='Read-only RC4 runtime byte audit. Prints JSON; does not install, repair, run the game or certify save safety.')
          parser.add_argument('--game-root', required=True, metavar='DIRECTORY', help='Cyberpunk installation directory; never the save directory')
          parser.add_argument('--version', action='append', default=[], metavar='COMPONENT=VALUE',
                              help='User-reported label: game,cet,redscript,red4ext,codeware,native_settings,dark_future; repeat per component')
---- RC2/tools/NLSRInstallAudit/tests/test_author.py
-+++ RC3/tools/NLSRInstallAudit/tests/test_author.py
+--- RC3/tools/NLSRInstallAudit/tests/test_author.py
++++ RC4/tools/NLSRInstallAudit/tests/test_author.py
 @@ -1,4 +1,4 @@
--"""Real-filesystem public CLI checks for the integrated RC2 installation auditor."""
-+"""Real-filesystem public CLI checks for the integrated RC3 installation auditor."""
+-"""Real-filesystem public CLI checks for the integrated RC3 installation auditor."""
++"""Real-filesystem public CLI checks for the integrated RC4 installation auditor."""
  import hashlib
  import json
  import os
@@ -671,27 +718,27 @@
      def test_log_tail_counts_digest_and_privacy(self):
          path = self.parent / 'PRIVATE_GAME.log'
          prefix = b'PRIVATE_LOG_CONTENT\nerror\n' * 10000
--        tail = b'warning failed 1.0.0-rc1 1.0.0-rc2 ERROR\n'
-+        tail = b'warning failed 1.0.0-rc1 1.0.0-rc2 1.0.0-RC3 ERROR\n'
+-        tail = b'warning failed 1.0.0-rc1 1.0.0-rc2 1.0.0-RC3 ERROR\n'
++        tail = b'warning failed 1.0.0-rc1 1.0.0-rc2 1.0.0-RC3 1.0.0-RC4 ERROR\n'
          path.write_bytes(prefix + tail)
          code, report = self.run_audit('--cet-log', path)
          self.assertEqual(code, 0)
-@@ -202,6 +202,7 @@
-         self.assertEqual(log['tail_sha256'], hashlib.sha256(observed).hexdigest())
+@@ -203,6 +203,7 @@
          self.assertEqual(log['marker_counts']['rc1_label'], 1)
          self.assertEqual(log['marker_counts']['rc2_label'], 1)
-+        self.assertEqual(log['marker_counts']['rc3_label'], 1)
+         self.assertEqual(log['marker_counts']['rc3_label'], 1)
++        self.assertEqual(log['marker_counts']['rc4_label'], 1)
          self.assertEqual(log['marker_counts']['warning'], 1)
          self.assertNotIn('PRIVATE_LOG_CONTENT', json.dumps(report))
          self.assertEqual(log['current_compilation'], 'unknown')
---- RC2/tools/NLSRInstallAudit/tests/test_independent.py
-+++ RC3/tools/NLSRInstallAudit/tests/test_independent.py
+--- RC3/tools/NLSRInstallAudit/tests/test_independent.py
++++ RC4/tools/NLSRInstallAudit/tests/test_independent.py
 @@ -90,7 +90,7 @@
          if expected is not None:
              self.assertEqual(p.returncode, expected, payload)
          self.assertEqual({'exact_match':0, 'drift_or_review':1, 'incomplete':2}[payload['audit_status']], p.returncode)
--        self.assertEqual(payload['release'], '1.0.0-rc2')
-+        self.assertEqual(payload['release'], '1.0.0-rc3')
+-        self.assertEqual(payload['release'], '1.0.0-rc3')
++        self.assertEqual(payload['release'], '1.0.0-rc4')
          return payload
  
      def test_clean_exact_bytes_and_no_input_writes(self):
@@ -699,13 +746,13 @@
  
      def test_log_marker_counts_do_not_promote_compilation(self):
          log=Path(self.tmp.name)/'log.txt'
--        log.write_text('error ERROR errorless\nwarning WARN failed FAILED 1.0.0-rc1 1.0.0-rc2\n')
-+        log.write_text('error ERROR errorless\nwarning WARN failed FAILED 1.0.0-rc1 1.0.0-rc2 1.0.0-rc3\n')
+-        log.write_text('error ERROR errorless\nwarning WARN failed FAILED 1.0.0-rc1 1.0.0-rc2 1.0.0-rc3\n')
++        log.write_text('error ERROR errorless\nwarning WARN failed FAILED 1.0.0-rc1 1.0.0-rc2 1.0.0-rc3 1.0.0-rc4\n')
          report=self.run_audit('--cet-log',log,expected=0)
          item=next(e for e in report['logs'] if e['kind']=='cet')
          self.assertEqual(item['current_compilation'],'unknown')
--        self.assertEqual(item['marker_counts'],{'error':2,'warning':2,'failed':2,'rc1_label':1,'rc2_label':1})
-+        self.assertEqual(item['marker_counts'],{'error':2,'warning':2,'failed':2,'rc1_label':1,'rc2_label':1,'rc3_label':1})
+-        self.assertEqual(item['marker_counts'],{'error':2,'warning':2,'failed':2,'rc1_label':1,'rc2_label':1,'rc3_label':1})
++        self.assertEqual(item['marker_counts'],{'error':2,'warning':2,'failed':2,'rc1_label':1,'rc2_label':1,'rc3_label':1,'rc4_label':1})
  
      def test_renamed_cet_copy_candidate_requires_review(self):
          p=(self.root/LUA_DIR).parent/PRIVATE/'init.lua'

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "release": "1.0.0-rc3",
+  "release": "1.0.0-rc4",
   "scope": "runtime_files_only",
   "runtime_files": [
     {
@@ -40,8 +40,8 @@
     },
     {
       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
-      "size": 74299,
-      "sha256": "58f1295871e29b5a0b5d15e78670f481669461242e49c628efa31dc1be4dedd5"
+      "size": 74336,
+      "sha256": "f3beda44cac722df64c3bed6381ac2990d6dbd5b967d447d340896e0b12b74df"
     },
     {
       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua",
@@ -80,8 +80,8 @@
     },
     {
       "path": "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds",
-      "size": 156837,
-      "sha256": "f2953b6903bb09da3bdec5eb7ee991a51928817ac2b527d9e816e9fc591c48d1"
+      "size": 157435,
+      "sha256": "ffc6864b69f2fc2c8f3b940a8ff9ef516368de1d7afe2224782c7ed20fc3a4a1"
     }
   ]
 }

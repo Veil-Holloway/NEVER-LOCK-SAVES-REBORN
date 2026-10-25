@@ -1,0 +1,8 @@
+{
+  "assertions": 2082,
+  "failed": 0,
+  "first_failures": [],
+  "scope": "Smart user-request routing regression against bounded actual REDscript source.\n\nThe tested methods, route branches, queue admission and dispatch are translated\nfrom the supplied release. Only game/service boundaries and the large existing\nCheckpointMessage library are doubled. This is not REDscript compilation, CET,\nnotification rendering, scheduler stability or actual save/reload evidence.",
+  "source_sha256": "ffc6864b69f2fc2c8f3b940a8ff9ef516368de1d7afe2224782c7ed20fc3a4a1",
+  "negative_control": false
+}
