@@ -10,8 +10,8 @@ import re
 import stat
 import sys
 
-RELEASE = '1.0.0-vehicle-diagnostic.1'
-INVENTORY_SHA256 = '0090e404d33c94af1d5076923a8fd22801a3fce4aed73915d7f8022becde433d'
+RELEASE = '1.0.0-vehicle-diagnostic.2'
+INVENTORY_SHA256 = 'd60af3e039cffc975bf65b59c2e9c5f28f676429ca48ae69bfdd5b715d9d1578'
 LUA_ROOT = 'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn'
 REDS_ROOT = 'r6/scripts/NeverLockSavesReborn'
 MAX_FILE = 2 * 1024 * 1024

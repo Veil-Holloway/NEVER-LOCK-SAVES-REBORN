@@ -1,4 +1,4 @@
--- Never Lock Saves Reborn v1.0.0-vehicle-diagnostic.1 Release Candidate
+-- Never Lock Saves Reborn v1.0.0-vehicle-diagnostic.2 Release Candidate
 -- Persistent UI settings, runtime bridge, and diagnostics.
 -- Smart permits only explicit combat locks with combat opt-in; mounted combat also needs vehicle opt-in.
 -- DF switches control contextual messages only. Optional scheduler defaults OFF.
@@ -702,7 +702,7 @@ local function exportSupportReport()
       end})
     if ok and type(value)=='table' and getmetatable(value)==nil then versionSnapshot=value end
   end
-  local snapshot={build='1.0.0-vehicle-diagnostic.1',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),
+  local snapshot={build='1.0.0-vehicle-diagnostic.2',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),
     facts={q000_done=read(function() return Game.GetQuestsSystem():GetFactStr('q000_done') end),
       q001_started=read(function() return Game.GetQuestsSystem():GetFactStr('q001_started') end)},
     sensors={combatKnown=combatKnown,combatActive=combatActive,vehicleKnown=vehicleKnown,vehicleActive=vehicleActive,
@@ -739,7 +739,7 @@ registerForEvent('onInit', function()
   end
   registerNativeSettings()
   deferredStatus = deferredEnabled and 'Live queue enabled (experimental)' or 'Disabled'
-  log('v1.0.0-vehicle-diagnostic.1 Release Candidate loaded; experimental native save-lock gate required')
+  log('v1.0.0-vehicle-diagnostic.2 Release Candidate loaded; experimental native save-lock gate required')
 end)
 registerForEvent('onOverlayOpen', function() show = true; apply() end)
 registerForEvent('onOverlayClose', function() show = false end)
@@ -1015,7 +1015,7 @@ registerForEvent('onDraw', function()
   if not show then return end
   local visible = ImGui.Begin(title)
   if visible then
-    ImGui.Text('v1.0.0-vehicle-diagnostic.1 Release Candidate | Runtime policy')
+    ImGui.Text('v1.0.0-vehicle-diagnostic.2 Release Candidate | Runtime policy')
     ImGui.TextWrapped('Native menu: '..nativeStatus)
     ImGui.Separator()
     for i=0,3 do
@@ -1174,7 +1174,7 @@ registerForEvent('onDraw', function()
       ImGui.TextWrapped('Context states: -1 UNKNOWN, 0 inactive/disabled, 1 active. Context: 8 sleep, 11 dehydration, 10 starvation, 9 addiction.')
       ImGui.TextWrapped('Compatibility is source-reviewed; in-game validation is still required. State samples refresh every two seconds.')
       if ImGui.Button('Log compatibility snapshot##nls_darkfuture') then
-        log('v1.0.0-vehicle-diagnostic.1 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)
+        log('v1.0.0-vehicle-diagnostic.2 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)
         log('Dark Future: '..darkFutureStatus)
         if darkFutureError then log('Dark Future query error: '..darkFutureError) end
         if dfOK then log('Last Immersion save check: '..tostring(dfLastCheck)) end
@@ -1208,7 +1208,7 @@ registerForEvent('onDraw', function()
       if ImGui.Button('Export Guardian report##nls_guardian_export') then
         local exported=pcall(function()
           local report=guardian:report()
-          report.rebornBuild='1.0.0-vehicle-diagnostic.1'
+          report.rebornBuild='1.0.0-vehicle-diagnostic.2'
           report.gameBuild='unknown'; report.frameworkVersions='unknown'
           configStore.save('guardian-report.json',report)
         end)

@@ -30,6 +30,8 @@ elif shutil.which('luatex'):
 else:
     raise SystemExit('Lua 5.3+ test host missing; no checks are claimed passed.')
 cases=[
+ ('diagnostic_initializers',[sys.executable,str(HERE/'test_diagnostic_initializers.py'),str(root)]),
+ ('diagnostic2_source_scope',[sys.executable,str(HERE/'check_diagnostic2_scope.py'),str(root)]),
  ('lua_syntax',lua+[str(HERE/'check_lua_syntax.lua'),str(root)]),
  ('guardian_ledger',lua+[str(HERE/'test_guardian.lua'),str(root/'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn')]),
  ('guardian_observers',lua+[str(HERE/'test_guardian_bridge.lua'),str(root/'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian_bridge.lua'),str(root/'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian.lua')]),

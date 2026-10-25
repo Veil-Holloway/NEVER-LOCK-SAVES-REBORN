@@ -1,4 +1,4 @@
-# Vehicle-combat save diagnostic — 1.0.0-vehicle-diagnostic.1
+# Vehicle-combat save diagnostic — 1.0.0-vehicle-diagnostic.2
 
 **Status: actual vehicle-combat saving is not fixed or verified by this build.**
 This preview distinguishes a rejected request from a native-accepted request
@@ -6,7 +6,7 @@ that still has no visible save. All game/compiler acceptance below is NOT RUN.
 
 1. Close the game. Preserve an ordinary pre-test save and external copies. Install
    the entire diagnostic runtime package; enable one Reborn installation, Deploy
-   and restart. Check fresh compiler/CET logs and the panel version `1.0.0-vehicle-diagnostic.1`.
+   and restart. Check fresh compiler/CET logs and the panel version `1.0.0-vehicle-diagnostic.2`.
 2. Use a disposable post-introduction save. Set Unrestricted, optional Smart
    Autosave OFF and Deferred Save ON. During vehicle combat press gameplay
    quicksave **once**. Record the exact feedback and check for an attributable

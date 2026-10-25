@@ -1,4 +1,4 @@
-// v1.0.0-vehicle-diagnostic.1 Release Candidate. Deferred/autosave lanes are opt-in.
+// v1.0.0-vehicle-diagnostic.2 Release Candidate. Deferred/autosave lanes are opt-in.
 // Engine native saving-unlocked state is the release gate; this does not
 // guarantee that a quest or phone conversation serializes correctly.
 @addField(PlayerPuppet) public let nlsDeferredEnabled: Bool = false;
@@ -90,8 +90,8 @@ public final func NLSRebornSaveLockSummary() -> String {
 @addField(PlayerPuppet) private let nlsCheckpointSource: Int32 = 0;
 @addField(PlayerPuppet) private let nlsCheckpointResult: Int32 = 0;
 @addField(PlayerPuppet) private let nlsCheckpointLocks: String = "unknown";
-@addField(PlayerPuppet) private let nlsCheckpointCombat: Int32 = -1;
-@addField(PlayerPuppet) private let nlsCheckpointMounted: Int32 = -1;
+@addField(PlayerPuppet) private let nlsCheckpointCombat: Int32;
+@addField(PlayerPuppet) private let nlsCheckpointMounted: Int32;
 @addMethod(PlayerPuppet)
 public final func NLSRebornCheckpointGetSerial() -> Int32 { return this.nlsCheckpointSerial; }
 @addMethod(PlayerPuppet)
@@ -101,9 +101,15 @@ public final func NLSRebornCheckpointGetResult() -> Int32 { return this.nlsCheck
 @addMethod(PlayerPuppet)
 public final func NLSRebornCheckpointGetLocks() -> String { return this.nlsCheckpointLocks; }
 @addMethod(PlayerPuppet)
-public final func NLSRebornCheckpointGetCombat() -> Int32 { return this.nlsCheckpointCombat; }
+public final func NLSRebornCheckpointGetCombat() -> Int32 {
+  if this.nlsCheckpointSerial == 0 { return -1; };
+  return this.nlsCheckpointCombat;
+}
 @addMethod(PlayerPuppet)
-public final func NLSRebornCheckpointGetMounted() -> Int32 { return this.nlsCheckpointMounted; }
+public final func NLSRebornCheckpointGetMounted() -> Int32 {
+  if this.nlsCheckpointSerial == 0 { return -1; };
+  return this.nlsCheckpointMounted;
+}
 @addMethod(PlayerPuppet)
 public final func NLSRebornCheckpointFailure() -> Void {
   if !this.NLSRebornGetNotificationsEnabled() { return; };
@@ -517,7 +523,7 @@ public final func NLSRebornGetNotificationDiagnostics() -> String { return this.
 public final func NLSRebornGetNotificationCategory() -> Int32 { return NLSRebornPolicy.NotificationContext(this.GetGame()); }
 
 public class NLSRebornPolicy {
-  public static func Version() -> String { return "1.0.0-vehicle-diagnostic.1"; }
+  public static func Version() -> String { return "1.0.0-vehicle-diagnostic.2"; }
   public static func ShuffleSlot(index: Int32, seed: Int32) -> Int32 {
     let cycle: Int32 = index / 20;
     let turn: Int32 = index % 20;

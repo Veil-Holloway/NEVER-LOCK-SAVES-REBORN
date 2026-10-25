@@ -1,6 +1,6 @@
 # Vehicle diagnostic installation audit
 
-This optional Python 3.10+ tool checks the installed **1.0.0-vehicle-diagnostic.1** runtime against
+This optional Python 3.10+ tool checks the installed **1.0.0-vehicle-diagnostic.2** runtime against
 16 pinned files: 13 CET Lua files and 3 REDscript files. Python is not required
 for the mod itself. Run this tool from the extracted diagnostic package, outside the
 game directory. In PowerShell, replace the example with your game root:

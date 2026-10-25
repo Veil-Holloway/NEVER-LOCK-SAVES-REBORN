@@ -1,0 +1,35 @@
+{
+  "scope": "Actual init/config_store and real temporary files; doubled CET/Game/UI/JSON only. Lua5.3 host, not real game or Windows.",
+  "init_sha256": "fb68780c44009ecd7899eeb9d6111b382dd21a52cda8207168dcf5e91672503b",
+  "test_sha256": "36294db34927b80346fff4658385f173a1d351f1c46c09fc4761daae870c5ab1",
+  "results": [
+    {
+      "case": "actual_init_real_disk",
+      "exit_code": 0,
+      "passed": true,
+      "log": "runtime.log"
+    },
+    {
+      "case": "load-validator-omitted",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "NLSR-MAIN-CONFIG-RECOVERY",
+      "log": "load-validator-omitted.log"
+    },
+    {
+      "case": "save-validator-omitted",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "saveConfig must pass the same validator",
+      "log": "save-validator-omitted.log"
+    },
+    {
+      "case": "preset-validator-omitted",
+      "exit_code": 1,
+      "passed": true,
+      "intended_assertion": "preset application must use same main validator",
+      "log": "preset-validator-omitted.log"
+    }
+  ],
+  "passed": true
+}
