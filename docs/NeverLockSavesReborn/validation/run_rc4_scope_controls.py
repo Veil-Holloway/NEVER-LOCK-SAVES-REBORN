@@ -5,6 +5,7 @@ These temporary byte edits do not execute REDscript, CET, or Cyberpunk.
 """
 import json
 from pathlib import Path
+from check_vehicle_diag_scope import normalize_reviewed_files
 import shutil
 import subprocess
 import sys
@@ -49,6 +50,7 @@ with tempfile.TemporaryDirectory(prefix='nlsr-rc4-scope-') as temporary:
         candidate = Path(temporary) / name
         for top in fixture['protected_roots']:
             shutil.copytree(root / top, candidate / top, ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.pyo'))
+        normalize_reviewed_files(candidate)
         path = candidate / rel
         if before == b'__REMOVE_FILE__':
             path.unlink()

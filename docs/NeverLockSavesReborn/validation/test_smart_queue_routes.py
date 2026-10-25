@@ -54,6 +54,11 @@ class Runtime:
             'NLSRebornDeferredIntroComplete', 'NLSRebornDeferredQueue',
             'NLSRebornDeferredNativeUnlocked', 'NLSRebornDeferredDispatch',
             'NLSRebornGetDFNotificationContext')}
+        # The native-result diagnostic moves the same request boundary into a
+        # checked helper. Execute it rather than substituting an always-true stub.
+        if 'func NLSRebornRequestCheckpoint(' in source:
+            for name in ('NLSRebornRequestCheckpoint', 'NLSRebornCheckpointFailure'):
+                self.methods[name] = compiler(source, name, self.ns, instance=True)
         self.hooks = {name: compiler(source, name, self.ns) for name in HOOKS}
 
     def locked(self, game, locks):
@@ -88,6 +93,10 @@ class Runtime:
               nlsRebornDFNotifyVehicleSleep=True, nlsRebornDFNotifyAddiction=True,
               nlsRebornDFNotifyStarvation=True, nlsRebornDFNotifyDehydration=True,
               GetGame=lambda: self.game, NLSRebornGetMode=lambda: s['mode'],
+              nlsCheckpointSerial=0, nlsCheckpointSource=0, nlsCheckpointResult=0,
+              nlsCheckpointLocks='unknown', nlsCheckpointCombat=-1, nlsCheckpointMounted=-1,
+              NLSRebornSaveLockSummary=lambda: 'locked' if s['locked'] else 'unlocked',
+              NLSRebornMountedState=lambda: int(s['mounted']),
               NLSRebornGetCombat=lambda: s['allow_combat'], NLSRebornGetVehicle=lambda: s['allow_vehicle'],
               IsInCombat=lambda: s['combat'], NLSRebornGetNotificationsEnabled=lambda: s['master'],
               NLSRebornGetStatusNotificationsEnabled=lambda: s['status'], NLSRebornGetTone=lambda: s['tone'],

@@ -1,8 +1,8 @@
-# RC4 installation audit
+# Vehicle diagnostic installation audit
 
-This optional Python 3.10+ tool checks the installed **1.0.0-rc4** runtime against
+This optional Python 3.10+ tool checks the installed **1.0.0-vehicle-diagnostic.1** runtime against
 16 pinned files: 13 CET Lua files and 3 REDscript files. Python is not required
-for the mod itself. Run this tool from the extracted RC4 package, outside the
+for the mod itself. Run this tool from the extracted diagnostic package, outside the
 game directory. In PowerShell, replace the example with your game root:
 
 ```powershell
@@ -40,7 +40,7 @@ actual launch separately.
 
 This embedded tool pins runtime bytes only. It does not accept the earlier
 acceptance kit's `--archive` option: a package cannot contain its own final ZIP
-hash. Verify the downloaded RC4 ZIP separately with its accompanying `.sha256`
+hash. Verify the downloaded diagnostic ZIP separately with its accompanying `.sha256`
 sidecar, for example `Get-FileHash -Algorithm SHA256 <ZIP path>`, and compare the
 full digest. Neither a ZIP match nor an installation match supplies a gameplay
 pass.
@@ -52,7 +52,7 @@ filesystem snapshot. Absolute paths, discovered filenames and raw errors are
 omitted; unexpected names use digest identifiers. A review candidate may require
 manual local directory inspection to locate it.
 
-The included regression tests use temporary directories and the extracted RC4
+The included regression tests use temporary directories and the extracted diagnostic
 runtime as fixture input. Run from the extracted package root:
 
 ```powershell

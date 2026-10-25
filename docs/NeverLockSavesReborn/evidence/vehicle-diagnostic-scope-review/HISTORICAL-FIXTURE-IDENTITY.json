@@ -1,0 +1,42 @@
+[
+  {
+    "fixture": "rc1_scope.json",
+    "byte_identical": true,
+    "sha256": "079fb19e55fa0bdd2b1eb06c5689dc94e147ae9c0f91f2f6bbfa3830419857cc"
+  },
+  {
+    "fixture": "rc2_scope.json",
+    "byte_identical": true,
+    "sha256": "d202c2cc689662de551602bb22f44ae30648f78c142b8c9eeb30b1d1f8edbeb7"
+  },
+  {
+    "fixture": "rc3_scope.json",
+    "byte_identical": true,
+    "sha256": "e4aad12b47ac24688c04275df78a6c428397b10f05a7c666843dd4556b8f394d"
+  },
+  {
+    "fixture": "rc4_scope.json",
+    "byte_identical": true,
+    "sha256": "908bb75db6cfde13f8f0152efb6100851c0c1ef677c9ef0783d19664c900a73f"
+  },
+  {
+    "fixture": "main_config_scope.json",
+    "byte_identical": true,
+    "sha256": "52892b89d459aaddd4c292eb803b11db9ae7e8cb30171bba36a0c9def705caee"
+  },
+  {
+    "fixture": "dependency_scope.json",
+    "byte_identical": true,
+    "sha256": "800711bf66e25163a270e3867a0d2b8957a9bbd4b3e0175401a81f008258741e"
+  },
+  {
+    "fixture": "preserved_preRC1.json",
+    "byte_identical": true,
+    "sha256": "76784d2137c397e0ab33bb018a3b5722117c520b9bb4818b678464531dcf1f39"
+  },
+  {
+    "fixture": "rc5_pools.json",
+    "byte_identical": true,
+    "sha256": "04eb8877224bd34eb7939c1927b0530096a361d271c01b5cd42bd1734b155879"
+  }
+]

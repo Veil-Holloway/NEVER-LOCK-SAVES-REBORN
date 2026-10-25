@@ -1,0 +1,56 @@
+--- rc4/test_smart_queue_routes.py
++++ diagnostic/test_smart_queue_routes.py
+@@ -54,6 +54,11 @@
+             'NLSRebornDeferredIntroComplete', 'NLSRebornDeferredQueue',
+             'NLSRebornDeferredNativeUnlocked', 'NLSRebornDeferredDispatch',
+             'NLSRebornGetDFNotificationContext')}
++        # The native-result diagnostic moves the same request boundary into a
++        # checked helper. Execute it rather than substituting an always-true stub.
++        if 'func NLSRebornRequestCheckpoint(' in source:
++            for name in ('NLSRebornRequestCheckpoint', 'NLSRebornCheckpointFailure'):
++                self.methods[name] = compiler(source, name, self.ns, instance=True)
+         self.hooks = {name: compiler(source, name, self.ns) for name in HOOKS}
+ 
+     def locked(self, game, locks):
+@@ -88,6 +93,10 @@
+               nlsRebornDFNotifyVehicleSleep=True, nlsRebornDFNotifyAddiction=True,
+               nlsRebornDFNotifyStarvation=True, nlsRebornDFNotifyDehydration=True,
+               GetGame=lambda: self.game, NLSRebornGetMode=lambda: s['mode'],
++              nlsCheckpointSerial=0, nlsCheckpointSource=0, nlsCheckpointResult=0,
++              nlsCheckpointLocks='unknown', nlsCheckpointCombat=-1, nlsCheckpointMounted=-1,
++              NLSRebornSaveLockSummary=lambda: 'locked' if s['locked'] else 'unlocked',
++              NLSRebornMountedState=lambda: int(s['mounted']),
+               NLSRebornGetCombat=lambda: s['allow_combat'], NLSRebornGetVehicle=lambda: s['allow_vehicle'],
+               IsInCombat=lambda: s['combat'], NLSRebornGetNotificationsEnabled=lambda: s['master'],
+               NLSRebornGetStatusNotificationsEnabled=lambda: s['status'], NLSRebornGetTone=lambda: s['tone'],
+--- rc4/test_autosave_source.py
++++ diagnostic/test_autosave_source.py
+@@ -13,6 +13,7 @@
+     calls.append('request')
+     if state.get('reenter'):
+         state['reentrant_result']=methods['NLSRebornDeferredDispatch'](state['player'],state['player'].nlsDeferredSerial)
++    return True
+ ns={'__builtins__':{},'IsDefined':lambda v:v is not None,'ArraySize':len,'Equals':lambda a,b:a==b,'NotEquals':lambda a,b:a!=b}
+ ns['GameInstance']=O(
+     GetQuestsSystem=lambda game:None if state['done'] is None else O(GetFact=lambda fact:state['done']),
+@@ -28,6 +29,8 @@
+        'NLSRebornPausedState','NLSRebornMenuState','NLSRebornMountedState','NLSRebornAutosaveSetEnabled',
+        'NLSRebornAutosaveReady','NLSRebornAutosaveQueue','NLSRebornDeferredNativeUnlocked',
+        'NLSRebornDeferredDispatch')
++if 'func NLSRebornRequestCheckpoint(' in source:
++    names += ('NLSRebornRequestCheckpoint','NLSRebornCheckpointFailure')
+ methods={n:compile_function(source,n,ns,instance=True) for n in names}
+ 
+ def fixture(**changes):
+@@ -38,6 +41,11 @@
+              nlsRebornSafetyBlock=state['protected'],nlsDeferredPending=False,nlsDeferredSerial=42,
+              nlsDeferredSource=0,NLSRebornGetMode=lambda:state['mode'],IsInCombat=lambda:state['combat'],
+              NLSRebornNotificationPhoneState=lambda:state['phone'])
++    player.nlsCheckpointSerial=0;player.nlsCheckpointSource=0;player.nlsCheckpointResult=0
++    player.nlsCheckpointLocks='unknown';player.nlsCheckpointCombat=-1;player.nlsCheckpointMounted=-1
++    player.NLSRebornSaveLockSummary=lambda:'locked' if state['locked'] else 'unlocked'
++    player.NLSRebornGetNotificationsEnabled=lambda:False
++    player.NLSRebornGetTone=lambda:0
+     state['player']=player
+     for n,fn in methods.items():
+         setattr(player,n,lambda *args,_fn=fn:_fn(player,*args))

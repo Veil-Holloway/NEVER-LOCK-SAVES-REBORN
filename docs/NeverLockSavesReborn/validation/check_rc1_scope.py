@@ -5,6 +5,7 @@ Byte identity is evidence about source scope, not gameplay or compatibility.
 The original preRC4->preRC3 and preRC3->preRC2 guards remain in force.
 """
 from pathlib import Path
+from check_vehicle_diag_scope import normalized_rc4
 from check_rc2_scope import normalized_rc1
 import hashlib
 import json
@@ -56,7 +57,7 @@ def check(root):
     expected = set(f['label_files']) | set(f['unchanged_files'])
     assert actual == expected, 'Runtime/helper file inventory changed'
     for rel, expected_hash in f['unchanged_files'].items():
-        assert sha((root / rel).read_bytes()) == expected_hash, 'Changed protected RC1 file: ' + rel
+        assert sha(normalized_rc4(root, rel)) == expected_hash, 'Changed protected RC1 file: ' + rel
     print('PASS RC1 source freeze: eight version labels and five adjacent titles only; '
           + str(len(f['unchanged_files'])) + ' whole runtime/helper files unchanged; '
           + str(len(actual)) + ' exact source/helper paths. Source identity only.')

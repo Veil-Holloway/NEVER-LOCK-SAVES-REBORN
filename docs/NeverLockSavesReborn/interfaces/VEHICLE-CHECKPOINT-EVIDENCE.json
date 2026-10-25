@@ -1,0 +1,19 @@
+{
+  "primary_repository": "CDPR-Modding-Documentation/Cyberpunk-Scripts",
+  "commit": "cfcf5071e5363962a44c33cb7cab749688b0ca51",
+  "sources": [
+    {
+      "path": "scripts/core/systems/gameSystem.script",
+      "finding": "gameAutoSaveSystem.RequestForcedCheckpoint(): Bool is imported; no native implementation is available here."
+    },
+    {
+      "path": "scripts/core/entity/gameObject.script",
+      "finding": "OnAutoSaveEvent checks the returned Bool; request acceptance differs from file completion."
+    },
+    {
+      "path": "scripts/core/ui/systemRequestsHandler.script",
+      "finding": "QuickSave and ManualSave declarations expose no force argument."
+    }
+  ],
+  "conclusion": "No alternative supported direct vehicle-combat save bypass established. Capture runtime result; do not infer native rejection solely from a missing menu entry."
+}

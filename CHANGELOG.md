@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+Vehicle-combat saving remains unresolved. See the [diagnostic preview changes](CHANGELOG-VEHICLE-DIAGNOSTIC.1.md) and [test procedure](DIAGNOSTIC-VEHICLE-SAVE.md). No stable promotion.
+
+# Changelog
+
 ## Unreleased — gameplay evidence correction
 
 October 25, 2026 (America/Los_Angeles).

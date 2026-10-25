@@ -6,6 +6,7 @@ Temporary byte edits do not execute REDscript, CET or the game.
 import json
 from check_rc4_scope import exact_candidate_to_rc3, fixture as rc4_fixture, sha as rc4_sha
 from pathlib import Path
+from check_vehicle_diag_scope import normalize_reviewed_files
 import shutil
 import subprocess
 import sys
@@ -48,6 +49,7 @@ with tempfile.TemporaryDirectory(prefix='nlsr-rc3-scope-') as temporary:
         candidate = Path(temporary) / name
         for top in fixture['protected_roots']:
             shutil.copytree(root / top, candidate / top, ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.pyo'))
+        normalize_reviewed_files(candidate)
         # Run the original fourteen controls against an exact recovered RC3 view.
         # No normalization is permitted for partial or modified RC4 files.
         for reviewed_rel, reviewed in rc4_fixture()['changed_files'].items():

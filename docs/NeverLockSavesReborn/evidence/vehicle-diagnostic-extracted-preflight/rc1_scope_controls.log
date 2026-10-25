@@ -1,0 +1,52 @@
+{
+  "scope": "RC1 source-preservation checks only; no game runtime.",
+  "unmodified_candidate": "passed",
+  "negative_controls": [
+    {
+      "control": "mixed_init_version",
+      "rejected": true,
+      "reason": "Unexpected RC1 version count"
+    },
+    {
+      "control": "mixed_init_title",
+      "rejected": true,
+      "reason": "Unexpected RC1 title count"
+    },
+    {
+      "control": "init_nonlabel_change",
+      "rejected": true,
+      "reason": "RC1 source differs from frozen labels"
+    },
+    {
+      "control": "reds_wrong_version",
+      "rejected": true,
+      "reason": "Unexpected RC1 version count"
+    },
+    {
+      "control": "reds_nonlabel_change",
+      "rejected": true,
+      "reason": "RC1 source differs from frozen labels"
+    },
+    {
+      "control": "module_changed",
+      "rejected": true,
+      "reason": "Changed protected RC1 file"
+    },
+    {
+      "control": "companion_changed",
+      "rejected": true,
+      "reason": "Changed protected RC1 file"
+    },
+    {
+      "control": "extra_runtime_file",
+      "rejected": true,
+      "reason": "Runtime/helper file inventory changed"
+    },
+    {
+      "control": "missing_runtime_file",
+      "rejected": true,
+      "reason": "Runtime/helper file inventory changed"
+    }
+  ]
+}
+PASS nine intended RC1 source-freeze mutation controls

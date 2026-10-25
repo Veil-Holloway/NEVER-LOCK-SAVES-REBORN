@@ -66,6 +66,8 @@ def compile_subset(source, name, namespace, *, instance=False):
         if token == '{':
             if pending[:1] == ['if']:
                 header = 'if ' + expression(pending[1:]) + ':'
+            elif pending[:2] == ['else', 'if']:
+                header = 'elif ' + expression(pending[2:]) + ':'
             elif pending[:1] == ['while']:
                 header = 'while ' + expression(pending[1:]) + ':'
             elif pending == ['else']:
@@ -99,7 +101,7 @@ class Runtime:
         self.state = {}
         self.game = Object()
         self.namespace = {'__builtins__': {}, 'IsDefined': lambda value: value is not None,
-                          'ArraySize':len,'NotEquals':lambda a,b:a!=b,
+                          'ArraySize':len,'NotEquals':lambda a,b:a!=b,'Equals':lambda a,b:a==b,
                           'gameSaveLockReason':Object(Combat=1),
                           'VehicleComponent':Object(IsMountedToVehicle=lambda game,player:False)}
         self.namespace['GameInstance'] = Object(
@@ -135,6 +137,10 @@ class Runtime:
             self.set_notifications = compile_subset(source, 'NLSRebornSetDFNotifications', self.namespace, instance=True)
             self.notification_mask = compile_subset(source, 'NLSRebornGetDFNotificationMask', self.namespace, instance=True)
         self.hooks = {name: compile_subset(source, name, self.namespace) for name in HOOKS}
+        self.checkpoint_request = self.checkpoint_failure = None
+        if 'func NLSRebornRequestCheckpoint(' in source:
+            self.checkpoint_request = compile_subset(source, 'NLSRebornRequestCheckpoint', self.namespace, instance=True)
+            self.checkpoint_failure = compile_subset(source, 'NLSRebornCheckpointFailure', self.namespace, instance=True)
 
     def locked(self, game, locks):
         if self.state['locked'] and isinstance(locks,list):
@@ -144,6 +150,7 @@ class Runtime:
     def force(self):
         self.state['forced'] += 1
         self.state['events'].append('forced')
+        return True  # Native boundary double: acceptance, not a file write.
 
     def wrapped(self, *args):
         self.state['wrapped'] += 1
@@ -171,7 +178,15 @@ class Runtime:
             nlsRebornDFStarvationState=-1, nlsRebornDFDehydrationState=-1,
             nlsRebornDFLastReason=-99, nlsRebornDFLastNotificationContext=-99,
             GetGame=lambda: self.game,
+            NLSRebornGetTone=lambda: 0,
+            NLSRebornSaveLockSummary=lambda: 'locked|Combat' if locked else 'unlocked',
+            NLSRebornMountedState=lambda: 0,
+            nlsCheckpointSerial=0, nlsCheckpointSource=0, nlsCheckpointResult=0,
+            nlsCheckpointLocks='unknown', nlsCheckpointCombat=-1, nlsCheckpointMounted=-1,
         )
+        if self.checkpoint_request is not None:
+            player.NLSRebornRequestCheckpoint = lambda source: self.checkpoint_request(player, source)
+            player.NLSRebornCheckpointFailure = lambda: self.checkpoint_failure(player)
         if self.context:
             self.set_notifications(player, *(bool(mask & (1 << index)) for index in range(4)))
             player.NLSRebornGetDFNotificationContext = lambda: self.notification_context(player)

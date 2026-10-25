@@ -6,6 +6,7 @@ Normalization requires a complete pinned RC3 file,
 then reconstructs and hashes the pinned RC2 source. It is not a compiler/runtime.
 """
 from pathlib import Path
+from check_vehicle_diag_scope import normalized_rc4
 from check_rc4_scope import normalized_rc3
 import hashlib
 import json
@@ -58,7 +59,7 @@ def check(root):
     expected = set(f['changed_files']) | set(f['unchanged_files'])
     assert actual == expected, 'RC3 runtime/helper file inventory changed'
     for rel, expected_hash in f['unchanged_files'].items():
-        assert sha((root / rel).read_bytes()) == expected_hash, 'Changed protected RC3 file: ' + rel
+        assert sha(normalized_rc4(root, rel)) == expected_hash, 'Changed protected RC3 file: ' + rel
     print('PASS exact RC3 scope: one Smart request helper, three guarded call sites and eight version labels; '
           + str(len(f['unchanged_files'])) + ' complete runtime/helper files unchanged; '
           + str(len(actual)) + ' exact paths. Source identity only.')

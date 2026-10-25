@@ -2,7 +2,7 @@
 
 I took Never Lock Saves by RalphModding and started updating and expanding it.. added CET controls.. Native Settings support.. and a bridge so CET and redscript can communicate..
 
-**current version is 1.0.0-rc4.. this is a release candidate for testing. actual ingame acceptance is still NOT RUN..** the offline checks passed but save creation.. reloading and quest progression still need to be checked in the game..
+**current branch build is 1.0.0-vehicle-diagnostic.1.. diagnostic developer preview..** vehicle combat shows a notification but the user reports no save ever appears.. this is still unresolved.. this build fixes unchecked request feedback and records the native result and locks.. it does not claim to fix actual saving..
 
 ## thanks Ralph
 
@@ -39,18 +39,18 @@ automatic character profiles.. every owned safehouse and automatic live backups 
 you need **Cyber Engine Tweaks and redscript** for the two runtime halves.. **Native Settings** is optional for its menu.. **Dark Future** is optional for its integration.. install any dependencies those frameworks require separately.. no framework binaries are bundled and no exact supported version combination is claimed yet..
 
 1. close the game.. keep external save copies and your existing Reborn settings..
-2. download `Never_Lock_Saves_Reborn_v1.0.0-rc4_RUNTIME_ONLY.zip` from the [packages folder](packages/) on this fix branch.. [Releases](https://github.com/rbucknell484-ai/NEVER-LOCK-SAVES-REBORN/releases) still holds the published RC3..
+2. download `Never_Lock_Saves_Reborn_v1.0.0-vehicle-diagnostic.1_RUNTIME_ONLY.zip` from [Releases](https://github.com/Veil-Holloway/NEVER-LOCK-SAVES-REBORN/releases).. older packages remain historical..
 3. install with Vortex.. enable one Reborn installation and Deploy.. or copy the complete `bin/` and `r6/` trees to the game root..
-4. launch.. check fresh logs and confirm the panel says `1.0.0-rc4`.. stop at compilation errors before testing saves..
+4. launch.. check fresh logs and confirm the panel says `1.0.0-vehicle-diagnostic.1`.. stop at compilation errors before testing saves..
 
 ## testing and issues
 
-RC4 corrects Unrestricted requests getting trapped in the deferred queue during vehicle combat.. it retains RC3s Smart interaction fix and RC2s autosave-system type correction.. offline checks cover the Unrestricted routing change and retained features.. see the current validation report for the actual results.. those use controlled boundaries.. they are not game tests..
+RC4 removed Unrestricteds queue interception but the user still reports no actual vehicle-combat save.. the earlier success report was withdrawn.. this preview checks native acceptance and captures last-attempt diagnostics.. see [the diagnostic procedure](DIAGNOSTIC-VEHICLE-SAVE.md) and [validation report](VALIDATION-VEHICLE-DIAGNOSTIC.1.md).. those are offline boundaries.. not game tests..
 
 start with an ordinary save.. confirm a new save exists.. reload it and continue gameplay.. then test Smart with Deferred Save ON during an interaction.. wait for native unlock and exactly one checkpoint request before checking save creation and reload separately..
 
-use the [testing checklist](docs/NeverLockSavesReborn/TESTING-CHECKLIST-RC4.md) and record each result.. current ingame cases start NOT RUN..
+use the [testing checklist](docs/NeverLockSavesReborn/TESTING-CHECKLIST-RC4.md) and record each result.. untested cases stay NOT RUN and the reported vehicle-combat failure stays recorded..
 
-for an [issue](https://github.com/rbucknell484-ai/NEVER-LOCK-SAVES-REBORN/issues).. include version.. game/framework versions.. relevant mods.. steps.. expected and actual behavior.. fresh logs and a reviewed support report.. dont post private paths or personal information..
+for an [issue](https://github.com/Veil-Holloway/NEVER-LOCK-SAVES-REBORN/issues).. include version.. game/framework versions.. relevant mods.. steps.. expected and actual behavior.. fresh logs and a reviewed support report.. dont post private paths or personal information..
 
-MIT permission and Ralphs credit stay included.. use the new checksum sidecars for RC4.. the current vehicle-combat fix still needs actual save creation.. reload and progression testing..
+MIT permission and Ralphs credit stay included.. use the checksum sidecars matching the downloaded preview.. actual save creation.. reload and progression still need proof..

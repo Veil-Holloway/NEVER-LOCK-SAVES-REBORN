@@ -9,6 +9,7 @@ import ast
 import hashlib
 import json
 from pathlib import Path
+from check_vehicle_diag_scope import normalized_rc4
 from bounded_source_runner import body
 from check_rc2_scope import normalized_rc1
 
@@ -21,7 +22,7 @@ a=p.parse_args()
 root=a.release.resolve()
 fixture=json.loads((Path(__file__).parent/'fixtures/preserved_preRC1.json').read_text())
 for name,expected in fixture['unchanged_files'].items():
-    assert sha((root/name).read_bytes())==expected, 'Changed protected file: '+name
+    assert sha(normalized_rc4(root,name))==expected, 'Changed protected file: '+name
 source=normalized_rc1(root,fixture['redscript_path']).decode('utf-8').replace('\r\n','\n')
 for name,expected in fixture['redscript_functions'].items():
     assert sha(body(source,name).encode())==expected, 'Changed protected method: '+name

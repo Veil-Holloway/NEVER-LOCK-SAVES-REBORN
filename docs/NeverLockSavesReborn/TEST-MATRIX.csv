@@ -50,3 +50,7 @@ target_release,case,requirement,status,evidence_or_limit,package_sha256,game_bui
 1.0.0-rc4,UNRESTRICTED-IMMEDIATE,"All three user routes, Deferred ON/OFF, immediate checkpoint request with no deferred item",UNTESTED,RC4 changed-path runtime acceptance still required.,,,
 1.0.0-rc4,UNRESTRICTED-STALE,Entering Unrestricted clears old manual work; automatic lane retains native gates; fresh user request takes priority,UNTESTED,RC4 changed-path runtime acceptance still required.,,,
 1.0.0-rc4,UNRESTRICTED-WRITE-RELOAD,"Actual vehicle-combat save creation, reload and quest progression",UNTESTED,RC4 changed-path runtime acceptance still required.,,,
+1.0.0-rc4,UNRESTRICTED-VEHICLE-COMBAT-NO-SAVE,Actual vehicle-combat save appears,USER_REPORTED_FAILURE,"Notification appears but no save ever appears, including after combat. Exact installed fingerprint and settings unknown.",,,
+1.0.0-vehicle-diagnostic.1,DIAG-NATIVE-RESULT,Report captures true/false native result and attempt-time state,UNTESTED,Offline checked; native game result needed.,,,
+1.0.0-vehicle-diagnostic.1,DIAG-REJECTION-FEEDBACK,Rejected requests do not receive accepted feedback or Submitted state,UNTESTED,Offline checked; native game result needed.,,,
+1.0.0-vehicle-diagnostic.1,DIAG-WRITE-RELOAD,Actual vehicle-combat save creation/reload/progression,UNTESTED,No save-creation repair claimed by this diagnostic preview.,,,

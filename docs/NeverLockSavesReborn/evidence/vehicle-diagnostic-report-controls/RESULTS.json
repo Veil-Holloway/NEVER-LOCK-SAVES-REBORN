@@ -1,0 +1,32 @@
+[
+  {
+    "name": "baseline_rc4",
+    "exit_code": 1,
+    "detected": true,
+    "output": "...verLockSavesReborn/validation/test_checkpoint_report.lua:5: checkpoint_attempt section required: nil != table"
+  },
+  {
+    "name": "rejection_promoted_to_acceptance",
+    "exit_code": 1,
+    "detected": true,
+    "output": "...verLockSavesReborn/validation/test_checkpoint_report.lua:5: rejected Boolean false: true != false"
+  },
+  {
+    "name": "malformed_lock_list_accepted",
+    "exit_code": 1,
+    "detected": true,
+    "output": "...verLockSavesReborn/validation/test_checkpoint_report.lua:5: lock known 7: true != false"
+  },
+  {
+    "name": "zero_serial_claimed_observed",
+    "exit_code": 1,
+    "detected": true,
+    "output": "...verLockSavesReborn/validation/test_checkpoint_report.lua:5: zero means no attempt: observed != not_attempted"
+  },
+  {
+    "name": "false_write_claim",
+    "exit_code": 1,
+    "detected": true,
+    "output": "...verLockSavesReborn/validation/test_checkpoint_report.lua:5: missing write unconfirmed: Verified != Unknown"
+  }
+]

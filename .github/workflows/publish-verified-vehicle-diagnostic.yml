@@ -1,0 +1,71 @@
+name: Publish verified vehicle save diagnostic
+
+on:
+  push:
+    branches: [fix/unrestricted-vehicle-combat-rc4]
+    paths: [.github/release-verification/vehicle-diagnostic.1.json]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: vehicle-diagnostic.1-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'Veil-Holloway/NEVER-LOCK-SAVES-REBORN' && github.ref == 'refs/heads/fix/unrestricted-vehicle-combat-rc4'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      DIAGNOSTIC_TAG: v1.0.0-vehicle-diagnostic.1
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Verify explicit Drive receipt and freshly downloaded GitHub draft
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import importlib.util, json, os, pathlib, subprocess
+          spec = importlib.util.spec_from_file_location('diagnostic_builder', '.github/scripts/build_vehicle_diagnostic.py')
+          module = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          receipt = json.loads(pathlib.Path('.github/release-verification/vehicle-diagnostic.1.json').read_text())
+          repo, tag = os.environ['GH_REPO'], os.environ['DIAGNOSTIC_TAG']
+          def api(endpoint):
+              return json.loads(subprocess.check_output(['gh', 'api', f'repos/{repo}/' + endpoint], text=True))
+          release = api('releases/tags/' + tag)
+          if release.get('draft') is not True or release.get('prerelease') is not True:
+              raise SystemExit('Expected a draft prerelease; refusing to edit an existing publication.')
+          ref = api('git/ref/tags/' + tag)
+          if ref.get('object', {}).get('type') != 'commit':
+              raise SystemExit('Expected the original lightweight source tag.')
+          subprocess.run(['gh', 'release', 'download', tag, '--dir', 'publish-readback'], check=True)
+          source = module.verify_release_downloads(receipt, pathlib.Path('publish-readback'), ref['object']['sha'])
+          # The receipt attests to authenticated Drive readback performed by the
+          # operator. This job independently re-verifies GitHub bytes; it never
+          # logs in to Drive or rebuilds/re-tags the source candidate.
+          print('Verified source tag, both GitHub ZIPs, external manifests/checksums, validation asset and matching Drive readback receipt.')
+          print('Verified diagnostic source commit:', source)
+          PY
+      - name: Publish the verified prerelease without marking Latest
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release edit "$DIAGNOSTIC_TAG" --verify-tag --draft=false --prerelease --latest=false
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          repo, tag = os.environ['GH_REPO'], os.environ['DIAGNOSTIC_TAG']
+          receipt = json.loads(pathlib.Path('.github/release-verification/vehicle-diagnostic.1.json').read_text())
+          release = json.loads(subprocess.check_output(['gh', 'api', f'repos/{repo}/releases/tags/{tag}'], text=True))
+          ref = json.loads(subprocess.check_output(['gh', 'api', f'repos/{repo}/git/ref/tags/{tag}'], text=True))
+          if release.get('draft') is not False or release.get('prerelease') is not True or ref.get('object', {}).get('sha') != receipt['source_commit']:
+              raise SystemExit('Publication readback failed.')
+          print('Published experimental diagnostic prerelease:', release['html_url'])
+          PY

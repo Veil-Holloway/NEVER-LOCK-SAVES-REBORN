@@ -1,0 +1,1 @@
+PASS source regression: verified gameAutoSaveSystem types, service fail-closed guards, consume-before-shared-request ordering and checked single native Bool seam. Not a REDscript compiler pass.

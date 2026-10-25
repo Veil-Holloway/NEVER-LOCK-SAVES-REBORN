@@ -6,6 +6,7 @@ pinned RC3 bytes; mutations must reach and fail previous preservation guards.
 This verifies source identity, not compilation, checkpoint acceptance or gameplay.
 """
 from pathlib import Path
+from check_vehicle_diag_scope import normalized_rc4
 import hashlib
 import json
 import sys
@@ -23,7 +24,7 @@ def sha(data):
 
 def exact_candidate_to_rc3(root, rel):
     spec = fixture()['changed_files'][rel]
-    data = (root / rel).read_bytes()
+    data = normalized_rc4(root, rel)
     assert sha(data) == spec['candidate_sha256'], 'RC4 source differs outside reviewed Unrestricted routing/cleanup: ' + rel
     lines = data.decode('utf-8').splitlines(keepends=True)
     for splice in reversed(spec['splices']):
@@ -38,7 +39,7 @@ def exact_candidate_to_rc3(root, rel):
 def normalized_rc3(root, rel):
     """Only complete exact RC4 files are adapted; every other edit stays visible."""
     spec = fixture()['changed_files'].get(rel)
-    data = (root / rel).read_bytes()
+    data = normalized_rc4(root, rel)
     if spec and sha(data) == spec['candidate_sha256']:
         return exact_candidate_to_rc3(root, rel)
     return data
@@ -57,7 +58,7 @@ def check(root):
     expected = set(f['changed_files']) | set(f['unchanged_files'])
     assert actual == expected, 'RC4 runtime/helper file inventory changed'
     for rel, expected_hash in f['unchanged_files'].items():
-        assert sha((root / rel).read_bytes()) == expected_hash, 'Changed protected RC4 file: ' + rel
+        assert sha(normalized_rc4(root, rel)) == expected_hash, 'Changed protected RC4 file: ' + rel
     print('PASS exact RC4 scope: Unrestricted manual admission/cleanup and valid-mode manual cancellation; '
           'eight version labels and one CET help string; '
           + str(len(f['unchanged_files'])) + ' complete runtime/helper files unchanged; '

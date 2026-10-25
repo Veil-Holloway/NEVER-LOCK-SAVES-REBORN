@@ -6,6 +6,7 @@ Only complete pinned RC3/RC2 files may be normalized for earlier preservation gu
 The RC3 adapter first proves exact reviewed Smart routing and recovers pinned RC2 bytes.
 """
 from pathlib import Path
+from check_vehicle_diag_scope import normalized_rc4
 from check_rc3_scope import normalized_rc2
 import hashlib
 import json
@@ -64,7 +65,7 @@ def check(root):
     expected = set(f['label_files']) | set(f['unchanged_files'])
     assert actual == expected, 'RC2 runtime/helper file inventory changed'
     for rel, expected_hash in f['unchanged_files'].items():
-        assert sha((root / rel).read_bytes()) == expected_hash, 'Changed protected RC2 file: ' + rel
+        assert sha(normalized_rc4(root, rel)) == expected_hash, 'Changed protected RC2 file: ' + rel
     print('PASS exact RC1 preservation: one autosave type annotation and eight version labels only; '
           + str(len(f['unchanged_files'])) + ' whole runtime/helper files unchanged; '
           + str(len(actual)) + ' exact protected paths. Source identity only.')

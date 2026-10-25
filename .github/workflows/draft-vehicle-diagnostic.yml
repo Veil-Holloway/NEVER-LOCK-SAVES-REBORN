@@ -1,0 +1,81 @@
+name: Draft vehicle save diagnostic
+
+on:
+  push:
+    branches: [fix/unrestricted-vehicle-combat-rc4]
+    paths: [.github/workflows/draft-vehicle-diagnostic.yml]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: vehicle-diagnostic.1-release
+  cancel-in-progress: false
+
+jobs:
+  draft:
+    if: github.repository == 'Veil-Holloway/NEVER-LOCK-SAVES-REBORN' && github.ref == 'refs/heads/fix/unrestricted-vehicle-combat-rc4'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      DIAGNOSTIC_TAG: v1.0.0-vehicle-diagnostic.1
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Build and verify deterministic installable assets
+        run: python3 .github/scripts/build_vehicle_diagnostic.py --source . --commit "$GITHUB_SHA" --output dist
+      - name: Create immutable source tag and draft prerelease
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view "$DIAGNOSTIC_TAG" >/dev/null 2>&1; then
+            echo "Release already exists; refusing to overwrite or replace its assets."
+            exit 1
+          fi
+          python3 - <<'PY'
+          import json, os, subprocess
+          sha, repo, tag = os.environ['GITHUB_SHA'], os.environ['GH_REPO'], os.environ['DIAGNOSTIC_TAG']
+          endpoint = f'repos/{repo}/git/ref/tags/{tag}'
+          result = subprocess.run(['gh', 'api', endpoint], text=True, capture_output=True)
+          if result.returncode:
+              subprocess.run(['gh', 'api', '--method', 'POST', f'repos/{repo}/git/refs', '-f', f'ref=refs/tags/{tag}', '-f', f'sha={sha}'], check=True, stdout=subprocess.DEVNULL)
+          ref = json.loads(subprocess.check_output(['gh', 'api', endpoint], text=True))
+          if ref.get('object', {}).get('type') != 'commit' or ref['object']['sha'] != sha:
+              raise SystemExit('Existing tag targets different bytes; refusing tag mutation.')
+          PY
+          cp RELEASE-NOTES-VEHICLE-DIAGNOSTIC.1.md draft-notes.md
+          printf '\nSource commit: `%s`\nTag: `%s`\n' "$GITHUB_SHA" "$DIAGNOSTIC_TAG" >> draft-notes.md
+          gh release create "$DIAGNOSTIC_TAG" dist/* \
+            --verify-tag --target "$GITHUB_SHA" --draft --prerelease --latest=false \
+            --title "Vehicle save diagnostics.. 1.0.0-vehicle-diagnostic.1 (experimental)" \
+            --notes-file draft-notes.md
+      - name: Download actual draft assets and compare every byte
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release download "$DIAGNOSTIC_TAG" --dir draft-readback
+          python3 - <<'PY'
+          import hashlib, importlib.util, json, os, pathlib, subprocess
+          spec = importlib.util.spec_from_file_location('diagnostic_builder', '.github/scripts/build_vehicle_diagnostic.py')
+          module = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          expected, actual = pathlib.Path('dist'), pathlib.Path('draft-readback')
+          if {p.name for p in expected.iterdir()} != {p.name for p in actual.iterdir()}:
+              raise SystemExit('Draft asset inventory differs from local build.')
+          for path in expected.iterdir():
+              if path.read_bytes() != (actual / path.name).read_bytes():
+                  raise SystemExit('Draft download differs: ' + path.name)
+          module.verify_archive(actual / module.FULL_ZIP, os.environ['GITHUB_SHA'], 'full_source')
+          module.verify_archive(actual / module.RUNTIME_ZIP, os.environ['GITHUB_SHA'], 'runtime_only')
+          release = json.loads(subprocess.check_output(['gh', 'api', f"repos/{os.environ['GH_REPO']}/releases/tags/{os.environ['DIAGNOSTIC_TAG']}"], text=True))
+          if release.get('draft') is not True or release.get('prerelease') is not True:
+              raise SystemExit('Expected an unpublished draft prerelease.')
+          print('Verified all seven downloaded draft assets. Publication remains pending authenticated Drive readback.')
+          for path in sorted(actual.iterdir()):
+              print(hashlib.sha256(path.read_bytes()).hexdigest(), path.name)
+          PY

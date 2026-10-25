@@ -1,4 +1,4 @@
-// v1.0.0-rc4 Release Candidate. Deferred/autosave lanes are opt-in.
+// v1.0.0-vehicle-diagnostic.1 Release Candidate. Deferred/autosave lanes are opt-in.
 // Engine native saving-unlocked state is the release gate; this does not
 // guarantee that a quest or phone conversation serializes correctly.
 @addField(PlayerPuppet) public let nlsDeferredEnabled: Bool = false;
@@ -85,6 +85,74 @@ public final func NLSRebornSaveLockSummary() -> String {
   };
   return result;
 }
+// Bounded last-attempt diagnostics. Native acceptance is not save completion.
+@addField(PlayerPuppet) private let nlsCheckpointSerial: Int32 = 0;
+@addField(PlayerPuppet) private let nlsCheckpointSource: Int32 = 0;
+@addField(PlayerPuppet) private let nlsCheckpointResult: Int32 = 0;
+@addField(PlayerPuppet) private let nlsCheckpointLocks: String = "unknown";
+@addField(PlayerPuppet) private let nlsCheckpointCombat: Int32 = -1;
+@addField(PlayerPuppet) private let nlsCheckpointMounted: Int32 = -1;
+@addMethod(PlayerPuppet)
+public final func NLSRebornCheckpointGetSerial() -> Int32 { return this.nlsCheckpointSerial; }
+@addMethod(PlayerPuppet)
+public final func NLSRebornCheckpointGetSource() -> Int32 { return this.nlsCheckpointSource; }
+@addMethod(PlayerPuppet)
+public final func NLSRebornCheckpointGetResult() -> Int32 { return this.nlsCheckpointResult; }
+@addMethod(PlayerPuppet)
+public final func NLSRebornCheckpointGetLocks() -> String { return this.nlsCheckpointLocks; }
+@addMethod(PlayerPuppet)
+public final func NLSRebornCheckpointGetCombat() -> Int32 { return this.nlsCheckpointCombat; }
+@addMethod(PlayerPuppet)
+public final func NLSRebornCheckpointGetMounted() -> Int32 { return this.nlsCheckpointMounted; }
+@addMethod(PlayerPuppet)
+public final func NLSRebornCheckpointFailure() -> Void {
+  if !this.NLSRebornGetNotificationsEnabled() { return; };
+  let message: String = "The game rejected the checkpoint request. No save confirmed.";
+  let tone: Int32 = this.NLSRebornGetTone();
+  if tone == 1 { message = "The game rejected the checkpoint request. Apparently a popup cannot save you."; };
+  if tone == 2 { message = "The game rejected the fucking checkpoint request. No save confirmed."; };
+  if this.nlsCheckpointResult == 3 {
+    message = "Checkpoint service unavailable. No save requested.";
+    if tone == 1 { message = "The checkpoint service did not show up for work. No save requested."; };
+    if tone == 2 { message = "The checkpoint service is fucking unavailable. No save requested."; };
+  };
+  if this.nlsCheckpointResult == 4 {
+    message = "Checkpoint request blocked by protection or invalid source. No save requested.";
+    if tone == 1 { message = "Checkpoint protection still has the keys. No save requested."; };
+    if tone == 2 { message = "Checkpoint protection blocked this damn request. No save requested."; };
+  };
+  PauseMenuGameController.NLSRebornNotify(this.GetGame(), message);
+}
+@addMethod(PlayerPuppet)
+public final func NLSRebornRequestCheckpoint(source: Int32) -> Bool {
+  if this.nlsCheckpointSerial < 2147483647 { this.nlsCheckpointSerial += 1; }
+  else { this.nlsCheckpointSerial = 1; };
+  this.nlsCheckpointSource = source;
+  this.nlsCheckpointResult = 0;
+  this.nlsCheckpointLocks = this.NLSRebornSaveLockSummary();
+  this.nlsCheckpointCombat = 0;
+  if this.IsInCombat() { this.nlsCheckpointCombat = 1; };
+  this.nlsCheckpointMounted = this.NLSRebornMountedState();
+  if (source != 1 && source != 2 && source != 3) || this.nlsRebornSafetyBlock || !this.NLSRebornDeferredIntroComplete() {
+    this.nlsCheckpointResult = 4;
+    this.NLSRebornCheckpointFailure();
+    return false;
+  };
+  let autosave: ref<gameAutoSaveSystem> = GameInstance.GetAutoSaveSystem(this.GetGame());
+  if !IsDefined(autosave) {
+    this.nlsCheckpointResult = 3;
+    this.NLSRebornCheckpointFailure();
+    return false;
+  };
+  if !autosave.RequestForcedCheckpoint() {
+    this.nlsCheckpointResult = 2;
+    this.NLSRebornCheckpointFailure();
+    return false;
+  };
+  this.nlsCheckpointResult = 1;
+  return true; // native accepted a request; written/reload status remains unknown
+}
+
 @addMethod(PlayerPuppet)
 public final func NLSRebornApartmentState() -> Int32 {
   let systems: ref<ScriptableSystemsContainer> = GameInstance.GetScriptableSystemsContainer(this.GetGame());
@@ -177,12 +245,12 @@ public final func NLSRebornDeferredDispatch(expectedSerial: Int32) -> Bool {
   let autosave: ref<gameAutoSaveSystem> = GameInstance.GetAutoSaveSystem(this.GetGame());
   if !IsDefined(autosave) { return false; };
   this.nlsDeferredPending = false; // clear before dispatch to prevent duplicates
-  autosave.RequestForcedCheckpoint();
+  if !this.NLSRebornRequestCheckpoint(this.nlsDeferredSource) { return false; };
   let context: Int32 = NLSRebornPolicy.GetImmersionSaveContext(this.GetGame());
   if context > 0 {
     NLSRebornPolicy.NotifyImmersionSaveRequest(this.GetGame(), context, true);
-  } else {
-    PauseMenuGameController.NLSRebornNotify(this.GetGame(), NLSRebornPolicy.CheckpointMessage(this.GetGame(), -1));
+  } else if this.NLSRebornGetNotificationsEnabled() {
+    PauseMenuGameController.NLSRebornNotify(this.GetGame(), NLSRebornPolicy.CheckpointMessage(this.GetGame(), -1) + " (Request accepted; save creation unconfirmed.)");
   };
   return true; // request submitted, NOT save completion
 }
@@ -449,7 +517,7 @@ public final func NLSRebornGetNotificationDiagnostics() -> String { return this.
 public final func NLSRebornGetNotificationCategory() -> Int32 { return NLSRebornPolicy.NotificationContext(this.GetGame()); }
 
 public class NLSRebornPolicy {
-  public static func Version() -> String { return "1.0.0-rc4"; }
+  public static func Version() -> String { return "1.0.0-vehicle-diagnostic.1"; }
   public static func ShuffleSlot(index: Int32, seed: Int32) -> Int32 {
     let cycle: Int32 = index / 20;
     let turn: Int32 = index % 20;
@@ -1877,7 +1945,9 @@ public class NLSRebornPolicy {
     let notificationContext: Int32 = player.NLSRebornGetDFNotificationContext();
     player.nlsRebornDFLastNotificationContext = notificationContext;
     if notificationContext <= 0 { return; };
-    PauseMenuGameController.NLSRebornNotify(game, NLSRebornDFMessages.Message(game, notificationContext, checkpoint));
+    let message: String = NLSRebornDFMessages.Message(game, notificationContext, checkpoint);
+    if checkpoint && !Equals(message, "") { message = message + " (Request accepted; save creation unconfirmed.)"; };
+    PauseMenuGameController.NLSRebornNotify(game, message);
   }
   public static func IsProtectedIntroduction(game: GameInstance) -> Bool {
     let player: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(game).GetLocalPlayerControlledGameObject() as PlayerPuppet;
@@ -1987,11 +2057,11 @@ private final func HandlePressToSaveGame(target: wref<inkWidget>) -> Void {
         if queuePlayer.NLSRebornGetNotificationsEnabled() && !queuePlayer.NLSRebornGetStatusNotificationsEnabled() { PauseMenuGameController.NLSRebornNotify(this.m_gameInstance, "Save queued until normal saving is available."); };
         return;
       };
-      GameInstance.GetAutoSaveSystem(this.m_gameInstance).RequestForcedCheckpoint();
+      if !IsDefined(queuePlayer) || !queuePlayer.NLSRebornRequestCheckpoint(1) { return; };
       if dfContext > 0 {
         NLSRebornPolicy.NotifyImmersionSaveRequest(this.m_gameInstance, dfContext, true);
-      } else {
-        PauseMenuGameController.NLSRebornNotify(this.m_gameInstance, NLSRebornPolicy.CheckpointMessage(this.m_gameInstance, -1));
+      } else if queuePlayer.NLSRebornGetNotificationsEnabled() {
+        PauseMenuGameController.NLSRebornNotify(this.m_gameInstance, NLSRebornPolicy.CheckpointMessage(this.m_gameInstance, -1) + " (Request accepted; save creation unconfirmed.)");
       };
     } else {
       if NLSRebornPolicy.IsProtectedIntroduction(this.m_gameInstance) {
@@ -2020,11 +2090,11 @@ private final func HandlePressToQuickSaveGame() -> Void {
         if queuePlayer.NLSRebornGetNotificationsEnabled() && !queuePlayer.NLSRebornGetStatusNotificationsEnabled() { PauseMenuGameController.NLSRebornNotify(this.m_gameInstance, "Quicksave queued until normal saving is available."); };
         return;
       };
-      GameInstance.GetAutoSaveSystem(this.m_gameInstance).RequestForcedCheckpoint();
+      if !IsDefined(queuePlayer) || !queuePlayer.NLSRebornRequestCheckpoint(2) { return; };
       if dfContext > 0 {
         NLSRebornPolicy.NotifyImmersionSaveRequest(this.m_gameInstance, dfContext, true);
-      } else {
-        PauseMenuGameController.NLSRebornNotify(this.m_gameInstance, NLSRebornPolicy.CheckpointMessage(this.m_gameInstance, -1));
+      } else if queuePlayer.NLSRebornGetNotificationsEnabled() {
+        PauseMenuGameController.NLSRebornNotify(this.m_gameInstance, NLSRebornPolicy.CheckpointMessage(this.m_gameInstance, -1) + " (Request accepted; save creation unconfirmed.)");
       };
     };
     return;
@@ -2055,11 +2125,11 @@ private final func HandleQuickSave() -> Void {
         if queuePlayer.NLSRebornGetNotificationsEnabled() && !queuePlayer.NLSRebornGetStatusNotificationsEnabled() { PauseMenuGameController.NLSRebornNotify(this.GetPlayerControlledObject().GetGame(), "Quicksave queued until normal saving is available."); };
         return;
       };
-      GameInstance.GetAutoSaveSystem(this.GetPlayerControlledObject().GetGame()).RequestForcedCheckpoint();
+      if !IsDefined(queuePlayer) || !queuePlayer.NLSRebornRequestCheckpoint(2) { return; };
       if dfContext > 0 {
         NLSRebornPolicy.NotifyImmersionSaveRequest(this.GetPlayerControlledObject().GetGame(), dfContext, true);
-      } else {
-        PauseMenuGameController.NLSRebornNotify(this.GetPlayerControlledObject().GetGame(), NLSRebornPolicy.CheckpointMessage(this.GetPlayerControlledObject().GetGame(), -1));
+      } else if queuePlayer.NLSRebornGetNotificationsEnabled() {
+        PauseMenuGameController.NLSRebornNotify(this.GetPlayerControlledObject().GetGame(), NLSRebornPolicy.CheckpointMessage(this.GetPlayerControlledObject().GetGame(), -1) + " (Request accepted; save creation unconfirmed.)");
       };
     };
     return;

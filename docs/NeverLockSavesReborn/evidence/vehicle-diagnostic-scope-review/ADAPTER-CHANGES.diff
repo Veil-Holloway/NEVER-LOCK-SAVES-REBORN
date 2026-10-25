@@ -1,0 +1,258 @@
+--- RC4/check_rc4_scope.py
++++ diagnostic/check_rc4_scope.py
+@@ -6,6 +6,7 @@
+ This verifies source identity, not compilation, checkpoint acceptance or gameplay.
+ """
+ from pathlib import Path
++from check_vehicle_diag_scope import normalized_rc4
+ import hashlib
+ import json
+ import sys
+@@ -23,7 +24,7 @@
+ 
+ def exact_candidate_to_rc3(root, rel):
+     spec = fixture()['changed_files'][rel]
+-    data = (root / rel).read_bytes()
++    data = normalized_rc4(root, rel)
+     assert sha(data) == spec['candidate_sha256'], 'RC4 source differs outside reviewed Unrestricted routing/cleanup: ' + rel
+     lines = data.decode('utf-8').splitlines(keepends=True)
+     for splice in reversed(spec['splices']):
+@@ -38,7 +39,7 @@
+ def normalized_rc3(root, rel):
+     """Only complete exact RC4 files are adapted; every other edit stays visible."""
+     spec = fixture()['changed_files'].get(rel)
+-    data = (root / rel).read_bytes()
++    data = normalized_rc4(root, rel)
+     if spec and sha(data) == spec['candidate_sha256']:
+         return exact_candidate_to_rc3(root, rel)
+     return data
+@@ -57,7 +58,7 @@
+     expected = set(f['changed_files']) | set(f['unchanged_files'])
+     assert actual == expected, 'RC4 runtime/helper file inventory changed'
+     for rel, expected_hash in f['unchanged_files'].items():
+-        assert sha((root / rel).read_bytes()) == expected_hash, 'Changed protected RC4 file: ' + rel
++        assert sha(normalized_rc4(root, rel)) == expected_hash, 'Changed protected RC4 file: ' + rel
+     print('PASS exact RC4 scope: Unrestricted manual admission/cleanup and valid-mode manual cancellation; '
+           'eight version labels and one CET help string; '
+           + str(len(f['unchanged_files'])) + ' complete runtime/helper files unchanged; '
+--- RC4/check_rc3_scope.py
++++ diagnostic/check_rc3_scope.py
+@@ -6,6 +6,7 @@
+ then reconstructs and hashes the pinned RC2 source. It is not a compiler/runtime.
+ """
+ from pathlib import Path
++from check_vehicle_diag_scope import normalized_rc4
+ from check_rc4_scope import normalized_rc3
+ import hashlib
+ import json
+@@ -58,7 +59,7 @@
+     expected = set(f['changed_files']) | set(f['unchanged_files'])
+     assert actual == expected, 'RC3 runtime/helper file inventory changed'
+     for rel, expected_hash in f['unchanged_files'].items():
+-        assert sha((root / rel).read_bytes()) == expected_hash, 'Changed protected RC3 file: ' + rel
++        assert sha(normalized_rc4(root, rel)) == expected_hash, 'Changed protected RC3 file: ' + rel
+     print('PASS exact RC3 scope: one Smart request helper, three guarded call sites and eight version labels; '
+           + str(len(f['unchanged_files'])) + ' complete runtime/helper files unchanged; '
+           + str(len(actual)) + ' exact paths. Source identity only.')
+--- RC4/check_rc2_scope.py
++++ diagnostic/check_rc2_scope.py
+@@ -6,6 +6,7 @@
+ The RC3 adapter first proves exact reviewed Smart routing and recovers pinned RC2 bytes.
+ """
+ from pathlib import Path
++from check_vehicle_diag_scope import normalized_rc4
+ from check_rc3_scope import normalized_rc2
+ import hashlib
+ import json
+@@ -64,7 +65,7 @@
+     expected = set(f['label_files']) | set(f['unchanged_files'])
+     assert actual == expected, 'RC2 runtime/helper file inventory changed'
+     for rel, expected_hash in f['unchanged_files'].items():
+-        assert sha((root / rel).read_bytes()) == expected_hash, 'Changed protected RC2 file: ' + rel
++        assert sha(normalized_rc4(root, rel)) == expected_hash, 'Changed protected RC2 file: ' + rel
+     print('PASS exact RC1 preservation: one autosave type annotation and eight version labels only; '
+           + str(len(f['unchanged_files'])) + ' whole runtime/helper files unchanged; '
+           + str(len(actual)) + ' exact protected paths. Source identity only.')
+--- RC4/check_rc1_scope.py
++++ diagnostic/check_rc1_scope.py
+@@ -5,6 +5,7 @@
+ The original preRC4->preRC3 and preRC3->preRC2 guards remain in force.
+ """
+ from pathlib import Path
++from check_vehicle_diag_scope import normalized_rc4
+ from check_rc2_scope import normalized_rc1
+ import hashlib
+ import json
+@@ -56,7 +57,7 @@
+     expected = set(f['label_files']) | set(f['unchanged_files'])
+     assert actual == expected, 'Runtime/helper file inventory changed'
+     for rel, expected_hash in f['unchanged_files'].items():
+-        assert sha((root / rel).read_bytes()) == expected_hash, 'Changed protected RC1 file: ' + rel
++        assert sha(normalized_rc4(root, rel)) == expected_hash, 'Changed protected RC1 file: ' + rel
+     print('PASS RC1 source freeze: eight version labels and five adjacent titles only; '
+           + str(len(f['unchanged_files'])) + ' whole runtime/helper files unchanged; '
+           + str(len(actual)) + ' exact source/helper paths. Source identity only.')
+--- RC4/check_preserved_scope.py
++++ diagnostic/check_preserved_scope.py
+@@ -9,6 +9,7 @@
+ import hashlib
+ import json
+ from pathlib import Path
++from check_vehicle_diag_scope import normalized_rc4
+ from bounded_source_runner import body
+ from check_rc2_scope import normalized_rc1
+ 
+@@ -21,7 +22,7 @@
+ root=a.release.resolve()
+ fixture=json.loads((Path(__file__).parent/'fixtures/preserved_preRC1.json').read_text())
+ for name,expected in fixture['unchanged_files'].items():
+-    assert sha((root/name).read_bytes())==expected, 'Changed protected file: '+name
++    assert sha(normalized_rc4(root,name))==expected, 'Changed protected file: '+name
+ source=normalized_rc1(root,fixture['redscript_path']).decode('utf-8').replace('\r\n','\n')
+ for name,expected in fixture['redscript_functions'].items():
+     assert sha(body(source,name).encode())==expected, 'Changed protected method: '+name
+--- RC4/check_dependency_scope.py
++++ diagnostic/check_dependency_scope.py
+@@ -1,6 +1,7 @@
+ #!/usr/bin/env python3
+ """Exact preRC3 identity outside the new on-demand diagnostic seams."""
+ from pathlib import Path
++from check_vehicle_diag_scope import normalized_rc4
+ from check_rc1_scope import normalized_pre_rc4
+ import hashlib,json,sys
+ FIXTURE=Path(__file__).parent/'fixtures/dependency_scope.json'
+@@ -20,7 +21,7 @@
+  b=b.replace(b'0.14.0-preRC4',b'0.14.0-preRC3');assert sha(b)==f['baseline_hashes'][f['redscript_path']],'Unrelated REDS source changed';return b
+ 
+ def normalized_report(root):
+- f=fixture();b=(root/f['report_path']).read_bytes();start=b.index(b'local DEPENDENCY_KEYS=');end=b.index(b'local function tri(',start)
++ f=fixture();b=normalized_rc4(root,f['report_path']);start=b.index(b'local DEPENDENCY_KEYS=');end=b.index(b'local function tri(',start)
+  assert sha(b[start:end])==f['report_block_sha256'],'Evidence helper differs from reviewed source';b=b[:start]+b[end:]
+  before=b"  for _,key in ipairs(DEPENDENCY_KEYS) do report.dependencies[key]=version(deps[key]) end\n  report.dependency_evidence=dependencyEvidence(s.dependencyEvidence,report.dependencies)\n"
+  after=b"  for _,key in ipairs({'cet','redscript','red4ext','nativeSettings','darkFuture'}) do report.dependencies[key]=version(deps[key]) end\n"
+--- RC4/run_rc4_scope_controls.py
++++ diagnostic/run_rc4_scope_controls.py
+@@ -5,6 +5,7 @@
+ """
+ import json
+ from pathlib import Path
++from check_vehicle_diag_scope import normalize_reviewed_files
+ import shutil
+ import subprocess
+ import sys
+@@ -49,6 +50,7 @@
+         candidate = Path(temporary) / name
+         for top in fixture['protected_roots']:
+             shutil.copytree(root / top, candidate / top, ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.pyo'))
++        normalize_reviewed_files(candidate)
+         path = candidate / rel
+         if before == b'__REMOVE_FILE__':
+             path.unlink()
+--- RC4/run_rc3_scope_controls.py
++++ diagnostic/run_rc3_scope_controls.py
+@@ -6,6 +6,7 @@
+ import json
+ from check_rc4_scope import exact_candidate_to_rc3, fixture as rc4_fixture, sha as rc4_sha
+ from pathlib import Path
++from check_vehicle_diag_scope import normalize_reviewed_files
+ import shutil
+ import subprocess
+ import sys
+@@ -48,6 +49,7 @@
+         candidate = Path(temporary) / name
+         for top in fixture['protected_roots']:
+             shutil.copytree(root / top, candidate / top, ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.pyo'))
++        normalize_reviewed_files(candidate)
+         # Run the original fourteen controls against an exact recovered RC3 view.
+         # No normalization is permitted for partial or modified RC4 files.
+         for reviewed_rel, reviewed in rc4_fixture()['changed_files'].items():
+--- RC4/check_autosave_type_contract.py
++++ diagnostic/check_autosave_type_contract.py
+@@ -21,7 +21,15 @@
+ assert declarations == [spec['verified_type']], 'Autosave getter annotation must resolve to verified native gameAutoSaveSystem; found ' + repr(declarations)
+ assert 'ref<AutoSaveSystem>' not in data, 'Reported unresolved AutoSaveSystem type remains'
+ assert body.count('if !IsDefined(autosave) { return false; };') == 1, 'Service absence must remain fail-closed'
+-assert body.count('autosave.RequestForcedCheckpoint();') == 1, 'Expected one checkpoint submission'
+-assert body.index('if !IsDefined(autosave) { return false; };') < body.index('this.nlsDeferredPending = false;') < body.index('autosave.RequestForcedCheckpoint();'), 'Service guard/one-shot submission order changed'
++assert body.count('if !this.NLSRebornRequestCheckpoint(this.nlsDeferredSource) { return false; };') == 1, 'Deferred dispatch must propagate checkpoint request rejection'
++assert body.index('if !IsDefined(autosave) { return false; };') < body.index('this.nlsDeferredPending = false;') < body.index('this.NLSRebornRequestCheckpoint('), 'Service guard/one-shot submission order changed'
+ assert body.index('this.NLSRebornDeferredNativeUnlocked()') < body.index('GameInstance.GetAutoSaveSystem'), 'Native dispatch guard must precede service query'
+-print('PASS source regression: verified gameAutoSaveSystem annotation, service fail-closed guard and one-shot order retained. Not a REDscript compiler pass.')
++helper_match = re.search(r'public final func NLSRebornRequestCheckpoint\(source: Int32\) -> Bool \{(.*?)\n\}', data, re.S)
++assert helper_match, 'Shared checkpoint request helper missing'
++helper = helper_match.group(1)
++assert re.findall(r'let autosave: ref<([^>]+)> = GameInstance\.GetAutoSaveSystem\(this\.GetGame\(\)\);', helper) == [spec['verified_type']], 'Shared helper must use verified gameAutoSaveSystem type'
++assert data.count('autosave.RequestForcedCheckpoint()') == 1, 'Expected exactly one native checkpoint seam'
++assert helper.count('if !autosave.RequestForcedCheckpoint() {') == 1, 'Native Bool result must be tested'
++assert helper.index('if !IsDefined(autosave) {') < helper.index('autosave.RequestForcedCheckpoint()'), 'Shared service guard must precede native call'
++assert helper.index('this.nlsCheckpointResult = 2;') < helper.index('this.nlsCheckpointResult = 1;'), 'Native rejection and acceptance states missing'
++print('PASS source regression: verified gameAutoSaveSystem types, service fail-closed guards, consume-before-shared-request ordering and checked single native Bool seam. Not a REDscript compiler pass.')
+--- RC4/bounded_source_runner.py
++++ diagnostic/bounded_source_runner.py
+@@ -66,6 +66,8 @@
+         if token == '{':
+             if pending[:1] == ['if']:
+                 header = 'if ' + expression(pending[1:]) + ':'
++            elif pending[:2] == ['else', 'if']:
++                header = 'elif ' + expression(pending[2:]) + ':'
+             elif pending[:1] == ['while']:
+                 header = 'while ' + expression(pending[1:]) + ':'
+             elif pending == ['else']:
+@@ -99,7 +101,7 @@
+         self.state = {}
+         self.game = Object()
+         self.namespace = {'__builtins__': {}, 'IsDefined': lambda value: value is not None,
+-                          'ArraySize':len,'NotEquals':lambda a,b:a!=b,
++                          'ArraySize':len,'NotEquals':lambda a,b:a!=b,'Equals':lambda a,b:a==b,
+                           'gameSaveLockReason':Object(Combat=1),
+                           'VehicleComponent':Object(IsMountedToVehicle=lambda game,player:False)}
+         self.namespace['GameInstance'] = Object(
+@@ -135,6 +137,10 @@
+             self.set_notifications = compile_subset(source, 'NLSRebornSetDFNotifications', self.namespace, instance=True)
+             self.notification_mask = compile_subset(source, 'NLSRebornGetDFNotificationMask', self.namespace, instance=True)
+         self.hooks = {name: compile_subset(source, name, self.namespace) for name in HOOKS}
++        self.checkpoint_request = self.checkpoint_failure = None
++        if 'func NLSRebornRequestCheckpoint(' in source:
++            self.checkpoint_request = compile_subset(source, 'NLSRebornRequestCheckpoint', self.namespace, instance=True)
++            self.checkpoint_failure = compile_subset(source, 'NLSRebornCheckpointFailure', self.namespace, instance=True)
+ 
+     def locked(self, game, locks):
+         if self.state['locked'] and isinstance(locks,list):
+@@ -144,6 +150,7 @@
+     def force(self):
+         self.state['forced'] += 1
+         self.state['events'].append('forced')
++        return True  # Native boundary double: acceptance, not a file write.
+ 
+     def wrapped(self, *args):
+         self.state['wrapped'] += 1
+@@ -171,7 +178,15 @@
+             nlsRebornDFStarvationState=-1, nlsRebornDFDehydrationState=-1,
+             nlsRebornDFLastReason=-99, nlsRebornDFLastNotificationContext=-99,
+             GetGame=lambda: self.game,
++            NLSRebornGetTone=lambda: 0,
++            NLSRebornSaveLockSummary=lambda: 'locked|Combat' if locked else 'unlocked',
++            NLSRebornMountedState=lambda: 0,
++            nlsCheckpointSerial=0, nlsCheckpointSource=0, nlsCheckpointResult=0,
++            nlsCheckpointLocks='unknown', nlsCheckpointCombat=-1, nlsCheckpointMounted=-1,
+         )
++        if self.checkpoint_request is not None:
++            player.NLSRebornRequestCheckpoint = lambda source: self.checkpoint_request(player, source)
++            player.NLSRebornCheckpointFailure = lambda: self.checkpoint_failure(player)
+         if self.context:
+             self.set_notifications(player, *(bool(mask & (1 << index)) for index in range(4)))
+             player.NLSRebornGetDFNotificationContext = lambda: self.notification_context(player)
+--- RC4/run_checks.py
++++ diagnostic/run_checks.py
+@@ -71,6 +71,11 @@
+  ('dependency_scope',[sys.executable,str(HERE/'check_dependency_scope.py'),str(root)]),
+  ('rc1_source_freeze',[sys.executable,str(HERE/'check_rc1_scope.py'),str(root)]),
+  ('autosave_type_contract',[sys.executable,str(HERE/'check_autosave_type_contract.py'),str(root)]),
++ ('checkpoint_native_result',[sys.executable,str(HERE/'test_checkpoint_native_result.py'),str(root)]),
++ ('checkpoint_native_mutations',[sys.executable,str(HERE/'run_native_result_mutations.py'),str(root),str(out/'checkpoint_native_mutations')]),
++ ('checkpoint_report',lua+[str(HERE/'test_checkpoint_report.lua'),str(module_dir)]),
++ ('vehicle_diag_source_freeze',[sys.executable,str(HERE/'check_vehicle_diag_scope.py'),str(root)]),
++ ('vehicle_diag_scope_controls',[sys.executable,str(HERE/'run_vehicle_diag_scope_controls.py'),str(root)]),
+  ('smart_queue_routes',[sys.executable,str(HERE/'test_smart_queue_routes.py'),str(root)]),
+  ('unrestricted_routes',[sys.executable,str(HERE/'test_unrestricted_routes.py'),str(root)]),
+  ('rc4_source_freeze',[sys.executable,str(HERE/'check_rc4_scope.py'),str(root)]),

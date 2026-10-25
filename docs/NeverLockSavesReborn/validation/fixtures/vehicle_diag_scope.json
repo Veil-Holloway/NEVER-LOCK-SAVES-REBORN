@@ -1,0 +1,269 @@
+{
+  "baseline_version": "1.0.0-rc4",
+  "candidate_version": "1.0.0-vehicle-diagnostic.1",
+  "approved_change": "Checked single native checkpoint seam; bounded last-attempt diagnostics and on-demand sanitized report; exact identification/pins only. This is not a save-creation fix.",
+  "protected_roots": [
+    "bin",
+    "r6",
+    "tools/NLSRSaveGuardian",
+    "tools/NLSRInstallAudit"
+  ],
+  "changed_files": {
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua": {
+      "candidate_sha256": "c9005a63230508b9ee5730c31968dba32e3d9e3d9dd5de783dd48e9e76d2b18a",
+      "baseline_sha256": "f3beda44cac722df64c3bed6381ac2990d6dbd5b967d447d340896e0b12b74df",
+      "splices": [
+        {
+          "candidate_start_line": 0,
+          "candidate_end_line": 1,
+          "before": "-- Never Lock Saves Reborn v1.0.0-rc4 Release Candidate\r\n",
+          "after": "-- Never Lock Saves Reborn v1.0.0-vehicle-diagnostic.1 Release Candidate\r\n"
+        },
+        {
+          "candidate_start_line": 704,
+          "candidate_end_line": 705,
+          "before": "  local snapshot={build='1.0.0-rc4',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),\r\n",
+          "after": "  local snapshot={build='1.0.0-vehicle-diagnostic.1',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),\r\n"
+        },
+        {
+          "candidate_start_line": 710,
+          "candidate_end_line": 716,
+          "before": "",
+          "after": "    checkpointAttempt={serial=read(function() return player:NLSRebornCheckpointGetSerial() end),\r\n      source=read(function() return player:NLSRebornCheckpointGetSource() end),\r\n      result=read(function() return player:NLSRebornCheckpointGetResult() end),\r\n      locks=read(function() return player:NLSRebornCheckpointGetLocks() end),\r\n      combat=read(function() return player:NLSRebornCheckpointGetCombat() end),\r\n      mounted=read(function() return player:NLSRebornCheckpointGetMounted() end)},\r\n"
+        },
+        {
+          "candidate_start_line": 741,
+          "candidate_end_line": 742,
+          "before": "  log('v1.0.0-rc4 Release Candidate loaded; experimental native save-lock gate required')\r\n",
+          "after": "  log('v1.0.0-vehicle-diagnostic.1 Release Candidate loaded; experimental native save-lock gate required')\r\n"
+        },
+        {
+          "candidate_start_line": 1017,
+          "candidate_end_line": 1018,
+          "before": "    ImGui.Text('v1.0.0-rc4 Release Candidate | Runtime policy')\r\n",
+          "after": "    ImGui.Text('v1.0.0-vehicle-diagnostic.1 Release Candidate | Runtime policy')\r\n"
+        },
+        {
+          "candidate_start_line": 1176,
+          "candidate_end_line": 1177,
+          "before": "        log('v1.0.0-rc4 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)\r\n",
+          "after": "        log('v1.0.0-vehicle-diagnostic.1 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)\r\n"
+        },
+        {
+          "candidate_start_line": 1210,
+          "candidate_end_line": 1211,
+          "before": "          report.rebornBuild='1.0.0-rc4'\r\n",
+          "after": "          report.rebornBuild='1.0.0-vehicle-diagnostic.1'\r\n"
+        }
+      ]
+    },
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua": {
+      "candidate_sha256": "a0513bf67c2cb5a4b9506bf8533f545d32012ff08ecc797b6ffc3ca4f4b812a0",
+      "baseline_sha256": "0dfdd44ae3baa6a5a20b0a2121e2844b52e1be4ae6f4b0db366aa061e6c838c6",
+      "splices": [
+        {
+          "candidate_start_line": 158,
+          "candidate_end_line": 197,
+          "before": "",
+          "after": "local CHECKPOINT_SOURCES={[1]='manual',[2]='quicksave',[3]='autosave'}\nlocal CHECKPOINT_RESULTS={[1]='native_accepted',[2]='native_rejected',[3]='service_unavailable',[4]='policy_blocked'}\nlocal function checkpointLocks(value)\n  local parsed={known=false,overflow=false,codes={}}\n  if value=='unlocked' then parsed.known=true\n  elseif value=='overflow' then parsed.overflow=true\n  elseif type(value)=='string' and #value<=512 and value:match('^locked|') then\n    local valid=true\n    for code in value:sub(8):gmatch('[^|]+') do\n      if #parsed.codes>=16 then parsed.overflow=true;valid=false;break end\n      if not LOCK_CODES[code] then valid=false end\n      -- Never copy a free-form native/string diagnostic into the report.\n      parsed.codes[#parsed.codes+1]=LOCK_CODES[code] and code or 'Unknown'\n    end\n    parsed.known=valid and #parsed.codes>0 and value=='locked|'..table.concat(parsed.codes,'|')\n  end\n  return lockSummary(parsed)\nend\nlocal function checkpointAttempt(value)\n  local input=tableValue(value)\n  local serial=integer(rawget(input,'serial'),0,2147483647)\n  local source=integer(rawget(input,'source'),1,3)\n  local outcome=integer(rawget(input,'result'),0,4)\n  local result={scope='latest_mod_checkpoint_attempt',observation='unknown',serial=serial,\n    source='unknown',result='unknown',native_accepted='unknown',\n    native_locks=checkpointLocks(nil),combat='unknown',mounted='unknown',\n    write_status='Unknown',reload_status='Unknown'}\n  if serial==0 and outcome==0 then\n    result.observation='not_attempted';result.result='not_attempted'\n  elseif type(serial)=='number' and serial>0 and CHECKPOINT_SOURCES[source] and CHECKPOINT_RESULTS[outcome] then\n    result.observation='observed';result.source=CHECKPOINT_SOURCES[source];result.result=CHECKPOINT_RESULTS[outcome]\n    if outcome==1 then result.native_accepted=true elseif outcome==2 then result.native_accepted=false end\n    result.native_locks=checkpointLocks(rawget(input,'locks'))\n    local combat,mounted=rawget(input,'combat'),rawget(input,'mounted')\n    result.combat=combat==0 and 'clear' or combat==1 and 'active' or 'unknown'\n    result.mounted=mounted==0 and 'clear' or mounted==1 and 'active' or 'unknown'\n  end\n  return result\nend\n"
+        },
+        {
+          "candidate_start_line": 231,
+          "candidate_end_line": 232,
+          "before": "",
+          "after": "    checkpoint_attempt=checkpointAttempt(s.checkpointAttempt),\n"
+        }
+      ]
+    },
+    "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds": {
+      "candidate_sha256": "6da34c503fdd0f042ba116d50533aa4903ff8cf82a298aea116fae6f27f22722",
+      "baseline_sha256": "ffc6864b69f2fc2c8f3b940a8ff9ef516368de1d7afe2224782c7ed20fc3a4a1",
+      "splices": [
+        {
+          "candidate_start_line": 0,
+          "candidate_end_line": 1,
+          "before": "// v1.0.0-rc4 Release Candidate. Deferred/autosave lanes are opt-in.\r\n",
+          "after": "// v1.0.0-vehicle-diagnostic.1 Release Candidate. Deferred/autosave lanes are opt-in.\r\n"
+        },
+        {
+          "candidate_start_line": 87,
+          "candidate_end_line": 155,
+          "before": "",
+          "after": "// Bounded last-attempt diagnostics. Native acceptance is not save completion.\r\n@addField(PlayerPuppet) private let nlsCheckpointSerial: Int32 = 0;\r\n@addField(PlayerPuppet) private let nlsCheckpointSource: Int32 = 0;\r\n@addField(PlayerPuppet) private let nlsCheckpointResult: Int32 = 0;\r\n@addField(PlayerPuppet) private let nlsCheckpointLocks: String = \"unknown\";\r\n@addField(PlayerPuppet) private let nlsCheckpointCombat: Int32 = -1;\r\n@addField(PlayerPuppet) private let nlsCheckpointMounted: Int32 = -1;\r\n@addMethod(PlayerPuppet)\r\npublic final func NLSRebornCheckpointGetSerial() -> Int32 { return this.nlsCheckpointSerial; }\r\n@addMethod(PlayerPuppet)\r\npublic final func NLSRebornCheckpointGetSource() -> Int32 { return this.nlsCheckpointSource; }\r\n@addMethod(PlayerPuppet)\r\npublic final func NLSRebornCheckpointGetResult() -> Int32 { return this.nlsCheckpointResult; }\r\n@addMethod(PlayerPuppet)\r\npublic final func NLSRebornCheckpointGetLocks() -> String { return this.nlsCheckpointLocks; }\r\n@addMethod(PlayerPuppet)\r\npublic final func NLSRebornCheckpointGetCombat() -> Int32 { return this.nlsCheckpointCombat; }\r\n@addMethod(PlayerPuppet)\r\npublic final func NLSRebornCheckpointGetMounted() -> Int32 { return this.nlsCheckpointMounted; }\r\n@addMethod(PlayerPuppet)\r\npublic final func NLSRebornCheckpointFailure() -> Void {\r\n  if !this.NLSRebornGetNotificationsEnabled() { return; };\r\n  let message: String = \"The game rejected the checkpoint request. No save confirmed.\";\r\n  let tone: Int32 = this.NLSRebornGetTone();\r\n  if tone == 1 { message = \"The game rejected the checkpoint request. Apparently a popup cannot save you.\"; };\r\n  if tone == 2 { message = \"The game rejected the fucking checkpoint request. No save confirmed.\"; };\r\n  if this.nlsCheckpointResult == 3 {\r\n    message = \"Checkpoint service unavailable. No save requested.\";\r\n    if tone == 1 { message = \"The checkpoint service did not show up for work. No save requested.\"; };\r\n    if tone == 2 { message = \"The checkpoint service is fucking unavailable. No save requested.\"; };\r\n  };\r\n  if this.nlsCheckpointResult == 4 {\r\n    message = \"Checkpoint request blocked by protection or invalid source. No save requested.\";\r\n    if tone == 1 { message = \"Checkpoint protection still has the keys. No save requested.\"; };\r\n    if tone == 2 { message = \"Checkpoint protection blocked this damn request. No save requested.\"; };\r\n  };\r\n  PauseMenuGameController.NLSRebornNotify(this.GetGame(), message);\r\n}\r\n@addMethod(PlayerPuppet)\r\npublic final func NLSRebornRequestCheckpoint(source: Int32) -> Bool {\r\n  if this.nlsCheckpointSerial < 2147483647 { this.nlsCheckpointSerial += 1; }\r\n  else { this.nlsCheckpointSerial = 1; };\r\n  this.nlsCheckpointSource = source;\r\n  this.nlsCheckpointResult = 0;\r\n  this.nlsCheckpointLocks = this.NLSRebornSaveLockSummary();\r\n  this.nlsCheckpointCombat = 0;\r\n  if this.IsInCombat() { this.nlsCheckpointCombat = 1; };\r\n  this.nlsCheckpointMounted = this.NLSRebornMountedState();\r\n  if (source != 1 && source != 2 && source != 3) || this.nlsRebornSafetyBlock || !this.NLSRebornDeferredIntroComplete() {\r\n    this.nlsCheckpointResult = 4;\r\n    this.NLSRebornCheckpointFailure();\r\n    return false;\r\n  };\r\n  let autosave: ref<gameAutoSaveSystem> = GameInstance.GetAutoSaveSystem(this.GetGame());\r\n  if !IsDefined(autosave) {\r\n    this.nlsCheckpointResult = 3;\r\n    this.NLSRebornCheckpointFailure();\r\n    return false;\r\n  };\r\n  if !autosave.RequestForcedCheckpoint() {\r\n    this.nlsCheckpointResult = 2;\r\n    this.NLSRebornCheckpointFailure();\r\n    return false;\r\n  };\r\n  this.nlsCheckpointResult = 1;\r\n  return true; // native accepted a request; written/reload status remains unknown\r\n}\r\n\r\n"
+        },
+        {
+          "candidate_start_line": 247,
+          "candidate_end_line": 248,
+          "before": "  autosave.RequestForcedCheckpoint();\r\n",
+          "after": "  if !this.NLSRebornRequestCheckpoint(this.nlsDeferredSource) { return false; };\r\n"
+        },
+        {
+          "candidate_start_line": 251,
+          "candidate_end_line": 253,
+          "before": "  } else {\r\n    PauseMenuGameController.NLSRebornNotify(this.GetGame(), NLSRebornPolicy.CheckpointMessage(this.GetGame(), -1));\r\n",
+          "after": "  } else if this.NLSRebornGetNotificationsEnabled() {\r\n    PauseMenuGameController.NLSRebornNotify(this.GetGame(), NLSRebornPolicy.CheckpointMessage(this.GetGame(), -1) + \" (Request accepted; save creation unconfirmed.)\");\r\n"
+        },
+        {
+          "candidate_start_line": 519,
+          "candidate_end_line": 520,
+          "before": "  public static func Version() -> String { return \"1.0.0-rc4\"; }\r\n",
+          "after": "  public static func Version() -> String { return \"1.0.0-vehicle-diagnostic.1\"; }\r\n"
+        },
+        {
+          "candidate_start_line": 1947,
+          "candidate_end_line": 1950,
+          "before": "    PauseMenuGameController.NLSRebornNotify(game, NLSRebornDFMessages.Message(game, notificationContext, checkpoint));\r\n",
+          "after": "    let message: String = NLSRebornDFMessages.Message(game, notificationContext, checkpoint);\r\n    if checkpoint && !Equals(message, \"\") { message = message + \" (Request accepted; save creation unconfirmed.)\"; };\r\n    PauseMenuGameController.NLSRebornNotify(game, message);\r\n"
+        },
+        {
+          "candidate_start_line": 2059,
+          "candidate_end_line": 2060,
+          "before": "      GameInstance.GetAutoSaveSystem(this.m_gameInstance).RequestForcedCheckpoint();\r\n",
+          "after": "      if !IsDefined(queuePlayer) || !queuePlayer.NLSRebornRequestCheckpoint(1) { return; };\r\n"
+        },
+        {
+          "candidate_start_line": 2062,
+          "candidate_end_line": 2064,
+          "before": "      } else {\r\n        PauseMenuGameController.NLSRebornNotify(this.m_gameInstance, NLSRebornPolicy.CheckpointMessage(this.m_gameInstance, -1));\r\n",
+          "after": "      } else if queuePlayer.NLSRebornGetNotificationsEnabled() {\r\n        PauseMenuGameController.NLSRebornNotify(this.m_gameInstance, NLSRebornPolicy.CheckpointMessage(this.m_gameInstance, -1) + \" (Request accepted; save creation unconfirmed.)\");\r\n"
+        },
+        {
+          "candidate_start_line": 2092,
+          "candidate_end_line": 2093,
+          "before": "      GameInstance.GetAutoSaveSystem(this.m_gameInstance).RequestForcedCheckpoint();\r\n",
+          "after": "      if !IsDefined(queuePlayer) || !queuePlayer.NLSRebornRequestCheckpoint(2) { return; };\r\n"
+        },
+        {
+          "candidate_start_line": 2095,
+          "candidate_end_line": 2097,
+          "before": "      } else {\r\n        PauseMenuGameController.NLSRebornNotify(this.m_gameInstance, NLSRebornPolicy.CheckpointMessage(this.m_gameInstance, -1));\r\n",
+          "after": "      } else if queuePlayer.NLSRebornGetNotificationsEnabled() {\r\n        PauseMenuGameController.NLSRebornNotify(this.m_gameInstance, NLSRebornPolicy.CheckpointMessage(this.m_gameInstance, -1) + \" (Request accepted; save creation unconfirmed.)\");\r\n"
+        },
+        {
+          "candidate_start_line": 2127,
+          "candidate_end_line": 2128,
+          "before": "      GameInstance.GetAutoSaveSystem(this.GetPlayerControlledObject().GetGame()).RequestForcedCheckpoint();\r\n",
+          "after": "      if !IsDefined(queuePlayer) || !queuePlayer.NLSRebornRequestCheckpoint(2) { return; };\r\n"
+        },
+        {
+          "candidate_start_line": 2130,
+          "candidate_end_line": 2132,
+          "before": "      } else {\r\n        PauseMenuGameController.NLSRebornNotify(this.GetPlayerControlledObject().GetGame(), NLSRebornPolicy.CheckpointMessage(this.GetPlayerControlledObject().GetGame(), -1));\r\n",
+          "after": "      } else if queuePlayer.NLSRebornGetNotificationsEnabled() {\r\n        PauseMenuGameController.NLSRebornNotify(this.GetPlayerControlledObject().GetGame(), NLSRebornPolicy.CheckpointMessage(this.GetPlayerControlledObject().GetGame(), -1) + \" (Request accepted; save creation unconfirmed.)\");\r\n"
+        }
+      ]
+    },
+    "tools/NLSRInstallAudit/README.md": {
+      "candidate_sha256": "eb733bb7751b3798a94643f073c401948bfe68f21b58dc4744de33573d225be3",
+      "baseline_sha256": "f8a828d6a59d12db3e9322b59c97b9e874b2e70def24c38643188c2cc0fbdd3d",
+      "splices": [
+        {
+          "candidate_start_line": 0,
+          "candidate_end_line": 1,
+          "before": "# RC4 installation audit\n",
+          "after": "# Vehicle diagnostic installation audit\n"
+        },
+        {
+          "candidate_start_line": 2,
+          "candidate_end_line": 3,
+          "before": "This optional Python 3.10+ tool checks the installed **1.0.0-rc4** runtime against\n",
+          "after": "This optional Python 3.10+ tool checks the installed **1.0.0-vehicle-diagnostic.1** runtime against\n"
+        },
+        {
+          "candidate_start_line": 4,
+          "candidate_end_line": 5,
+          "before": "for the mod itself. Run this tool from the extracted RC4 package, outside the\n",
+          "after": "for the mod itself. Run this tool from the extracted diagnostic package, outside the\n"
+        },
+        {
+          "candidate_start_line": 42,
+          "candidate_end_line": 43,
+          "before": "hash. Verify the downloaded RC4 ZIP separately with its accompanying `.sha256`\n",
+          "after": "hash. Verify the downloaded diagnostic ZIP separately with its accompanying `.sha256`\n"
+        },
+        {
+          "candidate_start_line": 54,
+          "candidate_end_line": 55,
+          "before": "The included regression tests use temporary directories and the extracted RC4\n",
+          "after": "The included regression tests use temporary directories and the extracted diagnostic\n"
+        }
+      ]
+    },
+    "tools/NLSRInstallAudit/audit_installation.py": {
+      "candidate_sha256": "d81fdba0ad60dea23abea7fcc7b1629271b244aa25ae35f0e0206d0ea52674bf",
+      "baseline_sha256": "7a0ebf660e876efe95c17ce4a97bcb902349c3a906adc30acb80f5f7f63dcf35",
+      "splices": [
+        {
+          "candidate_start_line": 12,
+          "candidate_end_line": 14,
+          "before": "RELEASE = '1.0.0-rc4'\nINVENTORY_SHA256 = 'f67def925f898924dcfe7cd2b9d0d485b8dd894033add0f334ae67b428402350'\n",
+          "after": "RELEASE = '1.0.0-vehicle-diagnostic.1'\nINVENTORY_SHA256 = '0090e404d33c94af1d5076923a8fd22801a3fce4aed73915d7f8022becde433d'\n"
+        }
+      ]
+    },
+    "tools/NLSRInstallAudit/runtime_inventory.json": {
+      "candidate_sha256": "0090e404d33c94af1d5076923a8fd22801a3fce4aed73915d7f8022becde433d",
+      "baseline_sha256": "f67def925f898924dcfe7cd2b9d0d485b8dd894033add0f334ae67b428402350",
+      "splices": [
+        {
+          "candidate_start_line": 2,
+          "candidate_end_line": 3,
+          "before": "  \"release\": \"1.0.0-rc4\",\n",
+          "after": "  \"release\": \"1.0.0-vehicle-diagnostic.1\",\n"
+        },
+        {
+          "candidate_start_line": 42,
+          "candidate_end_line": 44,
+          "before": "      \"size\": 74336,\n      \"sha256\": \"f3beda44cac722df64c3bed6381ac2990d6dbd5b967d447d340896e0b12b74df\"\n",
+          "after": "      \"size\": 74942,\n      \"sha256\": \"c9005a63230508b9ee5730c31968dba32e3d9e3d9dd5de783dd48e9e76d2b18a\"\n"
+        },
+        {
+          "candidate_start_line": 67,
+          "candidate_end_line": 69,
+          "before": "      \"size\": 16046,\n      \"sha256\": \"0dfdd44ae3baa6a5a20b0a2121e2844b52e1be4ae6f4b0db366aa061e6c838c6\"\n",
+          "after": "      \"size\": 18335,\n      \"sha256\": \"a0513bf67c2cb5a4b9506bf8533f545d32012ff08ecc797b6ffc3ca4f4b812a0\"\n"
+        },
+        {
+          "candidate_start_line": 82,
+          "candidate_end_line": 84,
+          "before": "      \"size\": 157435,\n      \"sha256\": \"ffc6864b69f2fc2c8f3b940a8ff9ef516368de1d7afe2224782c7ed20fc3a4a1\"\n",
+          "after": "      \"size\": 161745,\n      \"sha256\": \"6da34c503fdd0f042ba116d50533aa4903ff8cf82a298aea116fae6f27f22722\"\n"
+        }
+      ]
+    },
+    "tools/NLSRInstallAudit/tests/test_independent.py": {
+      "candidate_sha256": "122115b9870b213d40397e77ce47d587d1a0626e25f157f5e321782f4448b0f6",
+      "baseline_sha256": "b4175812a40d0d95024cf9f713494be9d4aaf88fb9270eb27b19dc9dcac591be",
+      "splices": [
+        {
+          "candidate_start_line": 92,
+          "candidate_end_line": 93,
+          "before": "        self.assertEqual(payload['release'], '1.0.0-rc4')\n",
+          "after": "        self.assertEqual(payload['release'], '1.0.0-vehicle-diagnostic.1')\n"
+        }
+      ]
+    }
+  },
+  "unchanged_files": {
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua": "14b0142a2fb4fe3dce80e0699690ef7093470954cc0a4ae38d7fd31517ed9289",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/config_store.lua": "71cc407a911ad5f6a9a8dda749e2ef3839fe74f01fd7fa3da8590968c80dece3",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dark_future.lua": "a4d5afd042e295b7db6af26026c4a55aab8d834ed21d4550946393ceba3fb3b8",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/deferred_save.lua": "b5c7413a274fd3d38612176891ee9dac06ebd2255bc0d40276fc9350400db9ca",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dependency_versions.lua": "32c132404062f25594684567b4a50acdbc61687e6eb59fee8a25fbee2393b53a",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian.lua": "ba22843f8356bd56b952d7629ff89667913a4b195513015aea981b9f41e67c40",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian_bridge.lua": "b3b438e12bd01fc6b0d5ce00a93fff9450e52def53a057971cb3ae469a158a04",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua": "58cbe7e5a431a8ba8a18f3d3f6526df08e029bc1410066b4303083b7244951ab",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua": "023c995c24e0c3c941861557bbe92c9caa7c3e3fe14ee5f0bfc19eaee1598547",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_message_library.lua": "67f090e136d54ed7580518eb4f0b48601d582f23fe3f55015b7ca4fba7a0ba7c",
+    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_messages.lua": "a271bac7f36417815d673bf0c176e7fe64c73b5da77b8c41c815c10fd0b3ecea",
+    "r6/scripts/NeverLockSavesReborn/DarkFutureMessages.reds": "d1cc373bf7a030929745f969528b31774998943e3108c0f8b9b96a09a2b7f350",
+    "r6/scripts/NeverLockSavesReborn/DarkFutureSavePolicy.reds": "f707dbbbfe3147fae24290c1832f6274614118daa3e4724ee94d3a6bd18bad37",
+    "tools/NLSRSaveGuardian/README.md": "4051c04e9b51e061556cc252f61dc1e301a68d026e91c0d5117767ea88b46d1f",
+    "tools/NLSRSaveGuardian/save_guardian.py": "c142d5f86a3c9593c99ebfd949643af3705075c71ce370b149d22c62cd77d9c7",
+    "tools/NLSRSaveGuardian/test_recovery_assistant.py": "8bf34e52a58b3b84161eb4f571c41742d74a619545ff012be0dc1f5c2f56d5bd",
+    "tools/NLSRSaveGuardian/test_retention.py": "f8f9bbba3bcb65a45d57e788e5078531ccd8245448a993b619a238f4586537f3",
+    "tools/NLSRSaveGuardian/test_save_guardian.py": "f43218a3e5dc4fe848a5faa58565fe990a5b5fee884d8b2b840af1834febba45",
+    "tools/NLSRInstallAudit/VALIDATION.md": "8fd2ea7732d61d849ea37ab971708e92c4b817fa955eaae218eb864d2b6b19fe",
+    "tools/NLSRInstallAudit/tests/test_author.py": "49cd9b6380f43617b7bb3e67ae32aee9f237aa65a1090d7ef286afbe31df081b"
+  }
+}
