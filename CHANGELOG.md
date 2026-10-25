@@ -8,7 +8,9 @@ the release-by-tag REST endpoint did not expose this unpublished draft. Read dra
 metadata through the authenticated CLI resolver instead. Pin the repair's draft
 verification to source commit 8748f0b2513216265bdfd2927320d3f7b22001bc and reuse
 existing assets without replacing them. No runtime, tag or package bytes change.
-The original failed job remains in history; fresh publication checks must pass.
+The original failed job remains in history. The repaired draft job passed; all
+seven Drive assets were downloaded through authenticated raw reads and matched
+SHA-256/size. A two-ZIP receipt now gates final GitHub readback and publication.
 
 # Changelog
 
