@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased — diagnostic publication repair
+
+October 25, 2026. The draft assets were uploaded successfully and their downloaded
+bytes and archive manifests matched. The final metadata query failed because
+the release-by-tag REST endpoint did not expose this unpublished draft. Read draft
+metadata through the authenticated CLI resolver instead. Pin the repair's draft
+verification to source commit 8748f0b2513216265bdfd2927320d3f7b22001bc and reuse
+existing assets without replacing them. No runtime, tag or package bytes change.
+The original failed job remains in history; fresh publication checks must pass.
+
+# Changelog
+
 ## Unreleased
 
 Vehicle-combat saving remains unresolved. See the [diagnostic preview changes](CHANGELOG-VEHICLE-DIAGNOSTIC.1.md) and [test procedure](DIAGNOSTIC-VEHICLE-SAVE.md). No stable promotion.

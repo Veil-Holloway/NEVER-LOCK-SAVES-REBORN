@@ -23,23 +23,21 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
       DIAGNOSTIC_TAG: v1.0.0-vehicle-diagnostic.1
+      DIAGNOSTIC_SOURCE: 8748f0b2513216265bdfd2927320d3f7b22001bc
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+          ref: ${{ env.DIAGNOSTIC_SOURCE }}
       - name: Build and verify deterministic installable assets
-        run: python3 .github/scripts/build_vehicle_diagnostic.py --source . --commit "$GITHUB_SHA" --output dist
+        run: python3 .github/scripts/build_vehicle_diagnostic.py --source . --commit "$DIAGNOSTIC_SOURCE" --output dist
       - name: Create immutable source tag and draft prerelease
         shell: bash
         run: |
           set -euo pipefail
-          if gh release view "$DIAGNOSTIC_TAG" >/dev/null 2>&1; then
-            echo "Release already exists; refusing to overwrite or replace its assets."
-            exit 1
-          fi
           python3 - <<'PY'
           import json, os, subprocess
-          sha, repo, tag = os.environ['GITHUB_SHA'], os.environ['GH_REPO'], os.environ['DIAGNOSTIC_TAG']
+          sha, repo, tag = os.environ['DIAGNOSTIC_SOURCE'], os.environ['GH_REPO'], os.environ['DIAGNOSTIC_TAG']
           endpoint = f'repos/{repo}/git/ref/tags/{tag}'
           result = subprocess.run(['gh', 'api', endpoint], text=True, capture_output=True)
           if result.returncode:
@@ -48,12 +46,17 @@ jobs:
           if ref.get('object', {}).get('type') != 'commit' or ref['object']['sha'] != sha:
               raise SystemExit('Existing tag targets different bytes; refusing tag mutation.')
           PY
-          cp RELEASE-NOTES-VEHICLE-DIAGNOSTIC.1.md draft-notes.md
-          printf '\nSource commit: `%s`\nTag: `%s`\n' "$GITHUB_SHA" "$DIAGNOSTIC_TAG" >> draft-notes.md
-          gh release create "$DIAGNOSTIC_TAG" dist/* \
-            --verify-tag --target "$GITHUB_SHA" --draft --prerelease --latest=false \
-            --title "Vehicle save diagnostics.. 1.0.0-vehicle-diagnostic.1 (experimental)" \
-            --notes-file draft-notes.md
+          if ! gh release view "$DIAGNOSTIC_TAG" >/dev/null 2>&1; then
+            cp RELEASE-NOTES-VEHICLE-DIAGNOSTIC.1.md draft-notes.md
+            printf '\nSource commit: `%s`\nTag: `%s`\n' "$DIAGNOSTIC_SOURCE" "$DIAGNOSTIC_TAG" >> draft-notes.md
+            gh release create "$DIAGNOSTIC_TAG" dist/* \
+              --verify-tag --target "$DIAGNOSTIC_SOURCE" --draft --prerelease --latest=false \
+              --title "Vehicle save diagnostics.. 1.0.0-vehicle-diagnostic.1 (experimental)" \
+              --notes-file draft-notes.md
+          else
+            echo "Existing release assets remain unchanged; verifying their readback."
+          fi
+
       - name: Download actual draft assets and compare every byte
         shell: bash
         run: |
@@ -70,10 +73,10 @@ jobs:
           for path in expected.iterdir():
               if path.read_bytes() != (actual / path.name).read_bytes():
                   raise SystemExit('Draft download differs: ' + path.name)
-          module.verify_archive(actual / module.FULL_ZIP, os.environ['GITHUB_SHA'], 'full_source')
-          module.verify_archive(actual / module.RUNTIME_ZIP, os.environ['GITHUB_SHA'], 'runtime_only')
-          release = json.loads(subprocess.check_output(['gh', 'api', f"repos/{os.environ['GH_REPO']}/releases/tags/{os.environ['DIAGNOSTIC_TAG']}"], text=True))
-          if release.get('draft') is not True or release.get('prerelease') is not True:
+          module.verify_archive(actual / module.FULL_ZIP, os.environ['DIAGNOSTIC_SOURCE'], 'full_source')
+          module.verify_archive(actual / module.RUNTIME_ZIP, os.environ['DIAGNOSTIC_SOURCE'], 'runtime_only')
+          release = json.loads(subprocess.check_output(['gh', 'release', 'view', os.environ['DIAGNOSTIC_TAG'], '--json', 'isDraft,isPrerelease,tagName'], text=True))
+          if release.get('isDraft') is not True or release.get('isPrerelease') is not True or release.get('tagName') != os.environ['DIAGNOSTIC_TAG']:
               raise SystemExit('Expected an unpublished draft prerelease.')
           print('Verified all seven downloaded draft assets. Publication remains pending authenticated Drive readback.')
           for path in sorted(actual.iterdir()):

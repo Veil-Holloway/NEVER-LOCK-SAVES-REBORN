@@ -40,8 +40,8 @@ jobs:
           repo, tag = os.environ['GH_REPO'], os.environ['DIAGNOSTIC_TAG']
           def api(endpoint):
               return json.loads(subprocess.check_output(['gh', 'api', f'repos/{repo}/' + endpoint], text=True))
-          release = api('releases/tags/' + tag)
-          if release.get('draft') is not True or release.get('prerelease') is not True:
+          release = json.loads(subprocess.check_output(['gh', 'release', 'view', tag, '--json', 'isDraft,isPrerelease,tagName'], text=True))
+          if release.get('isDraft') is not True or release.get('isPrerelease') is not True or release.get('tagName') != tag:
               raise SystemExit('Expected a draft prerelease; refusing to edit an existing publication.')
           ref = api('git/ref/tags/' + tag)
           if ref.get('object', {}).get('type') != 'commit':
