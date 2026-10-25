@@ -1,0 +1,48 @@
+name: Publish RC3 prerelease
+
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/publish-rc3.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-rc3
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out the published RC3 files
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Verify both release archives
+        working-directory: packages
+        run: |
+          sha256sum --check --strict Never_Lock_Saves_Reborn_v1.0.0-rc3_RUNTIME_ONLY.zip.sha256 Never_Lock_Saves_Reborn_v1.0.0-rc3_Release_Candidate.zip.sha256
+      - name: Publish the testing candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh release view v1.0.0-rc3 >/dev/null 2>&1; then
+            echo "RC3 already exists; leaving the published release unchanged."
+            exit 0
+          fi
+          gh release create v1.0.0-rc3 \
+            --target "$GITHUB_SHA" \
+            --title "1.0.0-rc3 .. testing candidate" \
+            --prerelease \
+            --latest=false \
+            --notes-file RELEASE-NOTES.md \
+            packages/Never_Lock_Saves_Reborn_v1.0.0-rc3_RUNTIME_ONLY.zip \
+            packages/Never_Lock_Saves_Reborn_v1.0.0-rc3_RUNTIME_ONLY.zip.sha256 \
+            packages/Never_Lock_Saves_Reborn_v1.0.0-rc3_Release_Candidate.zip \
+            packages/Never_Lock_Saves_Reborn_v1.0.0-rc3_Release_Candidate.zip.sha256 \
+            docs/NeverLockSavesReborn/TESTING-CHECKLIST-RC3.md \
+            LICENSE
