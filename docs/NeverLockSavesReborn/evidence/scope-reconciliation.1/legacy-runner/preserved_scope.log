@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/42c398b74e64/github-audit/repo/docs/NeverLockSavesReborn/validation/check_preserved_scope.py", line 25, in <module>
+    assert sha(normalized_rc4(root,name))==expected, 'Changed protected file: '+name
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/42c398b74e64/github-audit/repo/docs/NeverLockSavesReborn/validation/check_vehicle_diag_scope.py", line 42, in normalized_rc4
+    data = normalized_diagnostic1(root, rel)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/42c398b74e64/github-audit/repo/docs/NeverLockSavesReborn/validation/check_diagnostic2_scope.py", line 18, in normalized_diagnostic1
+    data = normalized_diagnostic2(root, rel)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/42c398b74e64/github-audit/repo/docs/NeverLockSavesReborn/validation/check_diagnostic3_scope.py", line 17, in normalized_diagnostic2
+    data = (root / rel).read_bytes()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/scratch/42c398b74e64/github-audit/repo/tools/NLSRSaveGuardian/save_guardian.py'

@@ -1,3 +1,16 @@
+# scope-reconciliation.1 — unreleased scope documentation/package correction
+
+October 29, 2026 (America/Vancouver). Applies the October 28 v2.6 scope freeze.
+Removes the five active Windows/Python backup/recovery companion files and their
+current runner entries. Corrects README/support/contribution/release claims,
+keeps Guardian request tracking and manual presets, and adds fail-closed package
+scope validation with unique review-package identities. Runtime .3 save semantics
+are unchanged; one CET panel sentence changes. Historical releases, tests and
+attribution remain intact. See PACKAGING-SCOPE-RECONCILIATION.md for verification
+and unresolved actual vehicle-combat save/reload/progression acceptance.
+
+---
+
 # 1.0.0-vehicle-diagnostic.3 — cold-start observer bindings
 
 Defers three CET observer API lookups until protected registration in onInit. Retains native result diagnostics and all save policy. Vehicle-combat saving remains unresolved. See CHANGELOG-VEHICLE-DIAGNOSTIC.3.md.

@@ -40,8 +40,8 @@
     },
     {
       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
-      "size": 75032,
-      "sha256": "bc1bc7a9af6684fdb674c1ba070a09e99876a4a6a037107ebd48dcd7aebc103a"
+      "size": 75018,
+      "sha256": "42f5259529d8402483d7b0a7115bae8f46b03741e3e7dd8a049c171187cd0392"
     },
     {
       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua",

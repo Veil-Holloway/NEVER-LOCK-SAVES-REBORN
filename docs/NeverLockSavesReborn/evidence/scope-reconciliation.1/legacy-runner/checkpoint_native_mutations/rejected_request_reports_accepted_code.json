@@ -1,0 +1,40 @@
+{
+  "source_sha256": "8ccf751b5f5aa489d349337344191521493f5d4f20de6597c22d73fa8e233fb3",
+  "assertions": 1943,
+  "failed": 3,
+  "boundary_errors": 0,
+  "first_failures": [
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 1,
+        "done": 1,
+        "safety": false,
+        "service": true,
+        "result": false
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 2,
+        "done": 1,
+        "safety": false,
+        "service": true,
+        "result": false
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 3,
+        "done": 1,
+        "safety": false,
+        "service": true,
+        "result": false
+      }
+    }
+  ],
+  "first_errors": [],
+  "scope": "Independent actual-source native-result boundary regression.\n\nExecutes the supplied REDscript helper, wrappers and deferred dispatcher through\nthe existing strict bounded evaluator. Native/game/UI services are doubles; this\ndoes not compile REDscript or demonstrate a game save, reload or progression."
+}

@@ -224,6 +224,8 @@ def main() -> None:
         relative = output.relative_to(source)
         require(bool(relative.parts) and relative.parts[0] in {"dist", "packages"}, "Output inside source must be under dist/ or packages/")
     require(not output.exists() or not any(output.iterdir()), "Output must be absent or empty")
+    require(not (source / "docs/NeverLockSavesReborn/Never_Lock_Saves_Reborn_Master_Status_Roadmap_v2.6.md").exists(),
+            "Historical diagnostic builder cannot package scope-reconciled source; use build_scope_reconciliation.py")
     files = source_files(source)
     names = runtime_files(files)
     require(all(name in files for name in RUNTIME_DOCS), "Missing required diagnostic documentation")

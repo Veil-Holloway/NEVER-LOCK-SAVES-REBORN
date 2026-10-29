@@ -1,3 +1,16 @@
+# Current scope authority
+
+October 28, 2026 v2.6 addendum supersedes conflicting earlier feature plans.
+See `docs/NeverLockSavesReborn/Never_Lock_Saves_Reborn_Master_Status_Roadmap_v2.6.md`.
+Game-save backup/retention/storage/recovery and automatic character identity
+configuration are removed from source/package scope. Retain Guardian request
+tracking, manual presets and supported settings recovery. This branch is the
+unreleased `scope-reconciliation.1` package/documentation revision over runtime
+`1.0.0-vehicle-diagnostic.3`; historical tags/assets are immutable. Current
+packaging and test boundaries are in PACKAGING-SCOPE-RECONCILIATION.md.
+
+---
+
 # Never Lock Saves: Reborn
 
 Preserve save integrity, quest progression, existing features, licenses and

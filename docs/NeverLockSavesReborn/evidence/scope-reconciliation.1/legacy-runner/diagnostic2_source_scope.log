@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/42c398b74e64/github-audit/repo/docs/NeverLockSavesReborn/validation/check_diagnostic2_scope.py", line 52, in <module>
+    check(Path(sys.argv[1]).resolve())
+  File "/workspace/scratch/42c398b74e64/github-audit/repo/docs/NeverLockSavesReborn/validation/check_diagnostic2_scope.py", line 43, in check
+    assert actual == set(f['changed_files']) | set(f['unchanged_files']), 'Diagnostic.2 inventory changed'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Diagnostic.2 inventory changed

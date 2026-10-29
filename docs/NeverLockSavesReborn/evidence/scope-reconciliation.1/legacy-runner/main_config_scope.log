@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/42c398b74e64/github-audit/repo/docs/NeverLockSavesReborn/validation/check_main_config_scope.py", line 9, in <module>
+    data=normalized_report(root) if rel.endswith('/support_report.lua') else normalized_syntax(root) if rel.endswith('/check_lua_syntax.lua') else (root/rel).read_bytes()
+                                                                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/scratch/42c398b74e64/github-audit/repo/tools/NLSRSaveGuardian/README.md'

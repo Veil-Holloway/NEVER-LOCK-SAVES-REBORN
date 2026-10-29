@@ -1,0 +1,118 @@
+{
+  "source_sha256": "ea3fd830a3fa774e6dc150b5ed410a3647e94d7d7e75c57b9e5ee59f089e9141",
+  "assertions": 1943,
+  "failed": 12,
+  "boundary_errors": 0,
+  "first_failures": [
+    {
+      "label": "deferred dispatch returns native request result",
+      "detail": {
+        "source": 1,
+        "native_result": false,
+        "service": true,
+        "reenter": false
+      }
+    },
+    {
+      "label": "deferred positive notice needs native true",
+      "detail": {
+        "source": 1,
+        "native_result": false,
+        "service": true,
+        "reenter": false
+      }
+    },
+    {
+      "label": "deferred dispatch returns native request result",
+      "detail": {
+        "source": 1,
+        "native_result": false,
+        "service": true,
+        "reenter": true
+      }
+    },
+    {
+      "label": "deferred positive notice needs native true",
+      "detail": {
+        "source": 1,
+        "native_result": false,
+        "service": true,
+        "reenter": true
+      }
+    },
+    {
+      "label": "deferred dispatch returns native request result",
+      "detail": {
+        "source": 2,
+        "native_result": false,
+        "service": true,
+        "reenter": false
+      }
+    },
+    {
+      "label": "deferred positive notice needs native true",
+      "detail": {
+        "source": 2,
+        "native_result": false,
+        "service": true,
+        "reenter": false
+      }
+    },
+    {
+      "label": "deferred dispatch returns native request result",
+      "detail": {
+        "source": 2,
+        "native_result": false,
+        "service": true,
+        "reenter": true
+      }
+    },
+    {
+      "label": "deferred positive notice needs native true",
+      "detail": {
+        "source": 2,
+        "native_result": false,
+        "service": true,
+        "reenter": true
+      }
+    },
+    {
+      "label": "deferred dispatch returns native request result",
+      "detail": {
+        "source": 3,
+        "native_result": false,
+        "service": true,
+        "reenter": false
+      }
+    },
+    {
+      "label": "deferred positive notice needs native true",
+      "detail": {
+        "source": 3,
+        "native_result": false,
+        "service": true,
+        "reenter": false
+      }
+    },
+    {
+      "label": "deferred dispatch returns native request result",
+      "detail": {
+        "source": 3,
+        "native_result": false,
+        "service": true,
+        "reenter": true
+      }
+    },
+    {
+      "label": "deferred positive notice needs native true",
+      "detail": {
+        "source": 3,
+        "native_result": false,
+        "service": true,
+        "reenter": true
+      }
+    }
+  ],
+  "first_errors": [],
+  "scope": "Independent actual-source native-result boundary regression.\n\nExecutes the supplied REDscript helper, wrappers and deferred dispatcher through\nthe existing strict bounded evaluator. Native/game/UI services are doubles; this\ndoes not compile REDscript or demonstrate a game save, reload or progression."
+}

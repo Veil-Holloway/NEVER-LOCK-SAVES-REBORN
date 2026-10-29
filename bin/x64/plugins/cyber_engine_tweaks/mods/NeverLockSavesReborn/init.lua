@@ -1216,7 +1216,7 @@ registerForEvent('onDraw', function()
       end
     end
     ImGui.TextWrapped('Guardian records requests. Written and reloaded stay unknown without independent evidence. Engine result hints are unassociated.')
-    ImGui.TextWrapped('Optional closed-game backup/recovery tool is under tools/NLSRSaveGuardian. It is separate from in-game request tracking.')
+    ImGui.TextWrapped('Guardian tracks requests only. Game-save backup, retention and restoration are removed from product scope.')
     ImGui.Separator()
     ImGui.TextWrapped('Named settings presets (manual selection):')
     if type(ImGui.InputText)=='function' then

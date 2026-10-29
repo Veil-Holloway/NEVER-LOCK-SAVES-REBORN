@@ -38,9 +38,6 @@ cases=[
  ('guardian_ledger',lua+[str(HERE/'test_guardian.lua'),str(root/'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn')]),
  ('guardian_observers',lua+[str(HERE/'test_guardian_bridge.lua'),str(root/'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian_bridge.lua'),str(root/'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian.lua')]),
  ('guardian_integration',lua+[str(HERE/'test_guardian_integration.lua'),str(root)]),
- ('backup_recovery',[sys.executable,'-m','unittest','discover','-s',str(root/'tools/NLSRSaveGuardian'),'-p','test_*.py','-v']),
- ('retention_journal_review',[sys.executable,str(HERE/'review_post_journal.py'),str(root/'tools/NLSRSaveGuardian/save_guardian.py')]),
- ('retention_protected_review',[sys.executable,str(HERE/'review_protected_journal.py'),str(root/'tools/NLSRSaveGuardian/save_guardian.py')]),
  ('lua_integration',lua+[str(HERE/'test_lua_integration.lua'),str(root)]),
  ('queue_lifecycle',lua+[str(HERE/'test_queue_fresh.lua'),str(root)]),
  ('df_adapter',lua+[str(HERE/'test_dark_future.lua'),str(root)]),
@@ -110,6 +107,9 @@ with tempfile.TemporaryDirectory(prefix='nlsr-config-test-') as fixture:
         (out/(name+'.log')).write_text(result.stdout+result.stderr,encoding='utf-8')
         results.append({'check':name,'exit_code':result.returncode,'command':command,'log':name+'.log'})
         print(('PASS' if result.returncode==0 else 'FAIL')+' '+name)
-summary={'scope':'Fresh offline actual-Lua and constrained REDscript-source boundary tests. No REDscript compiler, CET/game runtime, save creation, reload, or quest progression.','results':results,'passed':all(x['exit_code']==0 for x in results)}
+skipped=[{'check':name,'status':'SKIP_REMOVED_SCOPE','reason':'October 28 v2.6 removes the game-save backup/recovery companion; historical evidence is preserved.'} for name in ('backup_recovery','retention_journal_review','retention_protected_review')]
+for item in skipped:
+    print('SKIP_REMOVED_SCOPE '+item['check'])
+summary={'skipped':skipped,'scope':'Fresh offline actual-Lua and constrained REDscript-source boundary tests. No REDscript compiler, CET/game runtime, save creation, reload, or quest progression.','results':results,'passed':all(x['exit_code']==0 for x in results)}
 (out/'RESULTS.json').write_text(json.dumps(summary,indent=2),encoding='utf-8')
 sys.exit(0 if summary['passed'] else 1)

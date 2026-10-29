@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/42c398b74e64/github-audit/repo/docs/NeverLockSavesReborn/validation/run_rc1_scope_controls.py", line 22, in <module>
+    assert baseline.returncode == 0, 'Unmodified candidate must pass before controls: ' + baseline.stderr
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Unmodified candidate must pass before controls: Traceback (most recent call last):
+  File "/workspace/scratch/42c398b74e64/github-audit/repo/docs/NeverLockSavesReborn/validation/check_rc1_scope.py", line 67, in <module>
+    check(Path(sys.argv[1]).resolve())
+  File "/workspace/scratch/42c398b74e64/github-audit/repo/docs/NeverLockSavesReborn/validation/check_rc1_scope.py", line 49, in check
+    normalized_pre_rc4(root, rel, require_candidate=True)
+  File "/workspace/scratch/42c398b74e64/github-audit/repo/docs/NeverLockSavesReborn/validation/check_rc1_scope.py", line 36, in normalized_pre_rc4
+    assert data.count(after) == spec['version_count'], 'Unexpected RC1 version count: ' + rel
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Unexpected RC1 version count: bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
+

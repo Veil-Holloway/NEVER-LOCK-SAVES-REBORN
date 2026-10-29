@@ -2,7 +2,7 @@
 
 I took Never Lock Saves by RalphModding and started updating and expanding it.. added CET controls.. Native Settings support.. and a bridge so CET and redscript can communicate..
 
-**current branch build is 1.0.0-vehicle-diagnostic.3.. diagnostic developer preview..** the game returned true for the vehicle combat request but no visible save is reported.. actual saving is still unresolved.. this build repairs early-captured CET observer functions so existing request and completion tracing can register after startup..
+**current runtime is 1.0.0-vehicle-diagnostic.3; documentation/package revision scope-reconciliation.1 (unreleased).** the game returned true for the vehicle combat request but no visible save is reported.. actual saving is still unresolved.. this build repairs early-captured CET observer functions so existing request and completion tracing can register after startup..
 
 ## thanks Ralph
 
@@ -30,26 +30,29 @@ theres also..
 - read-only Dark future checks for vehicle sleep.. addiction.. starvation and dehydration.. the four message switches dont change Dark futures settings or survival systems..
 - named settings presets you apply manually.. settings recovery.. CET and Native Settings synchronization..
 - Save Guardian request tracking.. local support reports and an installation checker.. submitted never gets passed off as written or reloaded..
-- a separate optional Windows/Python backup and recovery tool in the full package.. it runs with the game closed and restores to a new separate destination..
 
-automatic character profiles.. every owned safehouse and automatic live backups are still outside the first release..
+The [October 28 scope freeze](docs/NeverLockSavesReborn/Never_Lock_Saves_Reborn_Master_Status_Roadmap_v2.6.md) removes game-save backup creation, hashing, rotation, retention and storage management; Save Recovery Assistant and all save restoration workflows; backup-copy integrity monitoring; and automatic character/playthrough identity and configuration binding. These systems are removed from the roadmap. The Windows/Python `tools/NLSRSaveGuardian` companion is absent from current source/package scope.
+
+Guardian request tracking is retained. It records bounded request evidence and local support snapshots; it does not back up or restore game saves. `profiles.lua` implements explicitly selected manual settings presets. Validated settings persistence and settings `.bak` recovery remain supported configuration features.
+
+Earlier roadmaps, release contracts, test evidence, tags and packages remain historical records. Their companion/automatic-profile claims are superseded where they conflict with v2.6. [Packaging and validation status](PACKAGING-SCOPE-RECONCILIATION.md) distinguishes current source from those archives. Other safehouses beyond the implemented original apartment remain unsupported.
 
 ## install
 
 you need **Cyber Engine Tweaks and redscript** for the two runtime halves.. **Native Settings** is optional for its menu.. **Dark Future** is optional for its integration.. install any dependencies those frameworks require separately.. no framework binaries are bundled and no exact supported version combination is claimed yet..
 
 1. close the game.. keep external save copies and your existing Reborn settings..
-2. download `Never_Lock_Saves_Reborn_v1.0.0-vehicle-diagnostic.3_RUNTIME_ONLY.zip` from [Releases](https://github.com/Veil-Holloway/NEVER-LOCK-SAVES-REBORN/releases).. older packages remain historical..
+2. this reconciliation is an unpublished source/documentation revision. Published [Releases](https://github.com/Veil-Holloway/NEVER-LOCK-SAVES-REBORN/releases) are historical previews; the diagnostic.3 full archive still contains the removed companion. Do not describe it as the current scope-clean package. Build uniquely named review packages using the command in [packaging status](PACKAGING-SCOPE-RECONCILIATION.md).
 3. install with Vortex.. enable one Reborn installation and Deploy.. or copy the complete `bin/` and `r6/` trees to the game root..
 4. launch.. check fresh logs and confirm the panel says `1.0.0-vehicle-diagnostic.3`.. stop at compilation errors before testing saves..
 
 ## testing and issues
 
-RC4 removed Unrestricteds queue interception but the user still reports no actual vehicle-combat save.. the earlier success report was withdrawn.. this preview checks native acceptance and captures last-attempt diagnostics.. see [the diagnostic procedure](DIAGNOSTIC-VEHICLE-SAVE.md) and [validation report](VALIDATION-VEHICLE-DIAGNOSTIC.3.md).. those are offline boundaries.. not game tests..
+RC4 removed Unrestricteds queue interception but the user still reports no actual vehicle-combat save.. the earlier success report was withdrawn.. this preview checks native acceptance and captures last-attempt diagnostics.. see [the diagnostic procedure](DIAGNOSTIC-VEHICLE-SAVE.md) and [historical diagnostic validation](VALIDATION-VEHICLE-DIAGNOSTIC.3.md) and [current reconciliation results](VALIDATION-SCOPE-RECONCILIATION.md).. those are offline boundaries.. not game tests..
 
 start with an ordinary save.. confirm a new save exists.. reload it and continue gameplay.. then test Smart with Deferred Save ON during an interaction.. wait for native unlock and exactly one checkpoint request before checking save creation and reload separately..
 
-use the [testing checklist](docs/NeverLockSavesReborn/TESTING-CHECKLIST-RC4.md) and record each result.. untested cases stay NOT RUN and the reported vehicle-combat failure stays recorded..
+use the [v2.6 acceptance criteria](docs/NeverLockSavesReborn/Never_Lock_Saves_Reborn_Master_Status_Roadmap_v2.6.md) and record each result. The earlier [RC4 checklist](docs/NeverLockSavesReborn/TESTING-CHECKLIST-RC4.md) is historical; its backup/recovery companion cases and automatic-profile plans no longer apply. Untested cases stay NOT RUN and the reported vehicle-combat failure stays recorded.
 
 for an [issue](https://github.com/Veil-Holloway/NEVER-LOCK-SAVES-REBORN/issues).. include version.. game/framework versions.. relevant mods.. steps.. expected and actual behavior.. fresh logs and a reviewed support report.. dont post private paths or personal information..
 
