@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "version": "1.0.0-vehicle-diagnostic.1",
+  "source_commit": "8748f0b2513216265bdfd2927320d3f7b22001bc",
+  "drive_verification_method": "authenticated_raw_readback",
+  "assets": [
+    {
+      "name": "Never_Lock_Saves_Reborn_v1.0.0-vehicle-diagnostic.1_RUNTIME_ONLY.zip",
+      "sha256": "ad1f5f51628fa58638e13a1945ead6634598b0ce63058d304c6725a48713949e",
+      "size_bytes": 429169,
+      "drive_file_id": "1V1yPn3v14yhJlDg44D1wChQCtLvt7U_a",
+      "drive_sha256": "ad1f5f51628fa58638e13a1945ead6634598b0ce63058d304c6725a48713949e",
+      "drive_size_bytes": 429169,
+      "drive_verified": true
+    },
+    {
+      "name": "Never_Lock_Saves_Reborn_v1.0.0-vehicle-diagnostic.1_Release_Diagnostic.zip",
+      "sha256": "9615fa454f15a42ad8daf13a52b026c9b3ed1b7568167d1e5a362ca869a660f1",
+      "size_bytes": 6661553,
+      "drive_file_id": "1kKTF89qISxdr2RkvSkXZyoEUYw5T_qDp",
+      "drive_sha256": "9615fa454f15a42ad8daf13a52b026c9b3ed1b7568167d1e5a362ca869a660f1",
+      "drive_size_bytes": 6661553,
+      "drive_verified": true
+    }
+  ]
+}

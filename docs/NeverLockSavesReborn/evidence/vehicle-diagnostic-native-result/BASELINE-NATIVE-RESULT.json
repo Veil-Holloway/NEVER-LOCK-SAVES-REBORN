@@ -1,0 +1,217 @@
+{
+  "source_sha256": "ffc6864b69f2fc2c8f3b940a8ff9ef516368de1d7afe2224782c7ed20fc3a4a1",
+  "assertions": 308,
+  "failed": 20,
+  "boundary_errors": 0,
+  "first_failures": [
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 0,
+        "deferred": false
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 0,
+        "deferred": true
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 1,
+        "deferred": false
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 1,
+        "deferred": true
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 2,
+        "deferred": false
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 2,
+        "deferred": true
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 0,
+        "deferred": false
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 0,
+        "deferred": true
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 1,
+        "deferred": false
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 1,
+        "deferred": true
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 2,
+        "deferred": false
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 2,
+        "deferred": true
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandleQuickSave",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 0,
+        "deferred": false
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandleQuickSave",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 0,
+        "deferred": true
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandleQuickSave",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 1,
+        "deferred": false
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandleQuickSave",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 1,
+        "deferred": true
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandleQuickSave",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 2,
+        "deferred": false
+      }
+    },
+    {
+      "label": "positive request notification requires true native result",
+      "detail": {
+        "hook": "HandleQuickSave",
+        "native_result": false,
+        "service": true,
+        "master": true,
+        "tone": 2,
+        "deferred": true
+      }
+    },
+    {
+      "label": "all native calls are centralized in checked helper",
+      "detail": null
+    },
+    {
+      "label": "explicit native-result helper exists",
+      "detail": null
+    }
+  ],
+  "first_errors": [],
+  "scope": "Independent actual-source native-result boundary regression.\n\nExecutes the supplied REDscript helper, wrappers and deferred dispatcher through\nthe existing strict bounded evaluator. Native/game/UI services are doubles; this\ndoes not compile REDscript or demonstrate a game save, reload or progression.",
+  "negative_control": true
+}

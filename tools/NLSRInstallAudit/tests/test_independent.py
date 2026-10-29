@@ -90,7 +90,7 @@ class AuditorCLI(unittest.TestCase):
         if expected is not None:
             self.assertEqual(p.returncode, expected, payload)
         self.assertEqual({'exact_match':0, 'drift_or_review':1, 'incomplete':2}[payload['audit_status']], p.returncode)
-        self.assertEqual(payload['release'], '1.0.0-rc3')
+        self.assertEqual(payload['release'], '1.0.0-vehicle-diagnostic.3')
         return payload
 
     def test_clean_exact_bytes_and_no_input_writes(self):
@@ -287,11 +287,11 @@ class AuditorCLI(unittest.TestCase):
 
     def test_log_marker_counts_do_not_promote_compilation(self):
         log=Path(self.tmp.name)/'log.txt'
-        log.write_text('error ERROR errorless\nwarning WARN failed FAILED 1.0.0-rc1 1.0.0-rc2 1.0.0-rc3\n')
+        log.write_text('error ERROR errorless\nwarning WARN failed FAILED 1.0.0-rc1 1.0.0-rc2 1.0.0-rc3 1.0.0-rc4\n')
         report=self.run_audit('--cet-log',log,expected=0)
         item=next(e for e in report['logs'] if e['kind']=='cet')
         self.assertEqual(item['current_compilation'],'unknown')
-        self.assertEqual(item['marker_counts'],{'error':2,'warning':2,'failed':2,'rc1_label':1,'rc2_label':1,'rc3_label':1})
+        self.assertEqual(item['marker_counts'],{'error':2,'warning':2,'failed':2,'rc1_label':1,'rc2_label':1,'rc3_label':1,'rc4_label':1})
 
     def test_renamed_cet_copy_candidate_requires_review(self):
         p=(self.root/LUA_DIR).parent/PRIVATE/'init.lua'

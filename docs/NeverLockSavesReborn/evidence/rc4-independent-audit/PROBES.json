@@ -1,0 +1,32 @@
+{
+  "scope": "real disposable filesystem/CLI probes only; no game, native compiler or Windows-runtime assertion",
+  "results": [
+    {
+      "case": "clean",
+      "exit_code": 0,
+      "audit_status": "exact_match",
+      "runtime_status": "exact_match",
+      "no_input_writes": true,
+      "no_private_path_leak": true,
+      "log_compilation": "unknown"
+    },
+    {
+      "case": "stale_rc3_redscript",
+      "exit_code": 1,
+      "audit_status": "drift_or_review",
+      "runtime_status": "drift",
+      "no_input_writes": true,
+      "no_private_path_leak": true,
+      "log_compilation": "unknown"
+    },
+    {
+      "case": "stale_rc3_init",
+      "exit_code": 1,
+      "audit_status": "drift_or_review",
+      "runtime_status": "drift",
+      "no_input_writes": true,
+      "no_private_path_leak": true,
+      "log_compilation": "unknown"
+    }
+  ]
+}

@@ -156,6 +156,45 @@ local function lockSummary(value)
   end
   return result
 end
+local CHECKPOINT_SOURCES={[1]='manual',[2]='quicksave',[3]='autosave'}
+local CHECKPOINT_RESULTS={[1]='native_accepted',[2]='native_rejected',[3]='service_unavailable',[4]='policy_blocked'}
+local function checkpointLocks(value)
+  local parsed={known=false,overflow=false,codes={}}
+  if value=='unlocked' then parsed.known=true
+  elseif value=='overflow' then parsed.overflow=true
+  elseif type(value)=='string' and #value<=512 and value:match('^locked|') then
+    local valid=true
+    for code in value:sub(8):gmatch('[^|]+') do
+      if #parsed.codes>=16 then parsed.overflow=true;valid=false;break end
+      if not LOCK_CODES[code] then valid=false end
+      -- Never copy a free-form native/string diagnostic into the report.
+      parsed.codes[#parsed.codes+1]=LOCK_CODES[code] and code or 'Unknown'
+    end
+    parsed.known=valid and #parsed.codes>0 and value=='locked|'..table.concat(parsed.codes,'|')
+  end
+  return lockSummary(parsed)
+end
+local function checkpointAttempt(value)
+  local input=tableValue(value)
+  local serial=integer(rawget(input,'serial'),0,2147483647)
+  local source=integer(rawget(input,'source'),1,3)
+  local outcome=integer(rawget(input,'result'),0,4)
+  local result={scope='latest_mod_checkpoint_attempt',observation='unknown',serial=serial,
+    source='unknown',result='unknown',native_accepted='unknown',
+    native_locks=checkpointLocks(nil),combat='unknown',mounted='unknown',
+    write_status='Unknown',reload_status='Unknown'}
+  if serial==0 and outcome==0 then
+    result.observation='not_attempted';result.result='not_attempted'
+  elseif type(serial)=='number' and serial>0 and CHECKPOINT_SOURCES[source] and CHECKPOINT_RESULTS[outcome] then
+    result.observation='observed';result.source=CHECKPOINT_SOURCES[source];result.result=CHECKPOINT_RESULTS[outcome]
+    if outcome==1 then result.native_accepted=true elseif outcome==2 then result.native_accepted=false end
+    result.native_locks=checkpointLocks(rawget(input,'locks'))
+    local combat,mounted=rawget(input,'combat'),rawget(input,'mounted')
+    result.combat=combat==0 and 'clear' or combat==1 and 'active' or 'unknown'
+    result.mounted=mounted==0 and 'clear' or mounted==1 and 'active' or 'unknown'
+  end
+  return result
+end
 local STATUS_KINDS={queued=true,auto_queued=true,submitted=true,expired=true,cancelled=true,error=true,none=true}
 local function statusPool(value)
   if value=='none' then return value end
@@ -190,6 +229,7 @@ function M.build(snapshot)
       combat=observation(sensors.combatKnown,sensors.combatActive),vehicle=observation(sensors.vehicleKnown,sensors.vehicleActive),
       phone=observation(sensors.phoneKnown,sensors.phoneActive),paused=boolean(sensors.paused),in_menu=boolean(sensors.inMenu)},
     observers=observerSummary(s.observers),native_locks=lockSummary(s.locks),
+    checkpoint_attempt=checkpointAttempt(s.checkpointAttempt),
     status_notifications=statusSummary(s.statusNotifications),
     queue={pending=boolean(queue.pending),source=member(queue.source,sources),serial=integer(queue.serial,0,2147483647),
       session=integer(queue.session,0,2147483647),gate=member(gateAliases[queue.gate] or queue.gate,gates),

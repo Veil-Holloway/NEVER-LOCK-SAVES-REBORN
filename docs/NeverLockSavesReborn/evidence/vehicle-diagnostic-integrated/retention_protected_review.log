@@ -1,0 +1,43 @@
+{
+  "retention": {
+    "status": "stopped",
+    "retired_ids": [],
+    "plan_digest": "322122d6fb0367b4213eb379d95b855e333d2c4bb4adc578be7a0d4afeb99232",
+    "active_retention_only": true,
+    "permanent_deletion": false,
+    "remaining_ids": [
+      "d048dd4099fb4bed9e6fc0b0c6b69f57"
+    ],
+    "error": "Snapshot integrity mismatch"
+  },
+  "verified_active_copies": 2,
+  "active": [
+    {
+      "snapshot_id": "2ef18c45d32940bf8b0ae7e9dffaa401",
+      "created_utc": "2026-10-24T00:00:01+00:00",
+      "status": "hash_verified",
+      "source_slot": "slot",
+      "game_build": "unknown",
+      "character_id": "character",
+      "loadability": "unknown",
+      "retention_profile": "review",
+      "retention_source": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "snapshot_id": "d048dd4099fb4bed9e6fc0b0c6b69f57",
+      "created_utc": "2026-10-24T00:00:00+00:00",
+      "status": "hash_verified",
+      "source_slot": "slot",
+      "game_build": "unknown",
+      "character_id": "character",
+      "loadability": "unknown",
+      "retention_profile": "review",
+      "retention_source": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "snapshot_id": "0463884140a7490c948efff4ff03949c",
+      "status": "invalid",
+      "loadability": "unknown"
+    }
+  ]
+}

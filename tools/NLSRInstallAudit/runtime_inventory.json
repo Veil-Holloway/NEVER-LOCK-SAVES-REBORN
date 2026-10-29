@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "release": "1.0.0-rc3",
+  "release": "1.0.0-vehicle-diagnostic.3",
   "scope": "runtime_files_only",
   "runtime_files": [
     {
@@ -40,8 +40,8 @@
     },
     {
       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
-      "size": 74299,
-      "sha256": "58f1295871e29b5a0b5d15e78670f481669461242e49c628efa31dc1be4dedd5"
+      "size": 75018,
+      "sha256": "42f5259529d8402483d7b0a7115bae8f46b03741e3e7dd8a049c171187cd0392"
     },
     {
       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua",
@@ -65,8 +65,8 @@
     },
     {
       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua",
-      "size": 16046,
-      "sha256": "0dfdd44ae3baa6a5a20b0a2121e2844b52e1be4ae6f4b0db366aa061e6c838c6"
+      "size": 18335,
+      "sha256": "a0513bf67c2cb5a4b9506bf8533f545d32012ff08ecc797b6ffc3ca4f4b812a0"
     },
     {
       "path": "r6/scripts/NeverLockSavesReborn/DarkFutureMessages.reds",
@@ -80,8 +80,8 @@
     },
     {
       "path": "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds",
-      "size": 156837,
-      "sha256": "f2953b6903bb09da3bdec5eb7ee991a51928817ac2b527d9e816e9fc591c48d1"
+      "size": 161847,
+      "sha256": "4f484edd5decdf70eb129887395d1e48dd04f38a577f2920d07a6733afbb1271"
     }
   ]
 }

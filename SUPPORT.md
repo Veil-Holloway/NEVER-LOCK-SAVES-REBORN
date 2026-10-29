@@ -1,20 +1,25 @@
 # Support and acceptance records
 
-This package is 1.0.0-rc2, a release candidate for testing. See README.md and
-`docs/NeverLockSavesReborn/TESTING-RC2.md` for the acceptance handoff.
+Runtime: `1.0.0-vehicle-diagnostic.3`. Unreleased documentation/package revision:
+`scope-reconciliation.1`. The October 28 v2.6 scope freeze governs current work;
+see README.md and PACKAGING-SCOPE-RECONCILIATION.md.
 
-When reporting a problem, provide the package SHA-256, actual game/framework
-versions, expected behavior, observed behavior and the shortest reproduction.
-Separate request, queue, engine submission, actual save creation, reload and
-subsequent progression. Record whether Dark Future and Native Settings are
-installed and enabled. Attach only relevant fresh logs and the local support
-report after reviewing them for personal information.
+Provide the exact package SHA-256, game/framework versions, expected/actual
+behavior and shortest reproduction. Separate request, queue, native acceptance,
+physical save creation, reload and subsequent progression. Record Dark Future
+and Native Settings presence/enabled state. Review relevant fresh logs and local
+support reports for personal information before sharing.
 
-`tools/NLSRInstallAudit/` checks installed source identity. It cannot certify
-compilation, compatibility or save safety. The optional closed-game recovery
-companion has its own README and acceptance requirements.
+Guardian is bounded request tracking. It does not create, hash, rotate, retain,
+monitor, back up or restore game-save copies. `tools/NLSRInstallAudit/` is a
+read-only installation/source-identity checker, not a recovery companion; an exact
+match cannot certify compilation, compatibility or save safety. Manual named
+settings presets and validated settings persistence/recovery remain supported.
 
-The matrix retains earlier broad user feedback without inventing detailed passes.
-Record tests already completed with their actual build and outcome; repeat only
-when changes or a failure make that necessary. No support report is uploaded
-automatically. A public issue tracker has not been created by this package.
+The removed Windows/Python companion has no current acceptance requirements.
+Historical tests and reports remain attributed to their original builds.
+Vehicle-combat saving remains an unresolved reported failure; native true and
+offline tests do not prove a written/reloadable save or quest progression.
+See `docs/NeverLockSavesReborn/evidence/VEHICLE-CHECKPOINT-WRITE-REPRO-DIAGNOSTIC.3.md`.
+No support report is uploaded automatically. Report issues at
+https://github.com/Veil-Holloway/NEVER-LOCK-SAVES-REBORN/issues.

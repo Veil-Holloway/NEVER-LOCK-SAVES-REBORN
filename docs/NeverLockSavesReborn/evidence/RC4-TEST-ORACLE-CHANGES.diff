@@ -1,0 +1,54 @@
+--- RC3/test_smart_queue_routes.py
++++ RC4/test_smart_queue_routes.py
+@@ -191,14 +191,14 @@
+               dict(hook=hook, busy=busy, failed=failed, saved=saved))
+ 
+     # Do not extend deferred behavior to Vanilla or ordinary Immersion. Keep
+-    # Unrestricted's existing queue and queue-off forced request behavior.
++    # RC4 Unrestricted user requests attempt immediately, independent of the manual deferred toggle.
+     for hook, mode, enabled in itertools.product(HOOKS, (0, 1, 2), (False, True)):
+         p = invoke(hook, mode=mode, enabled=enabled)
+-        expected_queue = mode == 2 and enabled
++        expected_queue = False
+         check('other modes retain queue scope', p.nlsDeferredPending == expected_queue,
+               dict(hook=hook, mode=mode, enabled=enabled))
+         check('other modes retain native/fallback routes',
+-              runtime.state['forced'] == int(mode == 2 and not enabled) and runtime.state['wrapped'] == int(mode in (0, 1)),
++              runtime.state['forced'] == int(mode == 2) and runtime.state['wrapped'] == int(mode in (0, 1)),
+               dict(hook=hook, mode=mode, enabled=enabled))
+ 
+     # Exercise the actual REDscript dispatch guard after a real wrapper queued a
+--- RC3/reproduce_fresh_intro_fallback.py
++++ RC4/reproduce_fresh_intro_fallback.py
+@@ -37,10 +37,11 @@
+       try:r.invoke(hook)
+       except AttributeError as exc:error=type(exc).__name__+': '+str(exc)
+       # All fixture DF states are active, so all three non-Vanilla modes
+-      # have the pre-existing fallback when fresh completion is positive.
++      # have fallback eligibility when fresh completion is positive. RC4 mode2 attempts
++      # immediately; other eligible modes keep their deferred preference.
+       eligible=(mode in (1,2,3) and not protected and done is not None and done>0)
+-      expected_forced=int(eligible and not enabled)
+-      expected_queued=bool(eligible and enabled)
++      expected_forced=int(eligible and (mode==2 or not enabled))
++      expected_queued=bool(eligible and enabled and mode!=2)
+       row={'mode':mode,'hook':hook,'cached_protection':protected,'q000_done':done,'deferred_enabled':enabled,'notifications':notifications,
+            'queued':player.nlsDeferredPending,'forced_checkpoint_attempts':r.state['forced'],'boundary_error':error,
+            'expected_forced_checkpoint_attempts':expected_forced,'expected_queued':expected_queued,
+--- RC3/test_autosave_source.py
++++ RC4/test_autosave_source.py
+@@ -31,12 +31,12 @@
+ methods={n:compile_function(source,n,ns,instance=True) for n in names}
+ 
+ def fixture(**changes):
+-    state.clear();state.update(enabled=True,manual=False,done=1,locked=False,paused=False,menu=False,phone=0,
++    state.clear();state.update(mode=3,enabled=True,manual=False,done=1,locked=False,paused=False,menu=False,phone=0,
+                                mounted=False,combat=False,protected=False,autosave_service=True,reenter=False)
+     state.update(changes);calls.clear()
+     player=O(GetGame=lambda:game,nlsAutosaveEnabled=state['enabled'],nlsDeferredEnabled=state['manual'],
+              nlsRebornSafetyBlock=state['protected'],nlsDeferredPending=False,nlsDeferredSerial=42,
+-             nlsDeferredSource=0,IsInCombat=lambda:state['combat'],
++             nlsDeferredSource=0,NLSRebornGetMode=lambda:state['mode'],IsInCombat=lambda:state['combat'],
+              NLSRebornNotificationPhoneState=lambda:state['phone'])
+     state['player']=player
+     for n,fn in methods.items():

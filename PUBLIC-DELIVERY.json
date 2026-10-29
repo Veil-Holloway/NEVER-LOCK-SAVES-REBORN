@@ -1,25 +1,10 @@
 {
-  "build": "1.0.0-rc3",
-  "packaging_only": true,
-  "runtime_files_unchanged": 16,
-  "frozen_records_unchanged": 96,
-  "license": "MIT",
-  "original_mod": "https://www.nexusmods.com/cyberpunk2077/mods/9662",
-  "permission": "granted",
-  "game_acceptance": "NOT RUN",
-  "packages": [
-    {
-      "name": "Never_Lock_Saves_Reborn_v1.0.0-rc3_Release_Candidate.zip",
-      "size": 1034483,
-      "sha256": "0f5067701f0273d9e4325300d3619a1cd8819c86351bbc490b151e9f4d5a25e8",
-      "files": 1052
-    },
-    {
-      "name": "Never_Lock_Saves_Reborn_v1.0.0-rc3_RUNTIME_ONLY.zip",
-      "size": 80090,
-      "sha256": "44e0e9e19815e32393d950c62740e7fc12637cc29e0407f118c9c9dee2b20cbc",
-      "files": 21
-    }
-  ],
-  "source_manifest_scope": "FILE_MANIFEST.sha256 covers full public distribution snapshot; root release metadata and packages/ are added repository delivery surfaces."
+  "runtime_build": "1.0.0-vehicle-diagnostic.3",
+  "package_revision": "scope-reconciliation.1",
+  "publication": "unpublished_review_only",
+  "tag": null,
+  "scope_authority": "roadmap_v2.6_2026-10-28",
+  "historical_delivery": "docs/NeverLockSavesReborn/history/pre-freeze-github-vehicle-diagnostic.3/PUBLIC-DELIVERY.json",
+  "vehicle_combat_save_creation": "UNRESOLVED",
+  "save_write_reload_progression": "UNVERIFIED"
 }

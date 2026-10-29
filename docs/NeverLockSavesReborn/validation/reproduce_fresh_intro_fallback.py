@@ -37,10 +37,11 @@ for mode in (0,1,2,3):
       try:r.invoke(hook)
       except AttributeError as exc:error=type(exc).__name__+': '+str(exc)
       # All fixture DF states are active, so all three non-Vanilla modes
-      # have the pre-existing fallback when fresh completion is positive.
+      # have fallback eligibility when fresh completion is positive. RC4 mode2 attempts
+      # immediately; other eligible modes keep their deferred preference.
       eligible=(mode in (1,2,3) and not protected and done is not None and done>0)
-      expected_forced=int(eligible and not enabled)
-      expected_queued=bool(eligible and enabled)
+      expected_forced=int(eligible and (mode==2 or not enabled))
+      expected_queued=bool(eligible and enabled and mode!=2)
       row={'mode':mode,'hook':hook,'cached_protection':protected,'q000_done':done,'deferred_enabled':enabled,'notifications':notifications,
            'queued':player.nlsDeferredPending,'forced_checkpoint_attempts':r.state['forced'],'boundary_error':error,
            'expected_forced_checkpoint_attempts':expected_forced,'expected_queued':expected_queued,

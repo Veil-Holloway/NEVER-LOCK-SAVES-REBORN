@@ -1,17 +1,25 @@
 # Contribution and release preparation
 
-RC2 corrects one native autosave type annotation reported by the user's compiler. Other save-policy behavior is preserved; retain the source-contract and preservation checks.
-Read `docs/NeverLockSavesReborn/RELEASE-CONTRACT-1.0.0-rc1.md` before proposing work.
+The October 28, 2026 [v2.6 scope freeze](docs/NeverLockSavesReborn/Never_Lock_Saves_Reborn_Master_Status_Roadmap_v2.6.md)
+and README govern current work. Earlier release contracts are historical where
+they conflict. No major subsystem is planned before first stable release.
 
-Keep changes focused. Preserve all four modes, introduction protection, one-item
-queue, optional settings synchronization, Dark Future read-only readers and
-message-only switches. Never infer written/reloaded success from submission,
+Preserve all four save modes, introduction protection, deferred queue, existing
+Smart Autosave, bounded Guardian request tracking, optional settings
+synchronization, manual presets, Dark Future read-only readers and message-only
+switches. Excluded game-save backup/retention/storage/recovery systems and
+automatic character identity/configuration binding must not be reintroduced.
+Never infer written/reloaded success from native acceptance, alter native locks,
 edit quest facts as a workaround or modify game-save bytes.
 
-Run the packaged offline runner as described in README.md. Include the command,
-exit status and evidence boundary. Native/game/Windows acceptance is separate.
-Do not bundle user settings, reports, saves, logs with personal data, framework
-binaries or bytecode caches. Preserve source attribution. Upstream redistribution
-permission is unresolved; this candidate does not grant an MIT license to the
-whole derived package. Repository creation and public release remain separate
-user-directed actions.
+Use focused changes and the verification commands in
+PACKAGING-SCOPE-RECONCILIATION.md. Record commands, exit status and limits.
+Historical identity fixtures remain intact; failures caused by the scope removal
+must be distinguished from current runtime regressions. Actual native/game
+acceptance is separate from offline results.
+
+Do not bundle private settings/reports/saves/logs, framework binaries or caches.
+Preserve MIT, RalphModding's attribution and PERMISSION.md. Existing published
+tags/assets and test evidence remain unchanged. Review packages need a unique
+package revision, checksums/manifests and rollback instructions. This source
+reconciliation authorizes neither stable publication nor merging PR #1.

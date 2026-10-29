@@ -1,0 +1,10 @@
+{
+  "source_sha256": "4f484edd5decdf70eb129887395d1e48dd04f38a577f2920d07a6733afbb1271",
+  "assertions": 1943,
+  "failed": 0,
+  "boundary_errors": 0,
+  "first_failures": [],
+  "first_errors": [],
+  "scope": "Independent actual-source native-result boundary regression.\n\nExecutes the supplied REDscript helper, wrappers and deferred dispatcher through\nthe existing strict bounded evaluator. Native/game/UI services are doubles; this\ndoes not compile REDscript or demonstrate a game save, reload or progression.",
+  "negative_control": false
+}

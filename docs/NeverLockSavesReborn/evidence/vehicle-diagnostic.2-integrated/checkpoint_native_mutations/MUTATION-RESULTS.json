@@ -1,0 +1,37 @@
+{
+  "source_sha256": "bbe625062a4fbee666d8a11c881997447faf7069227af195a222b79870627b6e",
+  "controls": {
+    "native_false_discarded": {
+      "detected": true,
+      "failed": 36,
+      "boundary_errors": 0
+    },
+    "fresh_intro_guard_removed": {
+      "detected": true,
+      "failed": 63,
+      "boundary_errors": 0
+    },
+    "failure_notification_ignores_master": {
+      "detected": true,
+      "failed": 54,
+      "boundary_errors": 0
+    },
+    "rejected_request_reports_accepted_code": {
+      "detected": true,
+      "failed": 3,
+      "boundary_errors": 0
+    },
+    "deferred_return_discards_helper_result": {
+      "detected": true,
+      "failed": 12,
+      "boundary_errors": 0
+    },
+    "attempt_serial_overflows_bound": {
+      "detected": true,
+      "failed": 8,
+      "boundary_errors": 0
+    }
+  },
+  "detected": 6,
+  "total": 6
+}

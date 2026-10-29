@@ -1,0 +1,67 @@
+{
+  "scope": "RC2 source/identity checks only; no compiler or game runtime.",
+  "unmodified_candidate": "passed",
+  "negative_controls": [
+    {
+      "control": "reported_type_regression",
+      "rejected": true,
+      "reason": "Verified autosave type declaration missing"
+    },
+    {
+      "control": "guessed_type_regression",
+      "rejected": true,
+      "reason": "Verified autosave type declaration missing"
+    },
+    {
+      "control": "getter_spelling_changed",
+      "rejected": true,
+      "reason": "Verified autosave type declaration missing"
+    },
+    {
+      "control": "service_guard_removed",
+      "rejected": true,
+      "reason": "RC2 source differs outside exact type/labels"
+    },
+    {
+      "control": "pending_clear_removed",
+      "rejected": true,
+      "reason": "RC2 source differs outside exact type/labels"
+    },
+    {
+      "control": "checkpoint_submit_changed",
+      "rejected": true,
+      "reason": "RC2 source differs outside exact type/labels"
+    },
+    {
+      "control": "mixed_init_version",
+      "rejected": true,
+      "reason": "Unexpected RC2 version count"
+    },
+    {
+      "control": "init_nonlabel_change",
+      "rejected": true,
+      "reason": "RC2 source differs outside exact type/labels"
+    },
+    {
+      "control": "module_changed",
+      "rejected": true,
+      "reason": "Changed protected RC2 file"
+    },
+    {
+      "control": "companion_changed",
+      "rejected": true,
+      "reason": "Changed protected RC2 file"
+    },
+    {
+      "control": "extra_runtime_file",
+      "rejected": true,
+      "reason": "RC2 runtime/helper file inventory changed"
+    },
+    {
+      "control": "missing_runtime_file",
+      "rejected": true,
+      "reason": "RC2 runtime/helper file inventory changed"
+    }
+  ]
+}
+PASS twelve intended RC2 source-scope mutation controls; reported and guessed type regressions also fail focused contract

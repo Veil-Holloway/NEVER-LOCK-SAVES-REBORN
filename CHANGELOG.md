@@ -1,3 +1,58 @@
+# scope-reconciliation.1 — unreleased scope documentation/package correction
+
+October 29, 2026 (America/Vancouver). Applies the October 28 v2.6 scope freeze.
+Removes the five active Windows/Python backup/recovery companion files and their
+current runner entries. Corrects README/support/contribution/release claims,
+keeps Guardian request tracking and manual presets, and adds fail-closed package
+scope validation with unique review-package identities. Runtime .3 save semantics
+are unchanged; one CET panel sentence changes. Historical releases, tests and
+attribution remain intact. See PACKAGING-SCOPE-RECONCILIATION.md for verification
+and unresolved actual vehicle-combat save/reload/progression acceptance.
+
+---
+
+# 1.0.0-vehicle-diagnostic.3 — cold-start observer bindings
+
+Defers three CET observer API lookups until protected registration in onInit. Retains native result diagnostics and all save policy. Vehicle-combat saving remains unresolved. See CHANGELOG-VEHICLE-DIAGNOSTIC.3.md.
+
+# 1.0.0-vehicle-diagnostic.2 — compiler-default hotfix
+
+Removes the two compiler-rejected negative diagnostic field defaults; serial-guarded readers retain unknown before an attempt. Save routing is unchanged. Native compilation and vehicle-combat saving remain unverified; see CHANGELOG-VEHICLE-DIAGNOSTIC.2.md.
+
+# Changelog
+
+## Unreleased — diagnostic publication repair
+
+October 25, 2026. The draft assets were uploaded successfully and their downloaded
+bytes and archive manifests matched. The final metadata query failed because
+the release-by-tag REST endpoint did not expose this unpublished draft. Read draft
+metadata through the authenticated CLI resolver instead. Pin the repair's draft
+verification to source commit 8748f0b2513216265bdfd2927320d3f7b22001bc and reuse
+existing assets without replacing them. No runtime, tag or package bytes change.
+The original failed job remains in history. The repaired draft job passed; all
+seven Drive assets were downloaded through authenticated raw reads and matched
+SHA-256/size. A two-ZIP receipt now gates final GitHub readback and publication.
+
+# Changelog
+
+## Unreleased
+
+Vehicle-combat saving remains unresolved. See the [diagnostic preview changes](CHANGELOG-VEHICLE-DIAGNOSTIC.1.md) and [test procedure](DIAGNOSTIC-VEHICLE-SAVE.md). No stable promotion.
+
+# Changelog
+
+## Unreleased — gameplay evidence correction
+
+October 25, 2026 (America/Los_Angeles).
+
+- Withdraw the earlier vehicle-combat success report: the user now reports a notification with no save visible in the load menu during vehicle combat. Actual saving remains a reported failure; RC4 is not validated for release promotion.
+- Record that all four forced-checkpoint calls currently ignore the native Bool return and notify afterwards. Notification display cannot establish request acceptance or save completion. The native rejection/write boundary still needs runtime evidence; no save-creation fix is claimed.
+- Preserve the existing RC4 packages and frozen evidence. This is a documentation-only correction; save/reload/progression and complete route/settings acceptance remain outstanding. See [the corrected report](docs/NeverLockSavesReborn/evidence/USER-TEST-REPORTS-RC4.md) and [RC4 notes](CHANGELOG-RC4.md).
+
+---
+
+## Historical combined changelog
+
 # 1.0.0-rc2 — autosave-system type correction
 
 October 24, 2026 (America/Los_Angeles). **Release candidate for testing.**

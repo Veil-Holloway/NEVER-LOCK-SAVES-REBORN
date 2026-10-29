@@ -1,0 +1,34 @@
+[
+  {
+    "case": "game_reopened_during_journal",
+    "retired_while_game_running": 0,
+    "result": {
+      "status": "stopped",
+      "retired_ids": [],
+      "plan_digest": "2d555de47f87bb6b8d3e6007c6a722d456f8c119993101a2806a922be3b1b3ad",
+      "active_retention_only": true,
+      "permanent_deletion": false,
+      "remaining_ids": [
+        "4e435f4df61d4f92be77d9a4d7499eae",
+        "ee6d561ee428483ca85fedcda0f01803"
+      ],
+      "error": "injected game reopened"
+    }
+  },
+  {
+    "case": "retired_directory_swapped_after_precheck",
+    "snapshot_ids_moved_outside_root": [],
+    "result": {
+      "status": "stopped",
+      "retired_ids": [],
+      "plan_digest": "f964f19e06bba47345864409a621cbce6a1cf7b96323b4040cf8df5f9a5041ac",
+      "active_retention_only": true,
+      "permanent_deletion": false,
+      "remaining_ids": [
+        "fd8745d42eaa489e9af489dec66b7682",
+        "bab8cdf26d604e0b95f8b0335a87b6fd"
+      ],
+      "error": "Symlinks and Windows reparse points are refused"
+    }
+  }
+]

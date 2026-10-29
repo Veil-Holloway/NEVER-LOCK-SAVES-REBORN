@@ -4,7 +4,7 @@
 supported stable character/playthrough identifier is unavailable. It never
 detects, selects or applies a character profile automatically. Callers must apply
 the complete returned settings only after a successful explicit `get(label)`.
-The broader automatic identity requirement remains unverified/partial.
+Automatic character/playthrough identity and binding are removed from product scope by the October 28 v2.6 addendum; manual presets remain retained.
 
 The bank is schema 1, a maximum of 16 presets. Labels are case-sensitive ASCII
 letters, digits, underscore or hyphen, 1–32 bytes. They are table keys, never

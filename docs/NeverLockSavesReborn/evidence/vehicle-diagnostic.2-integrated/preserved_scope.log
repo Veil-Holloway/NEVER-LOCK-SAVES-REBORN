@@ -1,0 +1,1 @@
+PASS preserved scope: 6 files, 49 REDscript methods, 41 companion functions/classes match preRC1; three request hooks differ only by a notification guard. Source identity only.

@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/42c398b74e64/github-audit/repo/docs/NeverLockSavesReborn/validation/check_rc4_scope.py", line 69, in <module>
+    check(Path(sys.argv[1]).resolve())
+  File "/workspace/scratch/42c398b74e64/github-audit/repo/docs/NeverLockSavesReborn/validation/check_rc4_scope.py", line 51, in check
+    exact_candidate_to_rc3(root, rel)
+  File "/workspace/scratch/42c398b74e64/github-audit/repo/docs/NeverLockSavesReborn/validation/check_rc4_scope.py", line 28, in exact_candidate_to_rc3
+    assert sha(data) == spec['candidate_sha256'], 'RC4 source differs outside reviewed Unrestricted routing/cleanup: ' + rel
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RC4 source differs outside reviewed Unrestricted routing/cleanup: bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua

@@ -30,13 +30,14 @@ elif shutil.which('luatex'):
 else:
     raise SystemExit('Lua 5.3+ test host missing; no checks are claimed passed.')
 cases=[
+ ('observer_cold_start',lua+[str(HERE/'test_observer_cold_start.lua'),str(root)]),
+ ('diagnostic3_source_scope',[sys.executable,str(HERE/'check_diagnostic3_scope.py'),str(root)]),
+ ('diagnostic_initializers',[sys.executable,str(HERE/'test_diagnostic_initializers.py'),str(root)]),
+ ('diagnostic2_source_scope',[sys.executable,str(HERE/'check_diagnostic2_scope.py'),str(root)]),
  ('lua_syntax',lua+[str(HERE/'check_lua_syntax.lua'),str(root)]),
  ('guardian_ledger',lua+[str(HERE/'test_guardian.lua'),str(root/'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn')]),
  ('guardian_observers',lua+[str(HERE/'test_guardian_bridge.lua'),str(root/'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian_bridge.lua'),str(root/'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian.lua')]),
  ('guardian_integration',lua+[str(HERE/'test_guardian_integration.lua'),str(root)]),
- ('backup_recovery',[sys.executable,'-m','unittest','discover','-s',str(root/'tools/NLSRSaveGuardian'),'-p','test_*.py','-v']),
- ('retention_journal_review',[sys.executable,str(HERE/'review_post_journal.py'),str(root/'tools/NLSRSaveGuardian/save_guardian.py')]),
- ('retention_protected_review',[sys.executable,str(HERE/'review_protected_journal.py'),str(root/'tools/NLSRSaveGuardian/save_guardian.py')]),
  ('lua_integration',lua+[str(HERE/'test_lua_integration.lua'),str(root)]),
  ('queue_lifecycle',lua+[str(HERE/'test_queue_fresh.lua'),str(root)]),
  ('df_adapter',lua+[str(HERE/'test_dark_future.lua'),str(root)]),
@@ -71,7 +72,15 @@ cases=[
  ('dependency_scope',[sys.executable,str(HERE/'check_dependency_scope.py'),str(root)]),
  ('rc1_source_freeze',[sys.executable,str(HERE/'check_rc1_scope.py'),str(root)]),
  ('autosave_type_contract',[sys.executable,str(HERE/'check_autosave_type_contract.py'),str(root)]),
+ ('checkpoint_native_result',[sys.executable,str(HERE/'test_checkpoint_native_result.py'),str(root)]),
+ ('checkpoint_native_mutations',[sys.executable,str(HERE/'run_native_result_mutations.py'),str(root),str(out/'checkpoint_native_mutations')]),
+ ('checkpoint_report',lua+[str(HERE/'test_checkpoint_report.lua'),str(module_dir)]),
+ ('vehicle_diag_source_freeze',[sys.executable,str(HERE/'check_vehicle_diag_scope.py'),str(root)]),
+ ('vehicle_diag_scope_controls',[sys.executable,str(HERE/'run_vehicle_diag_scope_controls.py'),str(root)]),
  ('smart_queue_routes',[sys.executable,str(HERE/'test_smart_queue_routes.py'),str(root)]),
+ ('unrestricted_routes',[sys.executable,str(HERE/'test_unrestricted_routes.py'),str(root)]),
+ ('rc4_source_freeze',[sys.executable,str(HERE/'check_rc4_scope.py'),str(root)]),
+ ('rc4_scope_controls',[sys.executable,str(HERE/'run_rc4_scope_controls.py'),str(root)]),
  ('rc3_source_freeze',[sys.executable,str(HERE/'check_rc3_scope.py'),str(root)]),
  ('rc3_scope_controls',[sys.executable,str(HERE/'run_rc3_scope_controls.py'),str(root)]),
  ('rc2_source_freeze',[sys.executable,str(HERE/'check_rc2_scope.py'),str(root)]),
@@ -98,6 +107,9 @@ with tempfile.TemporaryDirectory(prefix='nlsr-config-test-') as fixture:
         (out/(name+'.log')).write_text(result.stdout+result.stderr,encoding='utf-8')
         results.append({'check':name,'exit_code':result.returncode,'command':command,'log':name+'.log'})
         print(('PASS' if result.returncode==0 else 'FAIL')+' '+name)
-summary={'scope':'Fresh offline actual-Lua and constrained REDscript-source boundary tests. No REDscript compiler, CET/game runtime, save creation, reload, or quest progression.','results':results,'passed':all(x['exit_code']==0 for x in results)}
+skipped=[{'check':name,'status':'SKIP_REMOVED_SCOPE','reason':'October 28 v2.6 removes the game-save backup/recovery companion; historical evidence is preserved.'} for name in ('backup_recovery','retention_journal_review','retention_protected_review')]
+for item in skipped:
+    print('SKIP_REMOVED_SCOPE '+item['check'])
+summary={'skipped':skipped,'scope':'Fresh offline actual-Lua and constrained REDscript-source boundary tests. No REDscript compiler, CET/game runtime, save creation, reload, or quest progression.','results':results,'passed':all(x['exit_code']==0 for x in results)}
 (out/'RESULTS.json').write_text(json.dumps(summary,indent=2),encoding='utf-8')
 sys.exit(0 if summary['passed'] else 1)

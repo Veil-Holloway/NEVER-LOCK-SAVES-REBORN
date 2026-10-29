@@ -1,0 +1,87 @@
+{
+  "scope": "Exact source/identity controls only; not compiler/runtime/gameplay.",
+  "unmodified_candidate": "passed",
+  "negative_controls": [
+    {
+      "control": "unrestricted_admission_guard_removed",
+      "rejected": true,
+      "reason": "RC4 source differs outside reviewed Unrestricted routing/cleanup"
+    },
+    {
+      "control": "unrestricted_fresh_request_cleanup_removed",
+      "rejected": true,
+      "reason": "RC4 source differs outside reviewed Unrestricted routing/cleanup"
+    },
+    {
+      "control": "mode_switch_manual_cleanup_removed",
+      "rejected": true,
+      "reason": "RC4 source differs outside reviewed Unrestricted routing/cleanup"
+    },
+    {
+      "control": "mode_switch_cancels_automatic_work",
+      "rejected": true,
+      "reason": "RC4 source differs outside reviewed Unrestricted routing/cleanup"
+    },
+    {
+      "control": "intro_queue_guard_removed",
+      "rejected": true,
+      "reason": "RC4 source differs outside reviewed Unrestricted routing/cleanup"
+    },
+    {
+      "control": "smart_admission_removed",
+      "rejected": true,
+      "reason": "RC4 source differs outside reviewed Unrestricted routing/cleanup"
+    },
+    {
+      "control": "native_unlock_dispatch_guard_removed",
+      "rejected": true,
+      "reason": "RC4 source differs outside reviewed Unrestricted routing/cleanup"
+    },
+    {
+      "control": "checkpoint_pending_clear_removed",
+      "rejected": true,
+      "reason": "RC4 source differs outside reviewed Unrestricted routing/cleanup"
+    },
+    {
+      "control": "reported_autosave_type_regression",
+      "rejected": true,
+      "reason": "RC4 source differs outside reviewed Unrestricted routing/cleanup"
+    },
+    {
+      "control": "mixed_init_version",
+      "rejected": true,
+      "reason": "RC4 source differs outside reviewed Unrestricted routing/cleanup"
+    },
+    {
+      "control": "queue_help_drift",
+      "rejected": true,
+      "reason": "RC4 source differs outside reviewed Unrestricted routing/cleanup"
+    },
+    {
+      "control": "unrelated_init_change",
+      "rejected": true,
+      "reason": "RC4 source differs outside reviewed Unrestricted routing/cleanup"
+    },
+    {
+      "control": "module_changed",
+      "rejected": true,
+      "reason": "Changed protected RC4 file"
+    },
+    {
+      "control": "companion_changed",
+      "rejected": true,
+      "reason": "Changed protected RC4 file"
+    },
+    {
+      "control": "extra_runtime_file",
+      "rejected": true,
+      "reason": "RC4 runtime/helper file inventory changed"
+    },
+    {
+      "control": "missing_runtime_file",
+      "rejected": true,
+      "reason": "RC4 runtime/helper file inventory changed"
+    }
+  ]
+}
+PASS sixteen intended RC4 source-scope mutation controls

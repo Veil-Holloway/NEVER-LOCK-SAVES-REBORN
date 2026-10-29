@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Exact preRC3 identity outside the new on-demand diagnostic seams."""
 from pathlib import Path
+from check_vehicle_diag_scope import normalized_rc4
 from check_rc1_scope import normalized_pre_rc4
 import hashlib,json,sys
 FIXTURE=Path(__file__).parent/'fixtures/dependency_scope.json'
@@ -20,7 +21,7 @@ def normalized_redscript(root):
  b=b.replace(b'0.14.0-preRC4',b'0.14.0-preRC3');assert sha(b)==f['baseline_hashes'][f['redscript_path']],'Unrelated REDS source changed';return b
 
 def normalized_report(root):
- f=fixture();b=(root/f['report_path']).read_bytes();start=b.index(b'local DEPENDENCY_KEYS=');end=b.index(b'local function tri(',start)
+ f=fixture();b=normalized_rc4(root,f['report_path']);start=b.index(b'local DEPENDENCY_KEYS=');end=b.index(b'local function tri(',start)
  assert sha(b[start:end])==f['report_block_sha256'],'Evidence helper differs from reviewed source';b=b[:start]+b[end:]
  before=b"  for _,key in ipairs(DEPENDENCY_KEYS) do report.dependencies[key]=version(deps[key]) end\n  report.dependency_evidence=dependencyEvidence(s.dependencyEvidence,report.dependencies)\n"
  after=b"  for _,key in ipairs({'cet','redscript','red4ext','nativeSettings','darkFuture'}) do report.dependencies[key]=version(deps[key]) end\n"

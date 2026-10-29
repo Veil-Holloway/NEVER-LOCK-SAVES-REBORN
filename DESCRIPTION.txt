@@ -1,1 +1,1 @@
-Never Lock Saves expanded.. CET and Native Settings controls.. four save modes.. deferred queue and optional autosaves.. based on RalphModding's original.. RC3 testing candidate..
+Never Lock Saves: Reborn.. CET/Native Settings controls.. four save modes.. deferred queue and Smart Autosave.. read-only Dark Future.. Guardian request tracking and manual presets.. runtime diagnostic.3; scope-reconciliation.1 unpublished review revision.. vehicle-combat save/reload/progression unresolved.. based on RalphModding's original under MIT.

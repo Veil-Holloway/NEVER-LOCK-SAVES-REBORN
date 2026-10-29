@@ -1,0 +1,82 @@
+{
+  "source_sha256": "5eeac18723143de459aaa56d7aea5d3f8fd88ccfc9b2e57230fefb3bfde7f288",
+  "assertions": 1943,
+  "failed": 8,
+  "boundary_errors": 0,
+  "first_failures": [
+    {
+      "label": "diagnostic serial stays bounded and getters expose current observations",
+      "detail": {
+        "serial": 2147483647,
+        "combat": false,
+        "mounted": false,
+        "locked": false
+      }
+    },
+    {
+      "label": "diagnostic serial stays bounded and getters expose current observations",
+      "detail": {
+        "serial": 2147483647,
+        "combat": false,
+        "mounted": false,
+        "locked": true
+      }
+    },
+    {
+      "label": "diagnostic serial stays bounded and getters expose current observations",
+      "detail": {
+        "serial": 2147483647,
+        "combat": false,
+        "mounted": true,
+        "locked": false
+      }
+    },
+    {
+      "label": "diagnostic serial stays bounded and getters expose current observations",
+      "detail": {
+        "serial": 2147483647,
+        "combat": false,
+        "mounted": true,
+        "locked": true
+      }
+    },
+    {
+      "label": "diagnostic serial stays bounded and getters expose current observations",
+      "detail": {
+        "serial": 2147483647,
+        "combat": true,
+        "mounted": false,
+        "locked": false
+      }
+    },
+    {
+      "label": "diagnostic serial stays bounded and getters expose current observations",
+      "detail": {
+        "serial": 2147483647,
+        "combat": true,
+        "mounted": false,
+        "locked": true
+      }
+    },
+    {
+      "label": "diagnostic serial stays bounded and getters expose current observations",
+      "detail": {
+        "serial": 2147483647,
+        "combat": true,
+        "mounted": true,
+        "locked": false
+      }
+    },
+    {
+      "label": "diagnostic serial stays bounded and getters expose current observations",
+      "detail": {
+        "serial": 2147483647,
+        "combat": true,
+        "mounted": true,
+        "locked": true
+      }
+    }
+  ],
+  "first_errors": [],
+  "scope": "Independent actual-source native-result boundary regression.\n\nExecutes the supplied REDscript helper, wrappers and deferred dispatcher through\nthe existing strict bounded evaluator. Native/game/UI services are doubles; this\ndoes not compile REDscript or demonstrate a game save, reload or progression."
+}

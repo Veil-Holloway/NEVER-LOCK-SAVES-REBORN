@@ -1,0 +1,72 @@
+{
+  "scope": "Exact source-identity controls only; no compiler/runtime/save proof.",
+  "candidate": "passed",
+  "negative_controls": [
+    {
+      "control": "changed_file_0",
+      "rejected": true,
+      "reason": "Diagnostic source differs outside reviewed request-result changes"
+    },
+    {
+      "control": "changed_file_1",
+      "rejected": true,
+      "reason": "Diagnostic source differs outside reviewed request-result changes"
+    },
+    {
+      "control": "changed_file_2",
+      "rejected": true,
+      "reason": "Diagnostic source differs outside reviewed request-result changes"
+    },
+    {
+      "control": "changed_file_3",
+      "rejected": true,
+      "reason": "Diagnostic source differs outside reviewed request-result changes"
+    },
+    {
+      "control": "changed_file_4",
+      "rejected": true,
+      "reason": "Diagnostic source differs outside reviewed request-result changes"
+    },
+    {
+      "control": "changed_file_5",
+      "rejected": true,
+      "reason": "Diagnostic source differs outside reviewed request-result changes"
+    },
+    {
+      "control": "changed_file_6",
+      "rejected": true,
+      "reason": "Diagnostic source differs outside reviewed request-result changes"
+    },
+    {
+      "control": "native_false_not_checked",
+      "rejected": true,
+      "reason": "Diagnostic source differs outside reviewed request-result changes"
+    },
+    {
+      "control": "native_rejection_marked_accepted",
+      "rejected": true,
+      "reason": "Diagnostic source differs outside reviewed request-result changes"
+    },
+    {
+      "control": "deferred_result_ignored",
+      "rejected": true,
+      "reason": "Diagnostic source differs outside reviewed request-result changes"
+    },
+    {
+      "control": "unrelated_module",
+      "rejected": true,
+      "reason": "Changed protected diagnostic file"
+    },
+    {
+      "control": "extra_runtime",
+      "rejected": true,
+      "reason": "Diagnostic runtime/helper file inventory changed"
+    },
+    {
+      "control": "missing_runtime",
+      "rejected": true,
+      "reason": "Diagnostic runtime/helper file inventory changed"
+    }
+  ]
+}
+PASS 13 diagnostic source-scope mutation controls

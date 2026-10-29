@@ -1,8 +1,8 @@
-# RC3 installation audit
+# Vehicle diagnostic installation audit
 
-This optional Python 3.10+ tool checks the installed **1.0.0-rc3** runtime against
+This optional Python 3.10+ tool checks the installed **1.0.0-vehicle-diagnostic.3** runtime against
 16 pinned files: 13 CET Lua files and 3 REDscript files. Python is not required
-for the mod itself. Run this tool from the extracted RC3 package, outside the
+for the mod itself. Run this tool from the extracted diagnostic package, outside the
 game directory. In PowerShell, replace the example with your game root:
 
 ```powershell
@@ -34,13 +34,13 @@ Missing labels remain unknown. Use `--help` for options.
 
 Optional `--redscript-log "C:\Path\To\redscript.log"` and `--cet-log
 "C:\Path\To\cyber_engine_tweaks.log"` return a bounded tail's digest and
-marker counts, with no log text. RC1, RC2 and RC3 labels have separate counters. These observations are unscoped: old logs and
+marker counts, with no log text. RC1, RC2, RC3 and RC4 labels have separate counters. These observations are unscoped: old logs and
 zero error markers do not pass current compilation. Inspect fresh logs from an
 actual launch separately.
 
 This embedded tool pins runtime bytes only. It does not accept the earlier
 acceptance kit's `--archive` option: a package cannot contain its own final ZIP
-hash. Verify the downloaded RC3 ZIP separately with its accompanying `.sha256`
+hash. Verify the downloaded diagnostic ZIP separately with its accompanying `.sha256`
 sidecar, for example `Get-FileHash -Algorithm SHA256 <ZIP path>`, and compare the
 full digest. Neither a ZIP match nor an installation match supplies a gameplay
 pass.
@@ -52,7 +52,7 @@ filesystem snapshot. Absolute paths, discovered filenames and raw errors are
 omitted; unexpected names use digest identifiers. A review candidate may require
 manual local directory inspection to locate it.
 
-The included regression tests use temporary directories and the extracted RC3
+The included regression tests use temporary directories and the extracted diagnostic
 runtime as fixture input. Run from the extracted package root:
 
 ```powershell
@@ -61,5 +61,5 @@ py -3 -m unittest discover -s tools/NLSRInstallAudit/tests -p "test_*.py" -v
 
 These tests do not launch the game or establish Windows-specific behavior. Record
 actual outcomes in `docs/NeverLockSavesReborn/TEST-MATRIX.csv`; preserve untested
-and deferred rows. Prior preRC4 broad working feedback remains attributed to
-preRC4. The retained RC2 type-declaration fix and the RC3 Smart interaction-queue fix still need actual game compilation and gameplay tests.
+and deferred rows. Earlier broad gameplay working reports were withdrawn; current game acceptance
+remains untested. The retained RC2 native-type and RC3 Smart interaction fixes, plus RC4's Unrestricted immediate-request routing, still need actual game compilation and gameplay tests.

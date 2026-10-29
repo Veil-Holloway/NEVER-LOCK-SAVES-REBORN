@@ -1,0 +1,340 @@
+{
+  "source_sha256": "270d3eec955af11c6593eaa3048273833633527cddf1a7e23d6b0c37961d174a",
+  "assertions": 1943,
+  "failed": 54,
+  "boundary_errors": 0,
+  "first_failures": [
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": false,
+        "master": false,
+        "tone": 0,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": false,
+        "master": false,
+        "tone": 0,
+        "deferred": true
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": false,
+        "master": false,
+        "tone": 1,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": false,
+        "master": false,
+        "tone": 1,
+        "deferred": true
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": false,
+        "master": false,
+        "tone": 2,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": false,
+        "master": false,
+        "tone": 2,
+        "deferred": true
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": false,
+        "tone": 0,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": false,
+        "tone": 0,
+        "deferred": true
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": false,
+        "tone": 1,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": false,
+        "tone": 1,
+        "deferred": true
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": false,
+        "tone": 2,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": false,
+        "tone": 2,
+        "deferred": true
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": true,
+        "service": false,
+        "master": false,
+        "tone": 0,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": true,
+        "service": false,
+        "master": false,
+        "tone": 0,
+        "deferred": true
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": true,
+        "service": false,
+        "master": false,
+        "tone": 1,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": true,
+        "service": false,
+        "master": false,
+        "tone": 1,
+        "deferred": true
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": true,
+        "service": false,
+        "master": false,
+        "tone": 2,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToSaveGame",
+        "native_result": true,
+        "service": false,
+        "master": false,
+        "tone": 2,
+        "deferred": true
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": false,
+        "master": false,
+        "tone": 0,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": false,
+        "master": false,
+        "tone": 0,
+        "deferred": true
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": false,
+        "master": false,
+        "tone": 1,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": false,
+        "master": false,
+        "tone": 1,
+        "deferred": true
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": false,
+        "master": false,
+        "tone": 2,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": false,
+        "master": false,
+        "tone": 2,
+        "deferred": true
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": false,
+        "tone": 0,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": false,
+        "tone": 0,
+        "deferred": true
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": false,
+        "tone": 1,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": false,
+        "tone": 1,
+        "deferred": true
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": false,
+        "tone": 2,
+        "deferred": false
+      }
+    },
+    {
+      "label": "notification master switch controls all attempt feedback",
+      "detail": {
+        "hook": "HandlePressToQuickSaveGame",
+        "native_result": false,
+        "service": true,
+        "master": false,
+        "tone": 2,
+        "deferred": true
+      }
+    }
+  ],
+  "first_errors": [],
+  "scope": "Independent actual-source native-result boundary regression.\n\nExecutes the supplied REDscript helper, wrappers and deferred dispatcher through\nthe existing strict bounded evaluator. Native/game/UI services are doubles; this\ndoes not compile REDscript or demonstrate a game save, reload or progression."
+}

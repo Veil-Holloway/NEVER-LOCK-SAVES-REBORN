@@ -1,0 +1,77 @@
+{
+  "scope": "Exact source/identity controls only; no game/runtime/compiler.",
+  "unmodified_candidate": "passed",
+  "negative_controls": [
+    {
+      "control": "smart_mode_scope_changed",
+      "rejected": true,
+      "reason": "RC3 source differs outside reviewed Smart routing/labels"
+    },
+    {
+      "control": "smart_queue_admission_removed",
+      "rejected": true,
+      "reason": "RC3 source differs outside reviewed Smart routing/labels"
+    },
+    {
+      "control": "manual_smart_call_removed",
+      "rejected": true,
+      "reason": "RC3 source differs outside reviewed Smart routing/labels"
+    },
+    {
+      "control": "pause_smart_call_removed",
+      "rejected": true,
+      "reason": "RC3 source differs outside reviewed Smart routing/labels"
+    },
+    {
+      "control": "gameplay_smart_call_removed",
+      "rejected": true,
+      "reason": "RC3 source differs outside reviewed Smart routing/labels"
+    },
+    {
+      "control": "native_unlock_dispatch_guard_removed",
+      "rejected": true,
+      "reason": "RC3 source differs outside reviewed Smart routing/labels"
+    },
+    {
+      "control": "pending_clear_removed",
+      "rejected": true,
+      "reason": "RC3 source differs outside reviewed Smart routing/labels"
+    },
+    {
+      "control": "reported_autosave_type_regression",
+      "rejected": true,
+      "reason": "RC3 source differs outside reviewed Smart routing/labels"
+    },
+    {
+      "control": "mixed_init_version",
+      "rejected": true,
+      "reason": "RC3 source differs outside reviewed Smart routing/labels"
+    },
+    {
+      "control": "init_nonlabel_change",
+      "rejected": true,
+      "reason": "RC3 source differs outside reviewed Smart routing/labels"
+    },
+    {
+      "control": "module_changed",
+      "rejected": true,
+      "reason": "Changed protected RC3 file"
+    },
+    {
+      "control": "companion_changed",
+      "rejected": true,
+      "reason": "Changed protected RC3 file"
+    },
+    {
+      "control": "extra_runtime_file",
+      "rejected": true,
+      "reason": "RC3 runtime/helper file inventory changed"
+    },
+    {
+      "control": "missing_runtime_file",
+      "rejected": true,
+      "reason": "RC3 runtime/helper file inventory changed"
+    }
+  ]
+}
+PASS fourteen intended RC3 source-scope mutation controls

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only, bounded RC3 installation observations; standard library only."""
+"""Read-only, bounded RC4 installation observations; standard library only."""
 import argparse
 from datetime import datetime, timezone
 import hashlib
@@ -10,8 +10,8 @@ import re
 import stat
 import sys
 
-RELEASE = '1.0.0-rc3'
-INVENTORY_SHA256 = 'f2247af5195e9d0932a2bbc13fed52f3cafd2e60b65e4e80819fba47b2c8aef2'
+RELEASE = '1.0.0-vehicle-diagnostic.3'
+INVENTORY_SHA256 = 'a3eedb804da3ed5cd68d00bb076301b3e6a499b4848cce455b1fdaae7302efbf'
 LUA_ROOT = 'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn'
 REDS_ROOT = 'r6/scripts/NeverLockSavesReborn'
 MAX_FILE = 2 * 1024 * 1024
@@ -366,7 +366,8 @@ class Auditor:
                            'failed': len(re.findall(rb'\bfailed\b', data, re.I)),
                            'rc1_label': data.lower().count(b'1.0.0-rc1'),
                            'rc2_label': data.lower().count(b'1.0.0-rc2'),
-                           'rc3_label': data.lower().count(b'1.0.0-rc3')})
+                           'rc3_label': data.lower().count(b'1.0.0-rc3'),
+                           'rc4_label': data.lower().count(b'1.0.0-rc4')})
         except (OSError, AuditError) as exc:
             row['status'] = 'incomplete'
             self.issue(exc.code if isinstance(exc, AuditError) else 'io_error', kind + '_log', incomplete=True)
@@ -380,7 +381,7 @@ class Parser(argparse.ArgumentParser):
 def main(argv=None):
     report = base_report()
     try:
-        parser = Parser(description='Read-only RC3 runtime byte audit. Prints JSON; does not install, repair, run the game or certify save safety.')
+        parser = Parser(description='Read-only RC4 runtime byte audit. Prints JSON; does not install, repair, run the game or certify save safety.')
         parser.add_argument('--game-root', required=True, metavar='DIRECTORY', help='Cyberpunk installation directory; never the save directory')
         parser.add_argument('--version', action='append', default=[], metavar='COMPONENT=VALUE',
                             help='User-reported label: game,cet,redscript,red4ext,codeware,native_settings,dark_future; repeat per component')

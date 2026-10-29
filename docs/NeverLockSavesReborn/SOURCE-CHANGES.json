@@ -1,74 +1,24 @@
-[
-  {
-    "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
-    "change": "modified",
-    "baseline_sha256": "4049bef1a72415ebd7796e980e7cce2911ad7333dc7ca241f60b01a078648166",
-    "candidate_sha256": "58f1295871e29b5a0b5d15e78670f481669461242e49c628efa31dc1be4dedd5"
-  },
-  {
-    "path": "docs/NeverLockSavesReborn/validation/check_rc2_scope.py",
-    "change": "modified",
-    "baseline_sha256": "c98ec954f9224c27d6f3fcbb4af3828428e96cd7f6283c9bd376054cf09ff8b1",
-    "candidate_sha256": "400396aae810d24710a1a9a6d1bccccc08496c6c2f5f175f9eae3dd9b17dc8a6"
-  },
-  {
-    "path": "docs/NeverLockSavesReborn/validation/check_rc3_scope.py",
-    "change": "added",
-    "baseline_sha256": null,
-    "candidate_sha256": "dc97af8466f0669675318752e829f5c4de0a2ebba70ac2613e1f52b117641616"
-  },
-  {
-    "path": "docs/NeverLockSavesReborn/validation/reproduce_fresh_intro_fallback.py",
-    "change": "modified",
-    "baseline_sha256": "0a3853c5b8431acb1e1202c8a9f0aaae4bf6046cb4180e20474908be46adfea4",
-    "candidate_sha256": "04ad9b4925aded3aa3bf5b651586c5adb08df29c1c30ea85473c17f580ff884c"
-  },
-  {
-    "path": "docs/NeverLockSavesReborn/validation/run_checks.py",
-    "change": "modified",
-    "baseline_sha256": "63126d0bd06e105cb056b3ba0e7b4082c023866170fd342c29589879ef39343f",
-    "candidate_sha256": "2931a95cacc81460a11d127daea78ff76c183168d8e26fdc1f4a8e3595801afc"
-  },
-  {
-    "path": "docs/NeverLockSavesReborn/validation/run_rc2_scope_controls.py",
-    "change": "modified",
-    "baseline_sha256": "4e322a72016234079e9ce9b9e0dc718a719a9d641aa0fd12244a2614291423a5",
-    "candidate_sha256": "2572dc9113b1cb6e83d90cb9463d2210a1429b947910ed2a3518c0b05580e175"
-  },
-  {
-    "path": "docs/NeverLockSavesReborn/validation/run_rc3_scope_controls.py",
-    "change": "added",
-    "baseline_sha256": null,
-    "candidate_sha256": "6428d77495a651a8a0fe64f172f66ea68d5e06b09009749ca4ce57b0e007d2ee"
-  },
-  {
-    "path": "docs/NeverLockSavesReborn/validation/test_smart_queue_routes.py",
-    "change": "added",
-    "baseline_sha256": null,
-    "candidate_sha256": "e07b66113a7cc9c9bb8903820110a049fdce4c6f735ce0e12605404ad392f50c"
-  },
-  {
-    "path": "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds",
-    "change": "modified",
-    "baseline_sha256": "8fca7e488d202bef7a1b8c6b75bdd5e24f726480311ffe59131d11c8c83d9e10",
-    "candidate_sha256": "f2953b6903bb09da3bdec5eb7ee991a51928817ac2b527d9e816e9fc591c48d1"
-  },
-  {
-    "path": "tools/NLSRInstallAudit/audit_installation.py",
-    "change": "modified",
-    "baseline_sha256": "15927ddf87c6874845b0466d47ce9943a228d688f151ee927e37bddf1b498c94",
-    "candidate_sha256": "c6401112bc9f6bf44ae283200a25beaaa92a85e5096fd5917503186565438ae2"
-  },
-  {
-    "path": "tools/NLSRInstallAudit/tests/test_author.py",
-    "change": "modified",
-    "baseline_sha256": "d88edd0e547c5b2eb19459ce204beae70165af2976416f1f3b40a5f0a379661d",
-    "candidate_sha256": "437b782c450b3e40f76008450a6aaf99d2472d8392a6676f31a5239d7c219e77"
-  },
-  {
-    "path": "tools/NLSRInstallAudit/tests/test_independent.py",
-    "change": "modified",
-    "baseline_sha256": "fb748dfe5fd0a496df0420a745a43fe6d9f630a6ea7eecc7961efb3b0a617331",
-    "candidate_sha256": "11061b77cf4168389d9fb1e7d13522679d1fce147ba5773c5921257ec447ff11"
-  }
-]
+{
+  "build": "1.0.0-vehicle-diagnostic.1",
+  "baseline_commit": "dce154b8bc8f329779a7bb8a4c354972a2c33d8e",
+  "runtime_changes": [
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
+      "baseline_sha256": "f3beda44cac722df64c3bed6381ac2990d6dbd5b967d447d340896e0b12b74df",
+      "candidate_sha256": "c9005a63230508b9ee5730c31968dba32e3d9e3d9dd5de783dd48e9e76d2b18a"
+    },
+    {
+      "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/support_report.lua",
+      "baseline_sha256": "0dfdd44ae3baa6a5a20b0a2121e2844b52e1be4ae6f4b0db366aa061e6c838c6",
+      "candidate_sha256": "a0513bf67c2cb5a4b9506bf8533f545d32012ff08ecc797b6ffc3ca4f4b812a0"
+    },
+    {
+      "path": "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds",
+      "baseline_sha256": "ffc6864b69f2fc2c8f3b940a8ff9ef516368de1d7afe2224782c7ed20fc3a4a1",
+      "candidate_sha256": "6da34c503fdd0f042ba116d50533aa4903ff8cf82a298aea116fae6f27f22722"
+    }
+  ],
+  "runtime_unchanged": 13,
+  "companion_unchanged": 5,
+  "scope": "Checked native result, qualified request feedback, captured last-helper-attempt diagnostics, on-demand sanitized report. Actual vehicle-combat saving unresolved."
+}

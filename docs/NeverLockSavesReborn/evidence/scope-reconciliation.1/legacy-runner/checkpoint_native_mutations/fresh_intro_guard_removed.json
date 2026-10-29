@@ -1,0 +1,310 @@
+{
+  "source_sha256": "4ee71e2f6e2c4b3f22c6090b30a568c4194aab79f7c3636d6308eaed9f5b20d1",
+  "assertions": 1943,
+  "failed": 63,
+  "boundary_errors": 0,
+  "first_failures": [
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 1,
+        "done": null,
+        "safety": false,
+        "service": false,
+        "result": false
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 1,
+        "done": null,
+        "safety": false,
+        "service": false,
+        "result": true
+      }
+    },
+    {
+      "label": "helper calls native once only after fresh policy and service checks",
+      "detail": {
+        "source": 1,
+        "done": null,
+        "safety": false,
+        "service": true,
+        "result": false
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 1,
+        "done": null,
+        "safety": false,
+        "service": true,
+        "result": false
+      }
+    },
+    {
+      "label": "helper result reflects native boolean and policy/service availability",
+      "detail": {
+        "source": 1,
+        "done": null,
+        "safety": false,
+        "service": true,
+        "result": true
+      }
+    },
+    {
+      "label": "helper calls native once only after fresh policy and service checks",
+      "detail": {
+        "source": 1,
+        "done": null,
+        "safety": false,
+        "service": true,
+        "result": true
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 1,
+        "done": null,
+        "safety": false,
+        "service": true,
+        "result": true
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 1,
+        "done": -1,
+        "safety": false,
+        "service": false,
+        "result": false
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 1,
+        "done": -1,
+        "safety": false,
+        "service": false,
+        "result": true
+      }
+    },
+    {
+      "label": "helper calls native once only after fresh policy and service checks",
+      "detail": {
+        "source": 1,
+        "done": -1,
+        "safety": false,
+        "service": true,
+        "result": false
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 1,
+        "done": -1,
+        "safety": false,
+        "service": true,
+        "result": false
+      }
+    },
+    {
+      "label": "helper result reflects native boolean and policy/service availability",
+      "detail": {
+        "source": 1,
+        "done": -1,
+        "safety": false,
+        "service": true,
+        "result": true
+      }
+    },
+    {
+      "label": "helper calls native once only after fresh policy and service checks",
+      "detail": {
+        "source": 1,
+        "done": -1,
+        "safety": false,
+        "service": true,
+        "result": true
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 1,
+        "done": -1,
+        "safety": false,
+        "service": true,
+        "result": true
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 1,
+        "done": 0,
+        "safety": false,
+        "service": false,
+        "result": false
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 1,
+        "done": 0,
+        "safety": false,
+        "service": false,
+        "result": true
+      }
+    },
+    {
+      "label": "helper calls native once only after fresh policy and service checks",
+      "detail": {
+        "source": 1,
+        "done": 0,
+        "safety": false,
+        "service": true,
+        "result": false
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 1,
+        "done": 0,
+        "safety": false,
+        "service": true,
+        "result": false
+      }
+    },
+    {
+      "label": "helper result reflects native boolean and policy/service availability",
+      "detail": {
+        "source": 1,
+        "done": 0,
+        "safety": false,
+        "service": true,
+        "result": true
+      }
+    },
+    {
+      "label": "helper calls native once only after fresh policy and service checks",
+      "detail": {
+        "source": 1,
+        "done": 0,
+        "safety": false,
+        "service": true,
+        "result": true
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 1,
+        "done": 0,
+        "safety": false,
+        "service": true,
+        "result": true
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 2,
+        "done": null,
+        "safety": false,
+        "service": false,
+        "result": false
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 2,
+        "done": null,
+        "safety": false,
+        "service": false,
+        "result": true
+      }
+    },
+    {
+      "label": "helper calls native once only after fresh policy and service checks",
+      "detail": {
+        "source": 2,
+        "done": null,
+        "safety": false,
+        "service": true,
+        "result": false
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 2,
+        "done": null,
+        "safety": false,
+        "service": true,
+        "result": false
+      }
+    },
+    {
+      "label": "helper result reflects native boolean and policy/service availability",
+      "detail": {
+        "source": 2,
+        "done": null,
+        "safety": false,
+        "service": true,
+        "result": true
+      }
+    },
+    {
+      "label": "helper calls native once only after fresh policy and service checks",
+      "detail": {
+        "source": 2,
+        "done": null,
+        "safety": false,
+        "service": true,
+        "result": true
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 2,
+        "done": null,
+        "safety": false,
+        "service": true,
+        "result": true
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 2,
+        "done": -1,
+        "safety": false,
+        "service": false,
+        "result": false
+      }
+    },
+    {
+      "label": "diagnostic result distinguishes policy service rejection and acceptance",
+      "detail": {
+        "source": 2,
+        "done": -1,
+        "safety": false,
+        "service": false,
+        "result": true
+      }
+    }
+  ],
+  "first_errors": [],
+  "scope": "Independent actual-source native-result boundary regression.\n\nExecutes the supplied REDscript helper, wrappers and deferred dispatcher through\nthe existing strict bounded evaluator. Native/game/UI services are doubles; this\ndoes not compile REDscript or demonstrate a game save, reload or progression."
+}

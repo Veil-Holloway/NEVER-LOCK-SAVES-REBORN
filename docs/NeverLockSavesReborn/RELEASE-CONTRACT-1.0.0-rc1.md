@@ -1,3 +1,8 @@
+> Historical contract. Superseded for current scope by
+> [the October 28 v2.6 addendum](Never_Lock_Saves_Reborn_Master_Status_Roadmap_v2.6.md).
+> Backup/recovery companion and automatic-character requirements below no longer apply.
+> Original bytes are preserved in `history/pre-freeze-github-vehicle-diagnostic.3/`.
+
 > Historical development snapshot. Current permission and acceptance status: [PUBLICATION-STATUS.md](PUBLICATION-STATUS.md).
 
 # First-release feature contract — 1.0.0-rc1

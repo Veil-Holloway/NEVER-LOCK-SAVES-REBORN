@@ -1,0 +1,9 @@
+{
+  "assertions": 9641,
+  "failed": 0,
+  "boundary_errors": 0,
+  "first_failures": [],
+  "source_sha256": "6da34c503fdd0f042ba116d50533aa4903ff8cf82a298aea116fae6f27f22722",
+  "scope": "RC4 Unrestricted user-request routing through bounded actual REDscript.\n\nCompiles actual hooks, mode setter, queue, introduction and automatic/deferred\nmethods. Only external game services, scalar observations and the existing large\nCheckpointMessage library use boundary doubles. No REDscript compiler, CET/native\nruntime, UI rendering, engine acceptance, save write/reload or progression proof.",
+  "negative_control": false
+}

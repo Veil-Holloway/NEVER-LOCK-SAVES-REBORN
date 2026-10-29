@@ -1,0 +1,140 @@
+{
+  "fixture_only": true,
+  "source_commit": "0000000000000000000000000000000000000000",
+  "not_a_release_build": true,
+  "passed": 26,
+  "results": [
+    {
+      "name": "first_build_selfverification",
+      "passed": true
+    },
+    {
+      "name": "second_build_selfverification",
+      "passed": true
+    },
+    {
+      "name": "deterministic_all_seven_assets",
+      "passed": true
+    },
+    {
+      "name": "excluded_caches_packages_git_dist",
+      "passed": true
+    },
+    {
+      "name": "exact_runtime_payload",
+      "passed": true
+    },
+    {
+      "name": "runtime_and_full_source_exact",
+      "passed": true
+    },
+    {
+      "name": "receipt_and_download_verification",
+      "passed": true
+    },
+    {
+      "name": "wrong_version",
+      "passed": true,
+      "rejection": "Invalid publication receipt version"
+    },
+    {
+      "name": "wrong_source_commit",
+      "passed": true,
+      "rejection": "Receipt/tag commit mismatch"
+    },
+    {
+      "name": "missing_drive_attestation",
+      "passed": true,
+      "rejection": "Missing authenticated Drive readback attestation"
+    },
+    {
+      "name": "unverified_drive",
+      "passed": true,
+      "rejection": "Invalid Drive size/readback evidence"
+    },
+    {
+      "name": "drive_hash_mismatch",
+      "passed": true,
+      "rejection": "GitHub/Drive hash mismatch in receipt"
+    },
+    {
+      "name": "drive_size_mismatch",
+      "passed": true,
+      "rejection": "Invalid Drive size/readback evidence"
+    },
+    {
+      "name": "duplicate_zip",
+      "passed": true,
+      "rejection": "Unexpected or duplicate ZIP receipt name"
+    },
+    {
+      "name": "unexpected_asset",
+      "passed": true,
+      "rejection": "Unexpected or duplicate ZIP receipt name"
+    },
+    {
+      "name": "Boolean_size",
+      "passed": true,
+      "rejection": "Invalid Drive size/readback evidence"
+    },
+    {
+      "name": "invalid_drive_identifier",
+      "passed": true,
+      "rejection": "Invalid Drive file identifier"
+    },
+    {
+      "name": "wrong_tag_commit",
+      "passed": true,
+      "rejection": "Receipt/tag commit mismatch"
+    },
+    {
+      "name": "external_manifest_corrupt",
+      "passed": true,
+      "rejection": "External JSON manifest mismatch"
+    },
+    {
+      "name": "validation_asset_corrupt",
+      "passed": true,
+      "rejection": "Validation report asset mismatch"
+    },
+    {
+      "name": "zip_hash_mismatch",
+      "passed": true,
+      "rejection": "Downloaded ZIP differs from verified receipt"
+    },
+    {
+      "name": "extra_asset_inventory",
+      "passed": true,
+      "rejection": "Unexpected or missing release assets"
+    },
+    {
+      "name": "symlink_inside_excluded_directory",
+      "passed": true,
+      "rejection": "Symlink rejected: packages/escape"
+    },
+    {
+      "name": "runtime_pin_mismatch",
+      "passed": true,
+      "rejection": "Runtime size mismatch: bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua"
+    },
+    {
+      "name": "wrong_manifest_commit",
+      "passed": true,
+      "rejection": "Build provenance mismatch"
+    },
+    {
+      "name": "CRC_corruption",
+      "passed": true,
+      "rejection": "ZIP CRC verification failed"
+    }
+  ],
+  "asset_hashes": {
+    "Never_Lock_Saves_Reborn_v1.0.0-vehicle-diagnostic.1_RUNTIME_ONLY.manifest.json": "8a60edbf2f8254bb2a1ff6b93c9de6026467c5f07133402b93ce1fb545d8fdc3",
+    "Never_Lock_Saves_Reborn_v1.0.0-vehicle-diagnostic.1_RUNTIME_ONLY.zip": "b0347cb90818d659a4ea7e37a2d596b7dd596cc2463bce1377be7fa7b5f17f97",
+    "Never_Lock_Saves_Reborn_v1.0.0-vehicle-diagnostic.1_RUNTIME_ONLY.zip.sha256": "5d98a7e4570a833fb039453defed3301f79b3017d1bf9e0ae284b3e8c7560a1e",
+    "Never_Lock_Saves_Reborn_v1.0.0-vehicle-diagnostic.1_Release_Diagnostic.manifest.json": "3d5afdcfe1486d44f5e87b7acbb2f3eec8437fa01941900a3ae58d791172b59a",
+    "Never_Lock_Saves_Reborn_v1.0.0-vehicle-diagnostic.1_Release_Diagnostic.zip": "7670aa20dfb0244f87ee396b58f9728074f8b72da0d50dbc722d7baceaa2abc0",
+    "Never_Lock_Saves_Reborn_v1.0.0-vehicle-diagnostic.1_Release_Diagnostic.zip.sha256": "70ee892af376758d99dadcc8e62fb1e023c7c62494289ea107c71c78e98a097b",
+    "VALIDATION-VEHICLE-DIAGNOSTIC.1.md": "998288f70300f21ae6dde9cb6674212b3e477f5c763fc02f62e7090701b6a23e"
+  }
+}

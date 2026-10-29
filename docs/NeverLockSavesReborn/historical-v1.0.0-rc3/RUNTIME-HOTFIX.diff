@@ -1,0 +1,132 @@
+--- RC2/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
++++ RC3/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
+@@ -1,4 +1,4 @@
+--- Never Lock Saves Reborn v1.0.0-rc2 Release Candidate
++-- Never Lock Saves Reborn v1.0.0-rc3 Release Candidate
+ -- Persistent UI settings, runtime bridge, and diagnostics.
+ -- Smart permits only explicit combat locks with combat opt-in; mounted combat also needs vehicle opt-in.
+ -- DF switches control contextual messages only. Optional scheduler defaults OFF.
+@@ -702,7 +702,7 @@
+       end})
+     if ok and type(value)=='table' and getmetatable(value)==nil then versionSnapshot=value end
+   end
+-  local snapshot={build='1.0.0-rc2',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),
++  local snapshot={build='1.0.0-rc3',gameBuild=gameVersion,versions=versionSnapshot.versions,dependencyEvidence=versionSnapshot.evidence,settings=currentSettings(),
+     facts={q000_done=read(function() return Game.GetQuestsSystem():GetFactStr('q000_done') end),
+       q001_started=read(function() return Game.GetQuestsSystem():GetFactStr('q001_started') end)},
+     sensors={combatKnown=combatKnown,combatActive=combatActive,vehicleKnown=vehicleKnown,vehicleActive=vehicleActive,
+@@ -733,7 +733,7 @@
+   end
+   registerNativeSettings()
+   deferredStatus = deferredEnabled and 'Live queue enabled (experimental)' or 'Disabled'
+-  log('v1.0.0-rc2 Release Candidate loaded; experimental native save-lock gate required')
++  log('v1.0.0-rc3 Release Candidate loaded; experimental native save-lock gate required')
+ end)
+ registerForEvent('onOverlayOpen', function() show = true; apply() end)
+ registerForEvent('onOverlayClose', function() show = false end)
+@@ -1009,7 +1009,7 @@
+   if not show then return end
+   local visible = ImGui.Begin(title)
+   if visible then
+-    ImGui.Text('v1.0.0-rc2 Release Candidate | Runtime policy')
++    ImGui.Text('v1.0.0-rc3 Release Candidate | Runtime policy')
+     ImGui.TextWrapped('Native menu: '..nativeStatus)
+     ImGui.Separator()
+     for i=0,3 do
+@@ -1168,7 +1168,7 @@
+       ImGui.TextWrapped('Context states: -1 UNKNOWN, 0 inactive/disabled, 1 active. Context: 8 sleep, 11 dehydration, 10 starvation, 9 addiction.')
+       ImGui.TextWrapped('Compatibility is source-reviewed; in-game validation is still required. State samples refresh every two seconds.')
+       if ImGui.Button('Log compatibility snapshot##nls_darkfuture') then
+-        log('v1.0.0-rc2 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)
++        log('v1.0.0-rc3 Release Candidate | mode='..names[mode+1]..' | prologue='..prologueStatus)
+         log('Dark Future: '..darkFutureStatus)
+         if darkFutureError then log('Dark Future query error: '..darkFutureError) end
+         if dfOK then log('Last Immersion save check: '..tostring(dfLastCheck)) end
+@@ -1202,7 +1202,7 @@
+       if ImGui.Button('Export Guardian report##nls_guardian_export') then
+         local exported=pcall(function()
+           local report=guardian:report()
+-          report.rebornBuild='1.0.0-rc2'
++          report.rebornBuild='1.0.0-rc3'
+           report.gameBuild='unknown'; report.frameworkVersions='unknown'
+           configStore.save('guardian-report.json',report)
+         end)
+--- RC2/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
++++ RC3/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
+@@ -1,4 +1,4 @@
+-// v1.0.0-rc2 Release Candidate. Deferred/autosave lanes are opt-in.
++// v1.0.0-rc3 Release Candidate. Deferred/autosave lanes are opt-in.
+ // Engine native saving-unlocked state is the release gate; this does not
+ // guarantee that a quest or phone conversation serializes correctly.
+ @addField(PlayerPuppet) public let nlsDeferredEnabled: Bool = false;
+@@ -437,7 +437,7 @@
+ public final func NLSRebornGetNotificationCategory() -> Int32 { return NLSRebornPolicy.NotificationContext(this.GetGame()); }
+ 
+ public class NLSRebornPolicy {
+-  public static func Version() -> String { return "1.0.0-rc2"; }
++  public static func Version() -> String { return "1.0.0-rc3"; }
+   public static func ShuffleSlot(index: Int32, seed: Int32) -> Int32 {
+     let cycle: Int32 = index / 20;
+     let turn: Int32 = index % 20;
+@@ -1871,6 +1871,33 @@
+     let player: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(game).GetLocalPlayerControlledGameObject() as PlayerPuppet;
+     return IsDefined(player) && player.nlsRebornSafetyBlock;
+   }
++  // Smart queue admission is independent of permission to force a checkpoint.
++  // Called only for a native-locked user request, after quicksave busy guards.
++  public static func HandleSmartBlockedSave(game: GameInstance, source: Int32) -> Bool {
++    let players: ref<PlayerSystem> = GameInstance.GetPlayerSystem(game);
++    if !IsDefined(players) { return false; };
++    let player: ref<PlayerPuppet> = players.GetLocalPlayerControlledGameObject() as PlayerPuppet;
++    if !IsDefined(player) || player.NLSRebornGetMode() != 3 || player.nlsRebornSafetyBlock || !player.NLSRebornDeferredIntroComplete() { return false; };
++    if player.NLSRebornDeferredQueue(source) {
++      if player.NLSRebornGetNotificationsEnabled() && !player.NLSRebornGetStatusNotificationsEnabled() {
++        if source == 1 {
++          PauseMenuGameController.NLSRebornNotify(game, "Save queued until normal saving is available.");
++        } else {
++          PauseMenuGameController.NLSRebornNotify(game, "Quicksave queued until normal saving is available.");
++        };
++      };
++      return true;
++    };
++    // Preserve the existing explicit combat exception when the queue is off.
++    if NLSRebornPolicy.AllowForcedCheckpointFallback(game) { return false; };
++    if player.NLSRebornGetNotificationsEnabled() {
++      let message: String = "Saving is blocked by the current game state. No save was queued.";
++      if player.NLSRebornGetTone() == 1 { message = "The game still has the save button hostage. No save queued."; };
++      if player.NLSRebornGetTone() == 2 { message = "The game is still blocking this damn save. No save queued."; };
++      PauseMenuGameController.NLSRebornNotify(game, message);
++    };
++    return true;
++  }
+   // Combat is the only explicit native lock exception. No native Vehicle reason exists.
+   public static func SmartCombatFallback(game: GameInstance) -> Bool {
+     let players: ref<PlayerSystem> = GameInstance.GetPlayerSystem(game);
+@@ -1941,6 +1968,7 @@
+   let dfContext: Int32 = NLSRebornPolicy.GetImmersionSaveContext(this.m_gameInstance);
+   let locks: array<gameSaveLock>;
+   if GameInstance.IsSavingLocked(this.m_gameInstance, locks) {
++    if NLSRebornPolicy.HandleSmartBlockedSave(this.m_gameInstance, 1) { return; };
+     if NLSRebornPolicy.AllowForcedCheckpointFallback(this.m_gameInstance) || dfContext > 0 {
+       let queuePlayer: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.m_gameInstance).GetLocalPlayerControlledGameObject() as PlayerPuppet;
+       if IsDefined(queuePlayer) && queuePlayer.NLSRebornDeferredQueue(1) {
+@@ -1970,6 +1998,9 @@
+ private final func HandlePressToQuickSaveGame() -> Void {
+   let dfContext: Int32 = NLSRebornPolicy.GetImmersionSaveContext(this.m_gameInstance);
+   let locks: array<gameSaveLock>;
++  if GameInstance.IsSavingLocked(this.m_gameInstance, locks) && !this.m_quickSaveInProgress && !this.IsSaveFailedNotificationActive() && !this.IsGameSavedNotificationActive() {
++    if NLSRebornPolicy.HandleSmartBlockedSave(this.m_gameInstance, 2) { return; };
++  };
+   if GameInstance.IsSavingLocked(this.m_gameInstance, locks) && (NLSRebornPolicy.AllowForcedCheckpointFallback(this.m_gameInstance) || dfContext > 0) {
+     if !this.m_quickSaveInProgress && !this.IsSaveFailedNotificationActive() && !this.IsGameSavedNotificationActive() {
+       let queuePlayer: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.m_gameInstance).GetLocalPlayerControlledGameObject() as PlayerPuppet;
+@@ -2002,6 +2033,9 @@
+     dfContext = NLSRebornPolicy.GetImmersionSaveContext(this.GetPlayerControlledObject().GetGame());
+   };
+   let locks: array<gameSaveLock>;
++  if IsDefined(this.GetPlayerControlledObject()) && GameInstance.IsSavingLocked(this.GetPlayerControlledObject().GetGame(), locks) && !this.m_quickSaveInProgress {
++    if NLSRebornPolicy.HandleSmartBlockedSave(this.GetPlayerControlledObject().GetGame(), 2) { return; };
++  };
+   if IsDefined(this.GetPlayerControlledObject()) && GameInstance.IsSavingLocked(this.GetPlayerControlledObject().GetGame(), locks) && (NLSRebornPolicy.AllowForcedCheckpointFallback(this.GetPlayerControlledObject().GetGame()) || dfContext > 0) {
+     if !this.m_quickSaveInProgress {
+       let queuePlayer: ref<PlayerPuppet> = this.GetPlayerControlledObject() as PlayerPuppet;

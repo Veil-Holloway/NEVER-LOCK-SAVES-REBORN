@@ -1,0 +1,22 @@
+{
+  "Never_Lock_Saves_Reborn_v1.0.0-vehicle-diagnostic.3_scope-reconciliation.1_SOURCE_AND_TESTS.zip": {
+    "verified_records": 1699,
+    "companion_paths": false,
+    "tag": null,
+    "package_revision": "scope-reconciliation.1",
+    "publication": "unpublished_review_only"
+  },
+  "Never_Lock_Saves_Reborn_v1.0.0-vehicle-diagnostic.3_scope-reconciliation.1_RUNTIME_ONLY.zip": {
+    "verified_records": 26,
+    "companion_paths": false,
+    "tag": null,
+    "package_revision": "scope-reconciliation.1",
+    "publication": "unpublished_review_only"
+  },
+  "reintroduction_guard": {
+    "rejected": true,
+    "message": "Excluded backup/recovery companion in current package scope: tools/NLSRSaveGuardian/save_guardian.py"
+  },
+  "old_identity_reuse_blocked": true,
+  "preflight_commit_is_fixture_only": true
+}
