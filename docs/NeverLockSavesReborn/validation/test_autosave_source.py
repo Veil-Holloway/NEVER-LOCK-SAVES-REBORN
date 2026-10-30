@@ -13,9 +13,11 @@ def force():
     calls.append('request')
     if state.get('reenter'):
         state['reentrant_result']=methods['NLSRebornDeferredDispatch'](state['player'],state['player'].nlsDeferredSerial)
+    return True
 ns={'__builtins__':{},'IsDefined':lambda v:v is not None,'ArraySize':len,'Equals':lambda a,b:a==b,'NotEquals':lambda a,b:a!=b}
 ns['GameInstance']=O(
     GetQuestsSystem=lambda game:None if state['done'] is None else O(GetFact=lambda fact:state['done']),
+    GetPhoneManager=lambda game:None if state['phone_manager'] is None else O(IsPhoneCallActive=lambda:state['phone_manager']),
     GetTimeSystem=lambda game:None if state['paused'] is None else O(IsPausedState=lambda:state['paused']),
     IsSavingLocked=lambda game,locks:state['locked'],
     GetAutoSaveSystem=lambda game:O(RequestForcedCheckpoint=force) if state['autosave_service'] else None,
@@ -26,18 +28,25 @@ ns['NLSRebornPolicy']=O(GetImmersionSaveContext=lambda game:0,NotifyImmersionSav
 ns['PauseMenuGameController']=O(NLSRebornNotify=lambda *x:None)
 names=('NLSRebornDeferredIntroComplete','NLSRebornDeferredSetEnabled','NLSRebornDeferredQueue',
        'NLSRebornPausedState','NLSRebornMenuState','NLSRebornMountedState','NLSRebornAutosaveSetEnabled',
-       'NLSRebornAutosaveReady','NLSRebornAutosaveQueue','NLSRebornDeferredNativeUnlocked',
+       'NLSRebornAutosavePhoneState','NLSRebornAutosaveReady','NLSRebornAutosaveQueue','NLSRebornDeferredNativeUnlocked',
        'NLSRebornDeferredDispatch')
+if 'func NLSRebornRequestCheckpoint(' in source:
+    names += ('NLSRebornRequestCheckpoint','NLSRebornCheckpointFailure')
 methods={n:compile_function(source,n,ns,instance=True) for n in names}
 
 def fixture(**changes):
-    state.clear();state.update(enabled=True,manual=False,done=1,locked=False,paused=False,menu=False,phone=0,
+    state.clear();state.update(mode=3,enabled=True,manual=False,done=1,locked=False,paused=False,menu=False,phone=0,phone_manager=False,
                                mounted=False,combat=False,protected=False,autosave_service=True,reenter=False)
     state.update(changes);calls.clear()
     player=O(GetGame=lambda:game,nlsAutosaveEnabled=state['enabled'],nlsDeferredEnabled=state['manual'],
              nlsRebornSafetyBlock=state['protected'],nlsDeferredPending=False,nlsDeferredSerial=42,
-             nlsDeferredSource=0,IsInCombat=lambda:state['combat'],
+             nlsDeferredSource=0,NLSRebornGetMode=lambda:state['mode'],IsInCombat=lambda:state['combat'],
              NLSRebornNotificationPhoneState=lambda:state['phone'])
+    player.nlsCheckpointSerial=0;player.nlsCheckpointSource=0;player.nlsCheckpointResult=0
+    player.nlsCheckpointLocks='unknown';player.nlsCheckpointCombat=-1;player.nlsCheckpointMounted=-1
+    player.NLSRebornSaveLockSummary=lambda:'locked' if state['locked'] else 'unlocked'
+    player.NLSRebornGetNotificationsEnabled=lambda:False
+    player.NLSRebornGetTone=lambda:0
     state['player']=player
     for n,fn in methods.items():
         setattr(player,n,lambda *args,_fn=fn:_fn(player,*args))
@@ -49,12 +58,12 @@ def check(label,condition,detail=None):
     if not condition:failures.append({'label':label,'detail':detail})
 
 # Invalid/unknown or active safety signals may never enqueue/submit.
-for enabled,manual,done,locked,paused,menu,phone,mounted,combat,protected in itertools.product(
-    (False,True),(False,True),(None,0,1),(False,True),(None,False,True),(None,'missing_board',False,True),(-1,0,1),(False,True),(False,True),(False,True)):
-    player=fixture(enabled=enabled,manual=manual,done=done,locked=locked,paused=paused,menu=menu,phone=phone,
+for enabled,manual,done,locked,paused,menu,phone_manager,mounted,combat,protected in itertools.product(
+    (False,True),(False,True),(None,0,1),(False,True),(None,False,True),(None,'missing_board',False,True),(None,False,True),(False,True),(False,True),(False,True)):
+    player=fixture(enabled=enabled,manual=manual,done=done,locked=locked,paused=paused,menu=menu,phone_manager=phone_manager,
                    mounted=mounted,combat=combat,protected=protected)
-    expected=bool(enabled and done==1 and not locked and paused is False and menu is False and phone==0 and not mounted and not combat and not protected)
-    label=dict(enabled=enabled,manual=manual,done=done,locked=locked,paused=paused,menu=menu,phone=phone,
+    expected=bool(enabled and done==1 and not locked and paused is False and menu is False and phone_manager is False and not mounted and not combat and not protected)
+    label=dict(enabled=enabled,manual=manual,done=done,locked=locked,paused=paused,menu=menu,phone_manager=phone_manager,
                mounted=mounted,combat=combat,protected=protected)
     try:actual=player.NLSRebornAutosaveReady();queued=player.NLSRebornAutosaveQueue();error=None
     except Exception as e:actual=queued=None;error=type(e).__name__+': '+str(e)

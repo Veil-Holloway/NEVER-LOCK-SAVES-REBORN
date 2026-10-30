@@ -1,0 +1,1 @@
+PASS phone bridge source regression: manager primary, active-only fallback, unknown fail-closed, notification StartCall semantics preserved

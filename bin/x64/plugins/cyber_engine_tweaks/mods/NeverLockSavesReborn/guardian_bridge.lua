@@ -34,7 +34,9 @@ function M.new(ledger, api)
   end
   local function append(event,key)
     local okEnabled,enabled=pcall(function() return api.enabled() end)
-    if not okEnabled or enabled~=true then return end
+    -- Completion hints remain observable even when the optional Guardian ledger is off.
+    -- Other request-trace events remain Guardian-only.
+    if event.kind~='hint' and (not okEnabled or enabled~=true) then return end
     seen[key]=true
     local okSession,s=pcall(function() return api.session() end)
     event.session=okSession and session(s) and s or 0
@@ -143,7 +145,9 @@ function M.new(ledger, api)
           else gap(current,'queue changed without a verified pending request') end
         end
       elseif event.kind=='hint' then
-        invoke('hint',event.origin,event.success)
+        local okCompletion,completion=pcall(function() return api.completion end)
+        if okCompletion and type(completion)=='function' then pcall(completion,event.session,event.success,event.origin) end
+        invoke('hint',event.origin,event.success,event.session)
       end
     end
   end

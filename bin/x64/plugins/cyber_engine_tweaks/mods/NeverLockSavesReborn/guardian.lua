@@ -3,7 +3,7 @@
 local M = {}
 local instanceCounter = 0
 local MAX_RECORDS, MAX_TRANSITIONS, MAX_HINTS = 64, 128, 16
-local sources = {manual=true, pause_quicksave=true, gameplay_quicksave=true, autosave=true, unknown=true}
+local sources = {manual=true, pause_quicksave=true, gameplay_quicksave=true, quicksave=true, autosave=true, unknown=true}
 local phases = {Requested=true, Delegated=true, Queued=true, Waiting=true,
   Executing=true, Submitted=true, Blocked=true, Cancelled=true, Expired=true,
   Error=true, Unknown=true}
@@ -13,8 +13,19 @@ local reasons = {requested=true, queued=true, waiting=true, native_lock_or_unkno
   stabilizing=true, cancelled_by_user=true, disabled=true, expired=true,
   dispatch_rejected=true, bridge_unavailable=true, player_unavailable=true,
   session_changed=true, replaced=true, tracking_stopped=true, preview=true,
-  callback_returned=true, executing=true, submitted=true, blocked_intro=true, unknown=true}
+  callback_returned=true, executing=true, submitted=true, blocked_intro=true, unknown=true,
+  combat_active=true, combat_unknown=true, pause_unknown=true, paused=true,
+  native_state_unknown=true, native_save_lock=true, native_permission_changed=true, cooldown=true}
 local reasonAliases = {
+  ['Waiting: combat active']='combat_active',
+  ['Waiting: combat state unknown']='combat_unknown',
+  ['Waiting: pause/menu state unknown']='pause_unknown',
+  ['Waiting: paused or menu open']='paused',
+  ['Waiting: native permission unknown']='native_state_unknown',
+  ['Waiting: native save lock']='native_save_lock',
+  ['Waiting: native permission changed before dispatch']='native_permission_changed',
+  ['Waiting: dispatch cooldown']='cooldown',
+  ['Combat clear and native unlocked: stabilization']='stabilizing',
   ['Waiting: native save lock or unknown']='native_lock_or_unknown',
   ['Native unlocked: stabilization']='stabilizing',
   ['Cancelled by user']='cancelled_by_user', ['Disabled']='disabled',
@@ -41,7 +52,7 @@ local function copy(value)
   return result
 end
 
-function M.new(runId)
+function M.new(runId, clock)
   instanceCounter=instanceCounter+1
   local instance=instanceCounter
   local run=type(runId)=='string' and #runId>0 and #runId<=64 and
@@ -51,25 +62,61 @@ function M.new(runId)
   local records, byId, pending, transitions, hints={},{},{},{},{}
   local droppedRecords,droppedTransitions,droppedHints,gaps=0,0,0,0
   local api={}
+  -- Optional host clock is observation timing only. Never gates or retries a save.
+  -- It is sampled during update/report processing, not the original engine callback.
+  local lastClock=nil
+  local function observedTime()
+    if type(clock)~='function' then return nil end
+    local ok,value=pcall(clock)
+    if not ok or type(value)~='number' or value~=value or value<0 or value>2147483647 or
+      (lastClock~=nil and value<lastClock) then return nil end
+    lastClock=value
+    return value
+  end
+  local function elapsed(now,thenTime)
+    if type(now)~='number' or type(thenTime)~='number' or now<thenTime then return 'unknown' end
+    return math.floor(now-thenTime)
+  end
+  local function recordSnapshot(record,now)
+    local result=copy(record)
+    result.observed_age_seconds=elapsed(now,record.first_observed_seconds)
+    result.phase_age_seconds=elapsed(now,record.last_transition_seconds)
+    result.awaiting_write_evidence=record.phase=='Submitted'
+    return result
+  end
+  local function evidenceSummary()
+    local value={scope='retained_records_only',waiting=0,executing=0,submitted_unverified=0,
+      unknown_outcomes=0,uncorrelated_callbacks=#hints}
+    for _,record in ipairs(records) do
+      if record.phase=='Queued' or record.phase=='Waiting' then value.waiting=value.waiting+1
+      elseif record.phase=='Executing' then value.executing=value.executing+1
+      elseif record.phase=='Submitted' then value.submitted_unverified=value.submitted_unverified+1
+      elseif record.phase=='Unknown' then value.unknown_outcomes=value.unknown_outcomes+1 end
+    end
+    return value
+  end
   local function key(session,serial) return tostring(session)..':'..tostring(serial) end
   local function transition(record,phase,reason)
     reason=reasonValue(reason)
     if record.phase==phase and record.reason==reason then return record.id end
     record.phase=phase; record.reason=reason
+    record.last_transition_seconds=observedTime() or 'unknown'
     -- Evidence fields are deliberately immutable throughout this implementation.
     record.write_status='Unknown'; record.reload_status='Unknown'
     sequence=sequence+1; record.last_sequence=sequence
     if #transitions>=MAX_TRANSITIONS then
       table.remove(transitions,1); droppedTransitions=droppedTransitions+1
     end
-    transitions[#transitions+1]={sequence=sequence,trace_id=record.id,phase=phase,reason=reason}
+    transitions[#transitions+1]={sequence=sequence,trace_id=record.id,phase=phase,reason=reason,
+      observed_seconds=record.last_transition_seconds}
     return record.id
   end
   local function create(source,session,phase,dryRun,reason)
     counter=counter+1
     local id=run..':G'..tostring(instance)..':'..tostring(session)..':'..tostring(counter)
     local record={id=id,source=sourceValue(source),session=session,first_observed=phase,
-      dry_run=dryRun==true,write_status='Unknown',reload_status='Unknown'}
+      dry_run=dryRun==true,write_status='Unknown',reload_status='Unknown',
+      first_observed_seconds=observedTime() or 'unknown'}
     if #records>=MAX_RECORDS then
       local removed=table.remove(records,1); byId[removed.id]=nil
       if removed.serial~=nil and pending[key(removed.session,removed.serial)]==removed.id then
@@ -138,6 +185,16 @@ function M.new(runId)
     end
     return nil
   end
+  function api:preflight_wait(session,serial)
+    if not enabled then return nil end
+    local record=lookup(session,serial)
+    -- Host calls only after a matching pending serial and unchanged attempt counter
+    -- prove that the checkpoint helper was not entered. Never for an engine timeout.
+    if record and not record.dry_run and record.phase=='Executing' then
+      return transition(record,'Waiting','native_permission_changed')
+    end
+    return nil
+  end
   function api:submitted(session,serial)
     if not enabled then return nil end
     local record=lookup(session,serial)
@@ -164,12 +221,13 @@ function M.new(runId)
     record.serial=0; pending[key(session,0)]=record.id
     return record.id
   end
-  function api:hint(origin,success)
+  function api:hint(origin,success,session)
     if not enabled then return nil end
     if #hints>=MAX_HINTS then table.remove(hints,1); droppedHints=droppedHints+1 end
     hints[#hints+1]={origin=origins[origin] and origin or 'unknown',
       outcome=success==true and 'SuccessHint' or success==false and 'FailureHint' or 'Unknown',
-      correlated=false,write_status='Unknown',reload_status='Unknown'}
+      correlated=false,write_status='Unknown',reload_status='Unknown',
+      session=sessionValue(session),observed_seconds=observedTime() or 'unknown'}
     return true
   end
   function api:bridge_gap(session,reason)
@@ -189,7 +247,8 @@ function M.new(runId)
   end
   function api:latest()
     local result={}
-    for index=math.max(1,#records-11),#records do result[#result+1]=copy(records[index]) end
+    local now=observedTime()
+    for index=math.max(1,#records-11),#records do result[#result+1]=recordSnapshot(records[index],now) end
     return result
   end
   function api:summary()
@@ -197,13 +256,19 @@ function M.new(runId)
     local incomplete=droppedRecords>0 or droppedTransitions>0 or droppedHints>0 or gaps>0
     return 'Guardian '..(enabled and 'ON' or 'OFF')..' | records '..tostring(#records)..
       ' | last '..(last and last.phase or 'None')..' | write Unknown | reload Unknown'..
+      ' | accepted/unverified (retained) '..tostring(evidenceSummary().submitted_unverified)..
       (incomplete and ' | history incomplete' or '')
   end
   function api:report()
+    local now=observedTime()
+    local snapshots={}
+    for _,record in ipairs(records) do snapshots[#snapshots+1]=recordSnapshot(record,now) end
     return {schema_version=1,run_id=run,enabled=enabled,total_requests=counter,event_sequence=sequence,
       history_incomplete=droppedRecords>0 or droppedTransitions>0 or droppedHints>0 or gaps>0,
       dropped_records=droppedRecords,dropped_transitions=droppedTransitions,dropped_hints=droppedHints,
-      tracking_gaps=gaps,records=copy(records),transitions=copy(transitions),uncorrelated_hints=copy(hints)}
+      tracking_gaps=gaps,records=snapshots,transitions=copy(transitions),uncorrelated_hints=copy(hints),
+      observation_clock=type(clock)=='function' and 'coordinator_update_clock' or 'unknown',
+      evidence_summary=evidenceSummary()}
   end
   return api
 end

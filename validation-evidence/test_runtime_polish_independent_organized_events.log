@@ -1,0 +1,2 @@
+BUDGET default_OFF_frames=10000 draw_frames=100 apartment_calls=0 status_calls=0 filesystem_calls=0
+PASS independent runtime polish: 55 assertions; actual modules/external boundaries, not game/performance evidence

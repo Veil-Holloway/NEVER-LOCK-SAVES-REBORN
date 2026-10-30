@@ -1,0 +1,786 @@
+{
+  "release": "1.0.0",
+  "scope": "Current shipping contract only; fresh offline module/source/filesystem tests. No live compiler/CET/game/save/reload certification.",
+  "lua_command": [
+    "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py"
+  ],
+  "results": [
+    {
+      "check": "all_runtime_lua_syntax",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/check_release_syntax.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\autosave_policy.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\combat_events.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\config_store.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\dark_future.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\deferred_save.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\dependency_versions.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\guardian.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\guardian_bridge.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\init.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\native_settings_ui.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\overlay_ui.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\profiles.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\quest_milestones.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\save_completion.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\settings_ui.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\status_message_library.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\status_messages.lua",
+        "<local-path>\\stable-release\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\NeverLockSavesReborn\\support_report.lua"
+      ],
+      "log": "all_runtime_lua_syntax.log"
+    },
+    {
+      "check": "test_observer_cold_start_events",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_observer_cold_start_events.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_observer_cold_start_events.log"
+    },
+    {
+      "check": "config_recovery",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_config_store.lua",
+        "<local-path>\\stable-release",
+        "<local-path>\\AppData\\Local\\Temp\\nlsr-release-checks-t9hrb_69"
+      ],
+      "log": "config_recovery.log"
+    },
+    {
+      "check": "diagnostic_initializers",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_diagnostic_initializers.py",
+        "<local-path>\\stable-release"
+      ],
+      "log": "diagnostic_initializers.log"
+    },
+    {
+      "check": "guardian_ledger",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_guardian.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "guardian_ledger.log"
+    },
+    {
+      "check": "guardian_observers",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_guardian_bridge.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian_bridge.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian.lua"
+      ],
+      "log": "guardian_observers.log"
+    },
+    {
+      "check": "df_adapter",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_dark_future.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "df_adapter.log"
+    },
+    {
+      "check": "df_reader",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_df_reader.py",
+        "--release",
+        "<local-path>\\stable-release",
+        "--self-check"
+      ],
+      "log": "df_reader.log"
+    },
+    {
+      "check": "notifications",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_notifications.py",
+        "--release",
+        "<local-path>\\stable-release"
+      ],
+      "log": "notifications.log"
+    },
+    {
+      "check": "autosave_bridge_independent",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_autosave_source.py",
+        "<local-path>\\stable-release"
+      ],
+      "log": "autosave_bridge_independent.log"
+    },
+    {
+      "check": "autosave_scheduler",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_autosave_policy.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua"
+      ],
+      "log": "autosave_scheduler.log"
+    },
+    {
+      "check": "autosave_scheduler_independent",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_scheduler_independent.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua"
+      ],
+      "log": "autosave_scheduler_independent.log"
+    },
+    {
+      "check": "support_report",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_support_report.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "support_report.log"
+    },
+    {
+      "check": "profiles_independent",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/review_profiles.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua"
+      ],
+      "log": "profiles_independent.log"
+    },
+    {
+      "check": "support_report_independent",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/review_support_report.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "support_report_independent.log"
+    },
+    {
+      "check": "quest_milestone_events",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_quest_milestones.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua"
+      ],
+      "log": "quest_milestone_events.log"
+    },
+    {
+      "check": "test_init_priority_events",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_init_priority_events.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_init_priority_events.log"
+    },
+    {
+      "check": "quest_scheduler_independent",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/review_quest_milestones.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua"
+      ],
+      "log": "quest_scheduler_independent.log"
+    },
+    {
+      "check": "quest_reentry_independent",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/review_reentrant_boundaries.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua"
+      ],
+      "log": "quest_reentry_independent.log"
+    },
+    {
+      "check": "quest_bridge_source_independent",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/review_quest_source.py",
+        "<local-path>\\stable-release/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds"
+      ],
+      "log": "quest_bridge_source_independent.log"
+    },
+    {
+      "check": "quest_mutation_controls",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/run_quest_checks.py",
+        "--module",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua",
+        "--output",
+        "<local-path>\\evidence\\stable-final/quest_mutation_controls",
+        "--lua",
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "--lua-arg=<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py"
+      ],
+      "log": "quest_mutation_controls.log"
+    },
+    {
+      "check": "scheduler_mutation_controls",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/run_scheduler_controls.py",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua",
+        "--lua",
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "--lua-arg=<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py"
+      ],
+      "log": "scheduler_mutation_controls.log"
+    },
+    {
+      "check": "status_messages",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_status_messages.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "status_messages.log"
+    },
+    {
+      "check": "status_mutation_controls",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/run_status_checks.py",
+        "--module-dir",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "--output",
+        "<local-path>\\evidence\\stable-final/status_mutation_controls",
+        "--lua",
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "--lua-arg=<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py"
+      ],
+      "log": "status_mutation_controls.log"
+    },
+    {
+      "check": "apartment_policy",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_apartment_policy.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua"
+      ],
+      "log": "apartment_policy.log"
+    },
+    {
+      "check": "apartment_mutation_controls",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/run_apartment_checks.py",
+        "--module",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua",
+        "--output",
+        "<local-path>\\evidence\\stable-final/apartment_mutation_controls",
+        "--lua",
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "--lua-arg=<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py"
+      ],
+      "log": "apartment_mutation_controls.log"
+    },
+    {
+      "check": "observer_diagnostics",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_observer_diagnostics.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "observer_diagnostics.log"
+    },
+    {
+      "check": "support_observers",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_report_observers.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "support_observers.log"
+    },
+    {
+      "check": "status_independent",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_status_public_independent.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "status_independent.log"
+    },
+    {
+      "check": "autosave_type_contract",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/check_autosave_type_contract.py",
+        "<local-path>\\stable-release"
+      ],
+      "log": "autosave_type_contract.log"
+    },
+    {
+      "check": "checkpoint_report",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_checkpoint_report.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "checkpoint_report.log"
+    },
+    {
+      "check": "dependency_versions",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_dependency_versions.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dependency_versions.lua"
+      ],
+      "log": "dependency_versions.log"
+    },
+    {
+      "check": "dependency_report",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_dependency_report.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "dependency_report.log"
+    },
+    {
+      "check": "dependency_mutation_controls",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/run_dependency_controls.py",
+        "--module-dir",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "--output",
+        "<local-path>\\evidence\\stable-final/dependency_mutation_controls",
+        "--lua",
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "--lua-arg=<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py"
+      ],
+      "log": "dependency_mutation_controls.log"
+    },
+    {
+      "check": "readonly_readers",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_diagnostic_readers.py",
+        "<local-path>\\stable-release",
+        "--self-check"
+      ],
+      "log": "readonly_readers.log"
+    },
+    {
+      "check": "profiles_disk",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_profiles.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "<local-path>\\AppData\\Local\\Temp\\nlsr-release-checks-t9hrb_69",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/config_store.lua"
+      ],
+      "log": "profiles_disk.log"
+    },
+    {
+      "check": "profiles_disk_faults_independent",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/review_profile_disk_failures.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/config_store.lua",
+        "<local-path>\\AppData\\Local\\Temp\\nlsr-release-checks-t9hrb_69"
+      ],
+      "log": "profiles_disk_faults_independent.log"
+    },
+    {
+      "check": "schema_recovery",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_schema_recovery.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "<local-path>\\AppData\\Local\\Temp\\nlsr-release-checks-t9hrb_69"
+      ],
+      "log": "schema_recovery.log"
+    },
+    {
+      "check": "test_organized_ui",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_organized_ui.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_organized_ui.log"
+    },
+    {
+      "check": "test_organized_ui_integration_events",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_organized_ui_integration_events.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_organized_ui_integration_events.log"
+    },
+    {
+      "check": "test_guardian_integration_organized_events",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_guardian_integration_organized_events.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_guardian_integration_organized_events.log"
+    },
+    {
+      "check": "test_queue_fresh_organized_events",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_queue_fresh_organized_events.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_queue_fresh_organized_events.log"
+    },
+    {
+      "check": "test_runtime_polish_organized",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_runtime_polish_organized.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_runtime_polish_organized.log"
+    },
+    {
+      "check": "test_runtime_polish_independent_organized_events",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_runtime_polish_independent_organized_events.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_runtime_polish_independent_organized_events.log"
+    },
+    {
+      "check": "test_dependency_export_organized",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_dependency_export_organized.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_dependency_export_organized.log"
+    },
+    {
+      "check": "test_lua_integration_organized_events",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_lua_integration_organized_events.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_lua_integration_organized_events.log"
+    },
+    {
+      "check": "test_main_settings_recovery_organized_events",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_main_settings_recovery_organized_events.lua",
+        "<local-path>\\stable-release",
+        "<local-path>\\AppData\\Local\\Temp\\nlsr-release-checks-t9hrb_69"
+      ],
+      "log": "test_main_settings_recovery_organized_events.log"
+    },
+    {
+      "check": "test_combat_queue_ui_source",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_combat_queue_ui_source.py",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_combat_queue_ui_source.log"
+    },
+    {
+      "check": "test_combat_queue_ui_mutations",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_combat_queue_ui_mutations.py",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_combat_queue_ui_mutations.log"
+    },
+    {
+      "check": "installation_auditor",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "<local-path>\\stable-release/tools/NLSRInstallAudit/tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "log": "installation_auditor.log"
+    },
+    {
+      "check": "test_combat_events",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_combat_events.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_combat_events.log"
+    },
+    {
+      "check": "test_combat_events_integration",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_combat_events_integration.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_combat_events_integration.log"
+    },
+    {
+      "check": "test_combat_event_mutations",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_combat_event_mutations.py",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_combat_event_mutations.log"
+    },
+    {
+      "check": "test_guardian_trace",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_guardian_trace.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_guardian_trace.log"
+    },
+    {
+      "check": "test_guardian_trace_integration",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_guardian_trace_integration.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_guardian_trace_integration.log"
+    },
+    {
+      "check": "test_guardian_trace_mutations",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_guardian_trace_mutations.py",
+        "<local-path>\\stable-release"
+      ],
+      "log": "test_guardian_trace_mutations.log"
+    },
+    {
+      "check": "scheduler_state_focus",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_scheduler_state_fix.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "scheduler_state_focus.log"
+    },
+    {
+      "check": "scheduler_state_mutations",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_scheduler_state_mutations.py",
+        "<local-path>\\stable-release"
+      ],
+      "log": "scheduler_state_mutations.log"
+    },
+    {
+      "check": "phone_bridge_fix",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_phone_bridge_fix.py",
+        "<local-path>\\stable-release"
+      ],
+      "log": "phone_bridge_fix.log"
+    },
+    {
+      "check": "completion_tracker",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_completion_evidence.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "completion_tracker.log"
+    },
+    {
+      "check": "completion_notifications",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_completion_notice.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "completion_notifications.log"
+    },
+    {
+      "check": "notification_plain_language",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_notification_polish.py",
+        "<local-path>\\stable-release"
+      ],
+      "log": "notification_plain_language.log"
+    },
+    {
+      "check": "neutral_config_migration",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_neutral_migration.lua",
+        "<local-path>\\stable-release/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "log": "neutral_config_migration.log"
+    },
+    {
+      "check": "release_contract",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_release_contract.py",
+        "<local-path>\\stable-release"
+      ],
+      "log": "release_contract.log"
+    },
+    {
+      "check": "stable_menu_labels",
+      "exit_code": 0,
+      "command": [
+        "<local-path>\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation\\lupa_host.py",
+        "<local-path>\\stable-release\\docs\\NeverLockSavesReborn\\validation/test_stable_menu_labels.lua",
+        "<local-path>\\stable-release"
+      ],
+      "log": "stable_menu_labels.log"
+    }
+  ],
+  "passed": true,
+  "retired_checks": [
+    {
+      "check": "backup_recovery",
+      "disposition": "RETIRED",
+      "reason": "Scope-freeze explicitly removed the closed-game backup/retention/recovery companion. No shipping implementation exists; not applicable to Reborn."
+    },
+    {
+      "check": "retention_journal_review",
+      "disposition": "RETIRED",
+      "reason": "Scope-freeze explicitly removed the closed-game backup/retention/recovery companion. No shipping implementation exists; not applicable to Reborn."
+    },
+    {
+      "check": "retention_protected_review",
+      "disposition": "RETIRED",
+      "reason": "Scope-freeze explicitly removed the closed-game backup/retention/recovery companion. No shipping implementation exists; not applicable to Reborn."
+    }
+  ]
+}

@@ -40,7 +40,7 @@ for _,key in ipairs({'cet','codeware'})do
  for _,value in ipairs(sharedValid)do local version,status=one(key,value);eq(version,value,'safe full version '..key);eq(status,'observed','safe observed '..key)end
 end
 for _,value in ipairs(sharedValid)do local version,status=one('cet','v'..value);eq(version,value,'strip one lowercase v');eq(status,'observed','prefixed observed')end
-local badStrings={'','v','V1.2.3','vv1.2.3','v 1.2.3',' 1.2.3','1.2.3 ','1.2.3\n','1.2.3\r','1.2.3\0','1.2.3/private','1.2.3\\PRIVATE','1.2.3:PRIVATE','https://PRIVATE/1.2.3','PRIVATE1.2.3','+1','-1','.1','1=PRIVATE','1@PRIVATE','1#PRIVATE','1,97',string.rep('1',41),'1.2.3é'}
+local badStrings={'','v','V1.2.3','vv1.2.3','v 1.2.3',' 1.2.3','1.2.3 ','1.2.3\n','1.2.3\r','1.2.3\0','1.2.3/private','1.2.3\\PRIVATE','1.2.3:PRIVATE','https://PRIVATE/1.2.3','PRIVATE1.2.3','+1','-1','.1','1=PRIVATE','1@PRIVATE','1#PRIVATE','1,97',string.rep('1',41),'1.2.3Ã©'}
 for _,key in ipairs({'cet','codeware'})do
  for _,value in ipairs(badStrings)do local version,status=one(key,value);eq(version,'unknown','unsafe text stripped '..key);eq(status,'invalid','unsafe text invalid '..key)end
 end

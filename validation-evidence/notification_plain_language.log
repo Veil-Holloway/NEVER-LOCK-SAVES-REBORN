@@ -1,0 +1,15 @@
+{
+  "result": "PASS",
+  "assertions": 320,
+  "core_method_changes": [
+    "CheckpointMessage",
+    "HandleSmartBlockedSave",
+    "NLSRebornCheckpointFailure",
+    "NLSRebornDeferredDispatch",
+    "NotifyImmersionSaveRequest",
+    "Version"
+  ],
+  "unchanged_core_methods": 58,
+  "notification_strings_checked": 148,
+  "scope": "constrained actual REDscript source and exact policy-byte comparison; not live compilation"
+}

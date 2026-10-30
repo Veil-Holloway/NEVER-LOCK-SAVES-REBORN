@@ -9,7 +9,7 @@ local function check(v,label)checks=checks+1;assert(v,label)end
 local function build(extra)local s={build='0.14.0-preRC4',settings={}};for k,v in pairs(extra or {})do s[k]=v end;return report.build(s)end
 local first=build({versions={cet='1.37.1'}})
 check(type(first.dependency_evidence)=='table','NLSR-DEPENDENCY-EVIDENCE: report must identify provenance of dependency observations')
-eq(first.schema_version,1,'schema remains one')
+eq(first.schema_version,2,'current report schema is two after scope freeze')
 eq(first.dependencies.cet,'1.37.1','legacy flat CET version preserved')
 eq(first.dependencies.codeware,'unknown','Codeware fixed key added')
 eq(first.dependency_evidence.scope,'on_demand_runtime_self_report','observation scope')

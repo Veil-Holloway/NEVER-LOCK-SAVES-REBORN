@@ -24,15 +24,15 @@ end
 function M.new()
   return {options=copy(DEFAULTS), session=nil, baseline=nil, elapsedSeconds=0,
     cooldownRemaining=DEFAULTS.cooldownSeconds, retryRemaining=0, pending=nil,
-    accepted=0, rejected=0, errors=0, resets=0, generation=0,
-    dispatching=false, status='disabled', reason='disabled'}
+    accepted=0, rejected=0, errors=0, resets=0, blockedTransitions=0, generation=0,
+    blockedReason=nil, dispatching=false, status='disabled', reason='disabled'}
 end
 function M.reset(state, session, why)
   requireState(state)
   if session~=nil and not integer(session,1,2147483647) then return false,'invalid session' end
   state.session=session; state.baseline=nil; state.elapsedSeconds=0
   state.cooldownRemaining=state.options.cooldownSeconds
-  state.retryRemaining=0; state.pending=nil
+  state.retryRemaining=0; state.pending=nil; state.blockedReason=nil
   state.resets=state.resets+1; state.generation=state.generation+1
   state.status=state.options.enabled and 'waiting' or 'disabled'
   state.reason=reason(why)
@@ -79,9 +79,24 @@ end
 local function wait(state, why)
   state.status='waiting'; state.reason=why; return 'waiting'
 end
-local function interrupt(state, why)
-  M.reset(state,nil,why)
+-- Unknown/blocked observations are a state, not a per-frame reset command.
+-- The first sample entering a blocker clears captured automatic work and edges;
+-- repeated samples of the same blocker remain inert until valid data returns.
+local function block(state, snapshot, why)
+  local session=type(snapshot)=='table' and snapshot.session or nil
+  local validSession=integer(session,1,2147483647)
+  local changed=state.blockedReason~=why or (validSession and state.session~=session)
+  if changed then
+    state.baseline=nil; state.elapsedSeconds=0; state.retryRemaining=0; state.pending=nil
+    state.cooldownRemaining=state.options.cooldownSeconds
+    if validSession then state.session=session end
+    state.generation=state.generation+1; state.blockedTransitions=state.blockedTransitions+1
+    state.blockedReason=why
+  end
   return wait(state,why)
+end
+local function interrupt(state, snapshot, why)
+  return block(state,snapshot,why)
 end
 function M.tick(state, delta, snapshot, request)
   requireState(state)
@@ -91,9 +106,16 @@ function M.tick(state, delta, snapshot, request)
     state.status='disabled'; state.reason='disabled'
     return 'disabled'
   end
-  if not finite(delta) or delta<0 or delta>1 then return interrupt(state,'clock interrupted') end
+  if not finite(delta) or delta<0 or delta>1 then return interrupt(state,snapshot,'clock interrupted') end
   local invalid=invalidSnapshot(snapshot,state.options)
-  if invalid then return interrupt(state,invalid) end
+  if invalid then return interrupt(state,snapshot,invalid) end
+  if state.blockedReason~=nil then
+    -- First valid sample after a blocker establishes a fresh edge baseline.
+    state.blockedReason=nil; state.baseline={combat=snapshot.combatActive,vehicle=snapshot.vehicleActive,apartment=snapshot.apartmentInside}
+    state.elapsedSeconds=0; state.retryRemaining=0; state.cooldownRemaining=state.options.cooldownSeconds
+    state.status='waiting'; state.reason='session baseline'
+    return 'waiting'
+  end
   if state.session~=snapshot.session or not state.baseline then
     M.reset(state,snapshot.session,'session baseline')
     state.baseline={combat=snapshot.combatActive, vehicle=snapshot.vehicleActive,
@@ -188,6 +210,7 @@ function M.status(state)
   report.pendingReason=state.pending and state.pending.reason or 'none'
   report.pendingRemaining=state.pending and math.max(0,PENDING_SECONDS-state.pending.age) or 0
   report.accepted=state.accepted; report.rejected=state.rejected; report.errors=state.errors; report.resets=state.resets
+  report.blockedTransitions=state.blockedTransitions; report.blockedReason=state.blockedReason or 'none'
   -- Acceptance counts host queue handoffs, never engine dispatch or completion.
   report.checkpointSubmission='Unknown'; report.written='Unknown'; report.reload='Unknown'
   return report

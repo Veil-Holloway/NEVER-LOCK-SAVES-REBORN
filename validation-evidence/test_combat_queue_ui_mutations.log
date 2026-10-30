@@ -1,0 +1,40 @@
+{
+  "passed": true,
+  "controls": [
+    {
+      "mutation": "combat_guard_removed",
+      "detected_by_assertions": true,
+      "exit_code": 1
+    },
+    {
+      "mutation": "mounted_release_forbidden",
+      "detected_by_assertions": true,
+      "exit_code": 1
+    },
+    {
+      "mutation": "native_lock_guard_removed",
+      "detected_by_assertions": true,
+      "exit_code": 1
+    },
+    {
+      "mutation": "duplicate_pending_clear_removed",
+      "detected_by_assertions": true,
+      "exit_code": 1
+    },
+    {
+      "mutation": "native_false_treated_accepted",
+      "detected_by_assertions": true,
+      "exit_code": 1
+    },
+    {
+      "mutation": "intro_guard_removed",
+      "detected_by_assertions": true,
+      "exit_code": 1
+    },
+    {
+      "mutation": "native_reentrant_registration_guard_removed",
+      "detected_by_assertions": true,
+      "exit_code": 1
+    }
+  ]
+}

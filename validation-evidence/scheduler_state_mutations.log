@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "controls": [
+    {
+      "mutation": "per_frame_blocker_transition_restored",
+      "detected": true,
+      "exit_code": 1
+    },
+    {
+      "mutation": "current_queue_merged_with_history",
+      "detected": true,
+      "exit_code": 1
+    }
+  ]
+}

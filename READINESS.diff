@@ -1,0 +1,809 @@
+--- v1.0.0-rc.1/BASELINE-RUNTIME.json
++++ v1.0.0/BASELINE-RUNTIME.json
+@@ -1,6 +1,5 @@
+ {
+-  "baseline": "1.0.0-notification-polish.1",
+-  "user_report": "User reports this build works. No exhaustive matrix inferred.",
++  "baseline": "1.0.0-rc.1",
+   "runtime_files": [
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua",
+@@ -36,7 +35,7 @@
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
+-      "sha256": "bd237b63e11b8ea8565410dc08439455e7d2d8ad5d6bb780651b522ed029b32c"
++      "sha256": "f590eddb795855e4895168d7041030c4b341627b66fa4be6dc189a440a070dcd"
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/native_settings_ui.lua",
+@@ -87,5 +86,67 @@
+       "sha256": "3cfcf20da7466b48e0cf055ff77334b7e0c27732d6f734a5105393fb8805633a"
+     }
+   ],
+-  "init_normalized_sha256": "e8c6172c79af4460a39678b063bc418a509859bcaa62e2075cf0202b64ec923e"
++  "presentation_only_files": {
++    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua": {
++      "before_sha256": "f590eddb795855e4895168d7041030c4b341627b66fa4be6dc189a440a070dcd",
++      "expected_sha256": "b734fdeedf3f791c519c7ac1ca216aba22daa5bd7c02bedbf8a6514256ca8b4f",
++      "literal_replacements": [
++        [
++          "1.0.0-rc.1",
++          "1.0.0"
++        ],
++        [
++          " Developer Preview",
++          " Stable"
++        ],
++        [
++          " (experimental)",
++          ""
++        ],
++        [
++          "log('v1.0.0-scheduler-state.1 Stable loaded; experimental native save-lock gate required')",
++          "log('v' .. VERSION .. ' loaded')"
++        ]
++      ]
++    },
++    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/overlay_ui.lua": {
++      "before_sha256": "1ac969da2a0c28e7277c9dcde04164da0aa073825cae9340f650d54d536629f5",
++      "expected_sha256": "a8f7e8e7a70a010745c2cc802428790a0ffda1eff91ddaac39d7dbf0613b03fb",
++      "literal_replacements": [
++        [
++          " | Developer preview",
++          " | Stable"
++        ]
++      ]
++    },
++    "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/settings_ui.lua": {
++      "before_sha256": "95312d9c3f29381585789008713eba5b63a62defb4f6ab68cbdd65224ad5ebc6",
++      "expected_sha256": "b204f095b5c6f3094523116fbd0ae9c457f25c26e075a23a5862f8868fe4e312",
++      "literal_replacements": [
++        [
++          " (experimental)",
++          ""
++        ],
++        [
++          " (preview)",
++          ""
++        ]
++      ]
++    },
++    "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds": {
++      "before_sha256": "3cfcf20da7466b48e0cf055ff77334b7e0c27732d6f734a5105393fb8805633a",
++      "expected_sha256": "ce4ac9b06e9eb453dfef9bc1ed169fa819c7c9755fc581b4fbce9a92f1152d10",
++      "literal_replacements": [
++        [
++          "// v1.0.0-combat-queue-ui.1 Developer Preview.",
++          "// v1.0.0 Stable."
++        ],
++        [
++          "public static func Version() -> String { return \"1.0.0-combat-queue-ui.1\"; }",
++          "public static func Version() -> String { return \"1.0.0\"; }"
++        ]
++      ]
++    }
++  },
++  "user_report": "User confirmed the preceding game code works and explicitly requested stable promotion."
+ }
+--- v1.0.0-rc.1/BUILD-MANIFEST.json
++++ v1.0.0/BUILD-MANIFEST.json
+@@ -1,8 +1,8 @@
+ {
+-  "version": "1.0.0-rc.1",
+-  "channel": "release candidate",
+-  "baseline": "1.0.0-notification-polish.1",
+-  "game_logic_changes": "none; VERSION labels only in init.lua",
++  "version": "1.0.0",
++  "channel": "stable",
++  "baseline": "1.0.0-rc.1",
++  "game_logic_changes": "none; exact menu/version/status display replacements only",
+   "readiness_changes": [
+     "current release test plan and portable host",
+     "Windows auditor path/handle timestamp fix",
+@@ -10,7 +10,8 @@
+     "stale schema and Guardian test expectations",
+     "complete dependency mutation fixtures"
+   ],
+-  "user_runtime_report": "notification-polish.1 reported working",
+-  "this_candidate_game_validation": "user-tested runtime logic preserved; RC label/tooling not live re-tested",
+-  "public_stable_release": false
++  "user_runtime_report": "User-confirmed working notification-polish code; stable publication explicitly authorized",
++  "this_candidate_game_validation": "User-tested runtime logic preserved; stable presentation changes verified offline, not rerun in the native game",
++  "public_stable_release": true,
++  "stable_promotion": "menu experimental/preview labels removed"
+ }
+--- v1.0.0-rc.1/CHANGELOG.md
++++ v1.0.0/CHANGELOG.md
+@@ -1,12 +1,7 @@
+-# 1.0.0-rc.1 - October 29, 2026
++# 1.0.0 - Stable
+ 
+-- Prepared the user-reported working notification-polish.1 game code as a release candidate; only runtime version labels changed.
+-- Fixed Windows timestamp and inventory-pin handling in the separate read-only installation auditor.
+-- Fixed stale schema/quicksave test expectations and missing dependency-mutation fixtures.
+-- Retired the three checks for the already-removed backup companion; recorded explicit dispositions and current replacements.
+-- Added a portable canonical release suite with 64 active groups, full 18-file Lua syntax coverage, all recent regressions and a frozen-runtime contract.
+-- Updated current installation, support, license/credits references, test requirements, roadmap, release notes and publication handoff. Removed historical/developer-only material from the clean publication bundles.
+-
+-## Retained notification-polish behavior
+-
+-Neutral, bracket-free player notices; Saving game while pending; Game saved after existing matched successful engine completion; clear matched failure and plain-language uncertain-result messages. Stale pending notices for completed requests are dismissed. Native/intro protection, event queue, phone/combat handling, Smart Autosave, Dark Future detection, settings/presets and completion correlation remain unchanged.
++- Promoted the latest user-tested release to stable at the user's request.
++- Removed experimental labels from Unrestricted and Smart, and preview labels from Deferred Save and Smart Autosave menu controls. Replaced the Developer preview header with Stable.
++- Updated version/status display strings, repository documentation and release metadata. Stored config values, control identifiers and save behavior are unchanged.
++- Includes the event-driven queue, phone-manager gating, neutral notifications and matched completion feedback from the working predecessor.
++- Includes the repaired release test suite, Windows installation-auditor fixes, explicit retired-test dispositions and reproducible publication packages.
+--- v1.0.0-rc.1/DESCRIPTION.txt
++++ v1.0.0/DESCRIPTION.txt
+@@ -1 +1 @@
+-Never Lock Saves: Reborn 1.0.0-rc.1 - configurable saving, an event-driven deferred queue, optional Smart Autosave and neutral save notifications. Release candidate.
++Never Lock Saves: Reborn 1.0.0 - configurable saving, an event-driven deferred queue, optional Smart Autosave and neutral save notifications. Stable release.
+--- v1.0.0-rc.1/INSTALL.md
++++ v1.0.0/INSTALL.md
+@@ -1,12 +1,12 @@
+ # Installation, update and rollback
+ 
+-Use the RUNTIME_ONLY ZIP for 1.0.0-rc.1. The source/testing ZIP is for development.
++Use the RUNTIME_ONLY ZIP for 1.0.0. The source/testing ZIP is for development.
+ 
+ 1. Close Cyberpunk 2077. Keep the previous Reborn runtime ZIP and copies of config.json and profile-settings.json if you want a complete settings rollback.
+ 2. Install Cyber Engine Tweaks and redscript, plus the dependencies required by those frameworks. Native Settings and Dark Future are optional integrations installed separately.
+ 3. Install through one mod manager, or copy the complete bin/ and r6/ folders into the game root. The CET folder is bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn; the REDscript folder is r6/scripts/NeverLockSavesReborn.
+ 4. Replace existing Reborn runtime files in those paths. Do not leave an old renamed duplicate mod/script folder installed. Keep user config/preset files; the archive supplies none.
+-5. Launch and confirm 1.0.0-rc.1 in CET. Check fresh CET/redscript logs if the mod does not load. The archive manifest verifies installed bytes; it does not prove game compilation.
++5. Launch and confirm 1.0.0 in CET. Check fresh CET/redscript logs if the mod does not load. The archive manifest verifies installed bytes; it does not prove game compilation.
+ 
+ Old tone values are ignored and omitted on the next successful settings or preset write. No reset is needed. Optional Deferred Save, Smart Autosave and request tracking retain their current saved preferences.
+ 
+--- v1.0.0-rc.1/PUBLIC-DELIVERY.json
++++ v1.0.0/PUBLIC-DELIVERY.json
+@@ -1,6 +1,8 @@
+ {
+-  "version": "1.0.0-rc.1",
+-  "channel": "release candidate",
+-  "stable": false,
+-  "publication": "prepared; no public publication performed"
++  "version": "1.0.0",
++  "channel": "stable",
++  "stable": true,
++  "repository": "Veil-Holloway/NEVER-LOCK-SAVES-REBORN",
++  "tag": "v1.0.0",
++  "prior_releases": "preserved"
+ }
+--- v1.0.0-rc.1/PUBLISH-CHECKLIST.md
++++ v1.0.0/PUBLISH-CHECKLIST.md
+@@ -1,9 +1,7 @@
+-# Publication handoff - 1.0.0-rc.1
++# Stable publication - 1.0.0
+ 
+-Prepared assets: RUNTIME_ONLY.zip, SOURCE_AND_TESTS.zip, detached SHA-256 sidecars, validation report, release notes, install/support instructions, original-author credits and recorded MIT permission. The runtime ZIP is the player download; the source ZIP is for development.
++Publication is explicitly authorized by the user. Publish tag v1.0.0 as a normal stable release, not a draft or prerelease, and mark it Latest after asset/readback verification. Update the repository's main branch with the current tested source and stable menu labels. Preserve earlier releases for rollback.
+ 
+-Verification record: use VALIDATION.md and the accompanying package/cloud verification receipts. The canonical suite includes the current game policies, completion notifications, config migration, Windows auditor checks and mutation controls. The three removed-feature checks are explicitly retired, never counted as passing.
++Attach the RUNTIME_ONLY ZIP, SOURCE_AND_TESTS ZIP, both detached SHA-256 sidecars, validation report and license. Use RELEASE-NOTES.md for the public release description. The runtime ZIP is the player download; the source ZIP includes the developer tests and current evidence.
+ 
+-Publish as a release candidate/prerelease. Preserve prior downloads for rollback. Use RELEASE-NOTES.md for release content and INSTALL.md for instructions. Keep the runtime and source ZIPs distinct, publish both detached checksums, retain RalphModding's credit/original-mod link and MIT files, and list Native Settings/Dark Future as optional integrations.
+-
+-No public posting, GitHub release, repository change or Nexus upload has been performed by preparing these files. The exact game/framework combination from the user's working installation has not been recorded, so do not invent minimum supported versions or claim a full compatibility matrix. Known host-specific test skips are recorded in VALIDATION.md.
++The user reports the preceding game code works. Stable promotion changes labels only. Keep known verification limits and host-specific test skips in VALIDATION.md; do not replace them with claims that every framework combination was tested. Retain RalphModding's original-mod credit and recorded MIT permission.
+--- v1.0.0-rc.1/README.md
++++ v1.0.0/README.md
+@@ -1,6 +1,8 @@
+-# Never Lock Saves: Reborn 1.0.0-rc.1
++# Never Lock Saves: Reborn 1.0.0
+ 
+-Reborn adds configurable saving, a deferred save queue and optional Smart Autosave to Cyberpunk 2077. Native game restrictions and introduction protection remain authoritative. This package is a release candidate.
++Reborn adds configurable saving, a deferred save queue and optional Smart Autosave to Cyberpunk 2077. Native game restrictions and introduction protection remain authoritative. This is the stable 1.0.0 release.
++
++[Download the latest stable release](https://github.com/Veil-Holloway/NEVER-LOCK-SAVES-REBORN/releases/latest). Choose the RUNTIME_ONLY ZIP to install the mod.
+ 
+ ## Features
+ 
+@@ -20,7 +22,7 @@
+ 
+ ## Status
+ 
+-The user reports the preceding notification-polish.1 build works. This RC preserves that game code, with version labels only. The release-readiness changes fix tests and the separate installation auditor. Read VALIDATION.md for fresh offline results and the limits of that evidence. A successful game callback is not an independent reload-integrity check.
++The user reports the preceding notification-polish.1 build works and has authorized stable publication. This stable release preserves that game code, with version and menu-label changes only. The release-readiness changes fix tests and the separate installation auditor. Experimental and preview menu labels have been removed. Read VALIDATION.md for fresh offline results and the limits of that evidence. A successful game callback is not an independent reload-integrity check.
+ 
+ For problems, see SUPPORT.md. For tests and release preparation, see CONTRIBUTING.md and PUBLISH-CHECKLIST.md. Game-save backup/recovery and automatic character profiles are outside this release's scope.
+ 
+--- v1.0.0-rc.1/RELEASE-NOTES.md
++++ v1.0.0/RELEASE-NOTES.md
+@@ -1,21 +1,33 @@
+-# Never Lock Saves: Reborn 1.0.0-rc.1
++# Never Lock Saves: Reborn 1.0.0
+ 
+-October 29, 2026. Release candidate prepared from the user-reported working notification-polish.1 build.
++**Stable release.**
+ 
+-## This candidate
++Reborn adds configurable saving, an event-driven deferred queue and optional Smart Autosave to Cyberpunk 2077. This release contains the latest user-tested notification and queue fixes, with the experimental/preview labels removed from menu controls.
+ 
+-The game runtime is unchanged apart from version labels. It retains the neutral notification polish, matched save-completion messages, event-driven queue, phone/combat/native gating, optional Smart Autosave, settings/presets and Dark Future integration.
++## Included
+ 
+-Release-readiness work:
++- Four save modes: Vanilla, Immersion, Unrestricted and Smart. Native saving restrictions and introduction protection remain in place.
++- One queued player save that waits for saving to become available, including release after combat or an active phone call. Remaining in a vehicle does not by itself block a queued player save.
++- Optional Smart Autosave for exploration intervals, post-combat, vehicle exit, supported quest milestones and entry to V's original Little China apartment area.
++- CET controls, optional Native Settings integration, persistent settings and manual named presets.
++- Optional, read-only Dark Future integration for vehicle sleep, addiction, starvation and dehydration notifications.
++- Neutral notifications without bracketed developer text. Saving game indicates work in progress; Game saved follows the existing matching successful game callback; failures receive plain-language feedback.
++- Local diagnostics, an optional Guardian request ledger and on-demand support reports. No report is uploaded automatically.
+ 
+-- Reconciled the current test contract with the approved feature freeze. Three obsolete backup/recovery checks are explicitly retired.
+-- Updated report-schema and generic-quicksave expectations to the current supported behavior.
+-- Fixed dependency mutation fixtures to include the report's actual settings module, so all controls reach and detect their intended defects.
+-- Fixed the separate Windows installation auditor's path/handle timestamp comparison. File-identity, per-API change-time and reparse/mutation rejection remain enforced.
+-- Fixed the installation inventory pin to hash saved bytes, eliminating Windows newline-conversion mismatch.
+-- Added current phone/completion/notification regressions, all 18 Lua files to syntax coverage, saved-byte inventory checks and a frozen-runtime contract.
+-- Added one portable release test runner and clean installation, support, attribution and publication documents.
++## Install or update
+ 
+-See VALIDATION.md and TEST-DISPOSITION.json for fresh results and test retirement/replacement details. The user reports the preceding build works; that is retained without inventing exact framework versions or a completed compatibility matrix. This is a candidate publication, not a claim of every possible configuration passing.
++Download **Never_Lock_Saves_Reborn_v1.0.0_RUNTIME_ONLY.zip** for installation. Close the game, install the bin/ and r6/ folders into the game root or use your mod manager, and keep one Reborn installation. Existing config.json and profile-settings.json are retained. Restart and confirm 1.0.0 in CET. Full install/update/rollback instructions are in INSTALL.md.
+ 
+-Install/update/rollback instructions are in INSTALL.md. Keep one mod installation. No settings, saves or framework binaries are bundled. No public release is posted by preparing this package.
++Cyber Engine Tweaks and redscript are required, with their separately installed dependencies. Native Settings and Dark Future are optional. No frameworks or game saves are bundled. The SOURCE_AND_TESTS ZIP is for developers, not the player installation.
++
++## Verification and scope
++
++The preceding game code was reported working by the user, including the notification update. Stable promotion changes version/menu/status labels only; save logic and config values are preserved. The current release suite and package verification are documented in VALIDATION.md. Offline tests do not establish a previously unrecorded game/framework compatibility matrix, and a game completion callback is not independent reload-integrity verification.
++
++Game-save backup/recovery tooling, automatic character profiles and every-safehouse coverage remain outside this release. Previous releases remain available for rollback.
++
++## Credits
++
++Based on **Never Lock Saves v2.2.1.0 by RalphModding**. Reborn modifications and maintenance: **Veil Ashen Holloway**. Thanks to RalphModding for the original work and the recorded permission to publish the continuation under MIT. See LICENSE, ATTRIBUTION.md and PERMISSION.md.
++
++Original mod: https://www.nexusmods.com/cyberpunk2077/mods/9662
+--- v1.0.0-rc.1/ROADMAP.md
++++ v1.0.0/ROADMAP.md
+@@ -1,9 +1,9 @@
+ # Release roadmap
+ 
+-Current candidate: 1.0.0-rc.1. Game runtime frozen at the user-reported working notification-polish.1 code, with RC version labels only.
++Current release: **1.0.0 stable**. Stable promotion is user-authorized. The latest user-tested game code is retained with stable version/menu labels.
+ 
+-Completed for publication preparation: neutral notification polish, clearer matched completion feedback, current test-plan reconciliation, Windows auditor fixes, portable offline runner, current install/support/credits/license documents, and clean versioned package verification.
++Completed: event-driven deferred saving, phone/combat/native gating, optional Smart Autosave, manual presets, Dark Future notification contexts, neutral player notices, matched save-completion messages, current release tests, Windows auditor fixes and clean publication packages.
+ 
+-No new features are needed for this release. Backup/recovery tooling, automatic character profiles and every-safehouse trigger coverage remain outside the approved scope. Future changes require a separate decision.
++No new features were added during stable promotion. Backup/recovery tooling, automatic character profiles and every-safehouse trigger coverage remain outside scope. Future changes will be separately scoped.
+ 
+-Publication gate: the current offline suite and extracted-package suite must pass; package hashes and authenticated Drive readback must match. The RC is a candidate for public testing. A stable-release claim across additional game/framework combinations requires corresponding runtime evidence; none is inferred from offline source tests.
++Keep documented test/compatibility limits visible in VALIDATION.md and preserve previous downloads for rollback. Stable is the publication channel; it does not invent an unrecorded compatibility matrix.
+--- v1.0.0-rc.1/RUNTIME_MANIFEST.json
++++ v1.0.0/RUNTIME_MANIFEST.json
+@@ -1,6 +1,6 @@
+ {
+   "schema": 1,
+-  "release": "1.0.0-rc.1",
++  "release": "1.0.0",
+   "scope": "runtime_files_only",
+   "runtime_files": [
+     {
+@@ -45,8 +45,8 @@
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
+-      "size": 70436,
+-      "sha256": "f590eddb795855e4895168d7041030c4b341627b66fa4be6dc189a440a070dcd"
++      "size": 70301,
++      "sha256": "b734fdeedf3f791c519c7ac1ca216aba22daa5bd7c02bedbf8a6514256ca8b4f"
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/native_settings_ui.lua",
+@@ -55,8 +55,8 @@
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/overlay_ui.lua",
+-      "size": 10410,
+-      "sha256": "1ac969da2a0c28e7277c9dcde04164da0aa073825cae9340f650d54d536629f5"
++      "size": 10399,
++      "sha256": "a8f7e8e7a70a010745c2cc802428790a0ffda1eff91ddaac39d7dbf0613b03fb"
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua",
+@@ -75,8 +75,8 @@
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/settings_ui.lua",
+-      "size": 6544,
+-      "sha256": "95312d9c3f29381585789008713eba5b63a62defb4f6ab68cbdd65224ad5ebc6"
++      "size": 6494,
++      "sha256": "b204f095b5c6f3094523116fbd0ae9c457f25c26e075a23a5862f8868fe4e312"
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_message_library.lua",
+@@ -105,8 +105,8 @@
+     },
+     {
+       "path": "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds",
+-      "size": 33849,
+-      "sha256": "3cfcf20da7466b48e0cf055ff77334b7e0c27732d6f734a5105393fb8805633a"
++      "size": 33802,
++      "sha256": "ce4ac9b06e9eb453dfef9bc1ed169fa819c7c9755fc581b4fbce9a92f1152d10"
+     }
+   ]
+ }
+--- v1.0.0-rc.1/SUPPORT.md
++++ v1.0.0/SUPPORT.md
+@@ -1,4 +1,4 @@
+-# Support for 1.0.0-rc.1
++# Support for 1.0.0
+ 
+ Include the build/version and ZIP SHA-256, actual game/framework versions, expected behavior, observed behavior and the shortest reproduction. Record whether Dark Future, Native Settings, Deferred Save and Smart Autosave are enabled.
+ 
+@@ -6,4 +6,4 @@
+ 
+ tools/NLSRInstallAudit/audit_installation.py is a read-only installed-source auditor. Run it against the game installation directory, never the saved-games directory. It checks runtime identity and potential duplicates; it does not repair files or certify compilation, compatibility or save integrity.
+ 
+-The Windows auditor's timestamp/manifest-pin issues are fixed in this RC and covered by regression tests. Symbolic-link/case-collision filesystem fixtures may be unavailable on hosts without the necessary filesystem features or privileges; validation records those skips explicitly.
++The Windows auditor's timestamp/manifest-pin issues are fixed in this release and covered by regression tests. Symbolic-link/case-collision filesystem fixtures may be unavailable on hosts without the necessary filesystem features or privileges; validation records those skips explicitly.
+--- v1.0.0-rc.1/TEST-DISPOSITION.json
++++ v1.0.0/TEST-DISPOSITION.json
+@@ -1,5 +1,5 @@
+ {
+-  "release": "1.0.0-rc.1",
++  "release": "1.0.0",
+   "previous_current_failures": [
+     {
+       "check": "backup_recovery",
+--- v1.0.0-rc.1/VALIDATION.md
++++ v1.0.0/VALIDATION.md
+@@ -1,10 +1,10 @@
+-# Validation - Never Lock Saves: Reborn 1.0.0-rc.1
++# Validation - Never Lock Saves: Reborn 1.0.0
+ 
+-October 29, 2026. Release candidate. The user reports notification-polish.1 works; its game code is frozen in this RC, apart from VERSION labels.
++October 29, 2026. Stable release, explicitly authorized by the maintainer after the user-reported working notification-polish build. Version and menu/status display labels change; game logic is frozen.
+ 
+ ## Current release gate
+ 
+-**64/64 active check groups passed.** No active group failed. The canonical plan is docs/NeverLockSavesReborn/validation/RELEASE-TEST-PLAN.json, invoked by run_release_checks.py. The suite includes full current module/integration/source checks plus all applicable recent phone, completion, notification and scheduler regressions.
++**65/65 active check groups passed.** No active group failed. The canonical plan is docs/NeverLockSavesReborn/validation/RELEASE-TEST-PLAN.json, invoked by run_release_checks.py. The suite includes full current module/integration/source checks plus all applicable recent phone, completion, notification and scheduler regressions.
+ 
+ The separate installation-auditor unittest group ran **94 tests: 73 passed, 21 skipped**. Skips are explicit host limits for symbolic-link privileges and case-distinct path fixtures on this Windows filesystem. The new host-independent timestamp, mutation, inode, creation-time, reparse and saved-byte-pin regression cases pass. The skips are not counted as tested behavior. Broader existing link tests remain available for a capable host.
+ 
+@@ -31,8 +31,8 @@
+ ## Runtime, notifications and safety coverage
+ 
+ - All **18** runtime Lua files compile under the test host, including save_completion.lua, which the older fixed 17-file syntax list omitted.
+-- 58 release-contract assertions verify all 21 runtime entries, unique inventory coverage, auditor/package inventory equality, saved-byte SHA pins, active test coverage and the frozen user-tested game code. Twenty runtime files are byte-identical to notification-polish.1; init.lua differs only in version labels.
+-- Core/Dark Future notifications: 12,256 assertions. Player-copy/source checks: 322 assertions, scanning 148 notification string literals. Completion notices: 26 actual-init assertions; completion tracker: 35 assertions.
++- 58 release-contract assertions verify all 21 runtime entries, unique inventory coverage, auditor/package inventory equality, saved-byte SHA pins, active test coverage and the frozen user-tested game code. Seventeen runtime files are byte-identical to RC1. Four files contain only the exact version/menu/status presentation replacements recorded in BASELINE-RUNTIME.json. The new menu-label group passes 74 assertions covering both menus and persisted defaults.
++- Core/Dark Future notifications: 12,256 assertions. Player-copy/source checks: 320 assertions, scanning 148 notification string literals. Completion notices: 26 actual-init assertions; completion tracker: 35 assertions.
+ - Status notifications: 10,566 assertions, 6,101 independent public-contract assertions, and all 11 mutation controls detected. Tone migration: 990 assertions.
+ - Guardian, combat/queue retention, phone manager, Dark Future states, autosave scheduling, settings recovery, manual presets and current UI/report integration pass their active tests. Deliberate mutation controls must fail at the intended assertions, not merely at missing imports or syntax errors.
+ 
+@@ -44,8 +44,8 @@
+ 
+ Alternatively supply --lua with a compatible executable. Nested tests use that same explicit host through NLSR_LUA_COMMAND. No machine-specific launcher or sitecustomize patch is required. Redacted passing results and logs are included under validation-evidence/; the test plan retains reproducible command templates.
+ 
+-These are offline tests with explicit game/framework/UI boundaries and constrained REDscript-source execution. They are not native REDscript compilation or CET LuaJIT/game execution. The user-reported working predecessor is retained as runtime evidence without inferring exact framework versions or an exhaustive compatibility matrix. Callback success is not independent save-file/reload certification. This RC makes no stable-compatibility promise for untested configurations.
++These are offline tests with explicit game/framework/UI boundaries and constrained REDscript-source execution. They are not native REDscript compilation or CET LuaJIT/game execution. The user-reported working predecessor is retained as runtime evidence without inferring exact framework versions or an exhaustive compatibility matrix. Callback success is not independent save-file/reload certification. Stable status does not extend the recorded compatibility evidence to untested configurations. Native game compilation and live menu rendering of these presentation-only edits have not been rerun here.
+ 
+ ## Package and publication
+ 
+-Both runtime and clean source/testing archives receive complete SHA-256 manifests, safe unique path, CRC, inventory and decompressed-byte checks. The source/testing archive is extracted and its canonical suite rerun before handoff. Separate delivery receipts record extracted-package and authenticated Drive readback results; this document does not predict those future results. Original-author MIT permission/credits are retained. No public release is posted by this preparation task.
++Both runtime and clean source/testing archives receive complete SHA-256 manifests, safe unique path, CRC, inventory and decompressed-byte checks. The source/testing archive is extracted and its canonical suite rerun before handoff. Separate delivery receipts record the extracted-package rerun and authenticated GitHub asset readback; this document does not predict those future results. Original-author MIT permission/credits are retained. The stable release is published to the existing GitHub repository only after final package and extracted-source checks. Prior releases and tags are retained.
+--- v1.0.0-rc.1/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
++++ v1.0.0/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua
+@@ -1,9 +1,9 @@
+--- Never Lock Saves Reborn v1.0.0-rc.1 Developer Preview
++-- Never Lock Saves Reborn v1.0.0 Stable
+ -- Persistent UI settings, runtime bridge, and diagnostics.
+ -- Player requests never bypass combat/native locks; mounted state alone is not a queue blocker.
+ -- DF switches control contextual messages only. Optional scheduler defaults OFF.
+ local title = 'Never Lock Saves: Reborn'
+-local VERSION = '1.0.0-rc.1'
++local VERSION = '1.0.0'
+ local deferred = require('deferred_save')
+ local deferredState = deferred.new()
+ local combatEvents = require('combat_events').new(function(player)
+@@ -228,7 +228,7 @@
+ local lastPlayer = nil
+ local message = 'Waiting for player'
+ local attempts, successes, failures = 0, 0, 0
+-local names = {'Vanilla', 'Immersion', 'Unrestricted (experimental)', 'Smart (experimental)'}
++local names = {'Vanilla', 'Immersion', 'Unrestricted', 'Smart'}
+ local file = 'config.json'
+ local configStore = require('config_store')
+ local profilesModule=optional('profiles')
+@@ -715,8 +715,8 @@
+     pcall(function() initialPlayer:NLSRebornDeferredCancel() end)
+   end
+   registerNativeSettings()
+-  deferredStatus = deferredEnabled and 'Live queue enabled (experimental)' or 'Disabled'
+-  log('v1.0.0-scheduler-state.1 Developer Preview loaded; experimental native save-lock gate required')
++  deferredStatus = deferredEnabled and 'Live queue enabled' or 'Disabled'
++  log('v' .. VERSION .. ' loaded')
+ end)
+ registerForEvent('onOverlayOpen', function() show = true; apply() end)
+ registerForEvent('onOverlayClose', function() show = false;combatEvents:signal(deferredSession,'overlay_closed') end)
+--- v1.0.0-rc.1/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/overlay_ui.lua
++++ v1.0.0/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/overlay_ui.lua
+@@ -158,7 +158,7 @@
+     -- Always close a begun window, including collapsed/error frames.
+     local ok,err = pcall(function()
+       if not visible then return end
+-      ui.Text(view.version..' | Developer preview')
++      ui.Text(view.version..' | Stable')
+       text(ui,'Configuration',view.configStatus)
+       if type(ui.Checkbox) == 'function' then
+         local value,changed = ui.Checkbox('Show setting explanations##nls_help',self.showHelp)
+--- v1.0.0-rc.1/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/settings_ui.lua
++++ v1.0.0/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/settings_ui.lua
+@@ -1,7 +1,7 @@
+ -- Shared presentation metadata. Persisted values and game policy remain in init.lua.
+ -- Native option identifiers and all configuration keys retain their existing meanings.
+ local M = {}
+-M.modeNames = {'Vanilla', 'Immersion', 'Unrestricted (experimental)', 'Smart (experimental)'}
++M.modeNames = {'Vanilla', 'Immersion', 'Unrestricted', 'Smart'}
+ M.sections = {
+   {id='save', label='Saving'}, {id='autosave', label='Smart Autosave'},
+   {id='notifications', label='Notifications'}, {id='immersion', label='Dark Future'},
+@@ -10,13 +10,13 @@
+ M.options = {
+   {key='mode', nativeId='mode', section='save', label='Save Mode', kind='enum', default=1,
+     choices=M.modeNames, help='Vanilla uses the original save path. Reborn modes respect combat and native locks; Unrestricted is a retained legacy name, not a lock bypass.'},
+-  {key='deferredEnabled', nativeId='deferred', section='save', label='Deferred Save (preview)', kind='bool', default=false,
++  {key='deferredEnabled', nativeId='deferred', section='save', label='Deferred Save', kind='bool', default=false,
+     help='Remember one blocked player request for this session without expiry. Combat changes wake a live readiness check; native restrictions remain authoritative. Remaining inside a vehicle is allowed.'},
+   {key='deferredTTL', nativeId='deferredTTL', section='save', label='Automatic / test expiry (seconds)', kind='int', min=1, max=120, default=30,
+     help='Applies only to automatic requests and dry-run tests. Player save requests have no expiry and wait until cancelled or their session ends. Existing saved values are retained.'},
+   {key='deferredCooldownSeconds', nativeId='deferredCooldownSeconds', section='save', label='Queue dispatch cooldown (seconds)', kind='int', min=0, max=600, default=0,
+     help='Minimum spacing between queued checkpoint submissions. A two-second stable eligibility window is also required.'},
+-  {key='autosaveEnabled', nativeId='autosave', section='autosave', label='Smart Autosave (preview)', kind='bool', default=false,
++  {key='autosaveEnabled', nativeId='autosave', section='autosave', label='Smart Autosave', kind='bool', default=false,
+     help='Optional automatic requests, separate from Deferred Save. Native autosaves are unchanged. Turn this off to test only player-requested queuing.'},
+   {key='autosaveExploration', nativeId='autosaveExploration', section='autosave', label='Exploration interval', kind='bool', default=true,
+     help='Request a checkpoint after the selected interval of eligible exploration. Missed time is not replayed after a pause or load.'},
+--- v1.0.0-rc.1/docs/NeverLockSavesReborn/README.md
++++ v1.0.0/docs/NeverLockSavesReborn/README.md
+@@ -1,5 +1,5 @@
+ # Current release documentation
+ 
+-Current candidate: 1.0.0-rc.1. Start with the root README.md, INSTALL.md, RELEASE-NOTES.md, VALIDATION.md, ROADMAP.md, SUPPORT.md and PUBLISH-CHECKLIST.md. The active test plan is validation/RELEASE-TEST-PLAN.json, invoked through validation/run_release_checks.py.
++Current stable release: **1.0.0**. Start with the root README.md, INSTALL.md, RELEASE-NOTES.md, VALIDATION.md, ROADMAP.md and SUPPORT.md. The active test plan is validation/RELEASE-TEST-PLAN.json, invoked by validation/run_release_checks.py.
+ 
+-Historical plans/evidence are preserved in earlier developer archives. They do not certify this build. TEST-DISPOSITION.json explicitly maps the previous failing groups and obsolete version-frozen checks to the current contract.
++Prior version-frozen plans and evidence remain historical. TEST-DISPOSITION.json records the resolved or retired previous failures. Current passing evidence is under validation-evidence/.
+--- v1.0.0-rc.1/docs/NeverLockSavesReborn/validation/RELEASE-TEST-PLAN.json
++++ v1.0.0/docs/NeverLockSavesReborn/validation/RELEASE-TEST-PLAN.json
+@@ -618,6 +618,15 @@
+         "{root}"
+       ],
+       "origin": "complete inventory, pinned saved bytes, exact frozen game logic and current test contract"
++    },
++    {
++      "check": "stable_menu_labels",
++      "command": [
++        "{lua}",
++        "{validation}/test_stable_menu_labels.lua",
++        "{root}"
++      ],
++      "origin": "stable menu label and config-contract regression"
+     }
+   ],
+   "retired_checks": [
+@@ -637,5 +646,5 @@
+       "reason": "Scope-freeze explicitly removed the closed-game backup/retention/recovery companion. No shipping implementation exists; not applicable to Reborn."
+     }
+   ],
+-  "release": "1.0.0-rc.1"
++  "release": "1.0.0"
+ }
+--- v1.0.0-rc.1/docs/NeverLockSavesReborn/validation/review_profiles.lua
++++ v1.0.0/docs/NeverLockSavesReborn/validation/review_profiles.lua
+@@ -12,7 +12,7 @@
+ local store={load=function() return clone(disk) end,
+  save=function(_,value) saves=saves+1;if writesFail then error('private /path failure') end;disk=clone(value);return true end}
+ local api=M.new(store,'profile-settings.json',function() return false end)
+-for _,label in ipairs({'../outside','..','a/b','a\\b','C:drive','/abs','x\000y','line\nfeed',' space','space ',string.rep('x',33),'é'}) do
++for _,label in ipairs({'../outside','..','a/b','a\\b','C:drive','/abs','x\000y','line\nfeed',' space','space ',string.rep('x',33),'Ã©'}) do
+  local before=saves
+  local ok,code=api:save(label,{mode=2})
+  eq(ok,nil,'label rejected');eq(code,'invalid_label','stable label error');eq(saves,before,'invalid label no write')
+--- v1.0.0-rc.1/docs/NeverLockSavesReborn/validation/test_combat_events_integration.lua
++++ v1.0.0/docs/NeverLockSavesReborn/validation/test_combat_events_integration.lua
+@@ -29,7 +29,7 @@
+ for _,cancel in ipairs({'button','disable','death','detach','reload','shutdown'})do
+  local h=fixture();h.combat=true;h.unlocked=false;h:queue();h:run(1)
+  if cancel=='button'then h:press('Cancel queued request##nls_cancel_overview')
+- elseif cancel=='disable'then h.native['Deferred Save (preview)'].callback(false)
++ elseif cancel=='disable'then h.native['Deferred Save'].callback(false)
+  elseif cancel=='death'then h:signal('OnDeath')
+  elseif cancel=='detach'then h:signal('OnDetach')
+  elseif cancel=='reload'then h.present=false;h:step();h.present=true;h.player.session=0
+--- v1.0.0-rc.1/docs/NeverLockSavesReborn/validation/test_dependency_versions.lua
++++ v1.0.0/docs/NeverLockSavesReborn/validation/test_dependency_versions.lua
+@@ -40,7 +40,7 @@
+  for _,value in ipairs(sharedValid)do local version,status=one(key,value);eq(version,value,'safe full version '..key);eq(status,'observed','safe observed '..key)end
+ end
+ for _,value in ipairs(sharedValid)do local version,status=one('cet','v'..value);eq(version,value,'strip one lowercase v');eq(status,'observed','prefixed observed')end
+-local badStrings={'','v','V1.2.3','vv1.2.3','v 1.2.3',' 1.2.3','1.2.3 ','1.2.3\n','1.2.3\r','1.2.3\0','1.2.3/private','1.2.3\\PRIVATE','1.2.3:PRIVATE','https://PRIVATE/1.2.3','PRIVATE1.2.3','+1','-1','.1','1=PRIVATE','1@PRIVATE','1#PRIVATE','1,97',string.rep('1',41),'1.2.3é'}
++local badStrings={'','v','V1.2.3','vv1.2.3','v 1.2.3',' 1.2.3','1.2.3 ','1.2.3\n','1.2.3\r','1.2.3\0','1.2.3/private','1.2.3\\PRIVATE','1.2.3:PRIVATE','https://PRIVATE/1.2.3','PRIVATE1.2.3','+1','-1','.1','1=PRIVATE','1@PRIVATE','1#PRIVATE','1,97',string.rep('1',41),'1.2.3Ã©'}
+ for _,key in ipairs({'cet','codeware'})do
+  for _,value in ipairs(badStrings)do local version,status=one(key,value);eq(version,'unknown','unsafe text stripped '..key);eq(status,'invalid','unsafe text invalid '..key)end
+ end
+--- v1.0.0-rc.1/docs/NeverLockSavesReborn/validation/test_lua_integration_organized_events.lua
++++ v1.0.0/docs/NeverLockSavesReborn/validation/test_lua_integration_organized_events.lua
+@@ -178,7 +178,7 @@
+   return h
+ end
+ 
+-local modes={'Vanilla','Immersion','Unrestricted (experimental)','Smart (experimental)'}
++local modes={'Vanilla','Immersion','Unrestricted','Smart'}
+ for mode=0,3 do
+   local h=harness({mode=mode,allowCombat=true,allowVehicle=false,tone=2,notificationsEnabled=false,diagnosticDetails=false})
+   h:tick()
+@@ -446,15 +446,15 @@
+ local dq=harness({mode=1,deferredEnabled=true})
+ dq:tick()
+ equal(dq.player.deferred,true,'deferred persisted true reaches runtime')
+-equal(dq.native['Deferred Save (preview)'].value,true,'deferred persisted true reaches Native UI')
++equal(dq.native['Deferred Save'].value,true,'deferred persisted true reaches Native UI')
+ local old=dq.saves
+-dq:select('Deferred Save (preview)',false)
++dq:select('Deferred Save',false)
+ equal(dq.player.deferred,false,'Native deferred disable immediate bridge')
+ equal(dq.saved.deferredEnabled,false,'Native deferred disable persists')
+ equal(dq.saves,old+1,'Native deferred disable suppresses recursive callback')
+ dq:click('##nls_deferred')
+ equal(dq.player.deferred,true,'CET deferred enable immediate bridge')
+-equal(dq.native['Deferred Save (preview)'].value,true,'CET deferred enable syncs Native')
++equal(dq.native['Deferred Save'].value,true,'CET deferred enable syncs Native')
+ equal(dq.saved.deferredEnabled,true,'CET deferred enable persists')
+ local dqRestart=harness(dq.saved);dqRestart:tick()
+ equal(dqRestart.player.deferred,true,'deferred survives fresh Lua initialization boundary')
+--- v1.0.0-rc.1/docs/NeverLockSavesReborn/validation/test_main_settings_recovery_organized_events.lua
++++ v1.0.0/docs/NeverLockSavesReborn/validation/test_main_settings_recovery_organized_events.lua
+@@ -131,7 +131,7 @@
+  {'autosaveCooldownSeconds',29},{'autosaveCooldownSeconds',601},{'autosaveCooldownSeconds',30.5}})do invalid[#invalid+1]={[case[1]]=case[2]}end
+ for _,primary in ipairs(invalid)do
+  local h=fixture{primary=primary,backup=good}
+- check(h.mode=='Smart (experimental)','known invalid primary falls back to complete validated backup')
++ check(h.mode=='Smart','known invalid primary falls back to complete validated backup')
+  check(h:raw('config.json')==h.primary and h:raw('config.json.bak')==h.backup,'recovery read changes no primary or backup bytes')
+  h:press('Enable notifications: ON##nls_setting_notificationsEnabled')
+  check(h:raw('config.json.bak')==h.backup,'save after semantic recovery retains sole known-good backup')
+@@ -142,7 +142,7 @@
+ -- Legacy objects keep unknown obsolete keys, defaults and existing finite flooring.
+ do
+  local h=fixture{primary={mode=2.8,tone=1.9,dfBlockSleep=true,obsolete='ignored'},backup=good,native=true}
+- check(h.mode=='Unrestricted (experimental)' and not h:contains('Sarcastic##nls_setting_tone'),'legacy mode flooring retained; tone control removed')
++ check(h.mode=='Unrestricted' and not h:contains('Sarcastic##nls_setting_tone'),'legacy mode flooring retained; tone control removed')
+  check(h:raw('config.json')==h.primary and h:raw('config.json.bak')==h.backup,'healthy partial primary wins without read repair')
+  check(h.native['Automatic / test expiry (seconds)'].value==30 and h.native['Autosave interval (seconds)'].value==241,'missing fields retain existing effective defaults')
+  h:press('Enable notifications: ON##nls_setting_notificationsEnabled');check(h:raw('config.json.bak')==h.primary,'healthy legacy primary normally rotates')
+@@ -158,7 +158,7 @@
+ -- Invalid roots cannot mask the backup. Unknown string keys do not become restrictions.
+ for _,primary in ipairs({{[1]='array value'},setmetatable({mode=1},{})})do
+  -- JSON decoding cannot create metatables; validate that root directly at the public store seam below.
+- if getmetatable(primary)==nil then local h=fixture{primary=primary,backup=good};check(h.mode=='Smart (experimental)','nonempty array root rejected');h:cleanup()end
++ if getmetatable(primary)==nil then local h=fixture{primary=primary,backup=good};check(h.mode=='Smart','nonempty array root rejected');h:cleanup()end
+ end
+ -- Validator protects incoming writes before any filesystem mutation.
+ do
+@@ -181,7 +181,7 @@
+ end
+ -- Missing optional profiles cannot disable main config schema recovery.
+ do
+- local h=fixture{primary={mode='broken'},backup=good,noProfiles=true};check(h.mode=='Smart (experimental)','main validator independent of optional profiles');h:cleanup()
++ local h=fixture{primary={mode='broken'},backup=good,noProfiles=true};check(h.mode=='Smart','main validator independent of optional profiles');h:cleanup()
+ end
+ -- Preset-application write failure preserves runtime/queued request AND validated config recovery.
+ do
+--- v1.0.0-rc.1/docs/NeverLockSavesReborn/validation/test_notification_polish.py
++++ v1.0.0/docs/NeverLockSavesReborn/validation/test_notification_polish.py
+@@ -28,14 +28,14 @@
+  return result
+ fixture=json.loads(Path(__file__).with_name('fixtures').joinpath('neutral-source-baseline.json').read_text()) if before is None else None
+ f=funcs(core);old=fixture['core_methods'] if fixture else funcs((before/'r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds').read_text())
+-allowed={'NLSRebornCheckpointFailure','NLSRebornDeferredDispatch','CheckpointMessage','NotifyImmersionSaveRequest','HandleSmartBlockedSave'}
++allowed={'NLSRebornCheckpointFailure','NLSRebornDeferredDispatch','CheckpointMessage','NotifyImmersionSaveRequest','HandleSmartBlockedSave','Version'}
+ check(set(f)-set(old)=={'NLSRebornCompletionNotify'},'only completion presentation method added')
+ check(set(old)-set(f)==set(),'no previous method removed')
+ changed={k for k in old if old[k]!=f[k]};check(changed==allowed,'only expected notification methods changed: '+str(changed))
+ import hashlib
+ expected=fixture['runtime_files'] if fixture else {p.relative_to(before).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for folder in ['bin','r6'] for p in (before/folder).rglob('*') if p.is_file()}
+ for relative,digest in expected.items():
+- if Path(relative).name not in {'init.lua','status_messages.lua','status_message_library.lua','NeverLockSavesReborn.reds','DarkFutureMessages.reds'}:
++ if Path(relative).name not in {'init.lua','status_messages.lua','status_message_library.lua','NeverLockSavesReborn.reds','DarkFutureMessages.reds','settings_ui.lua','overlay_ui.lua'}:
+   check(hashlib.sha256((r/relative).read_bytes()).hexdigest()==digest,'unchanged policy/module '+relative)
+ strings=[]
+ for name in ['CheckpointMessage','NLSRebornCheckpointFailure','HandleSmartBlockedSave','NLSRebornShowActivation','NLSRebornCompletionNotify']:
+--- v1.0.0-rc.1/docs/NeverLockSavesReborn/validation/test_queue_fresh_organized_events.lua
++++ v1.0.0/docs/NeverLockSavesReborn/validation/test_queue_fresh_organized_events.lua
+@@ -122,7 +122,7 @@
+ f=fixture();f:queue(1);f.unlocked=true;f:tick(.25,5);f:queue(2);f:tick(.25,7);check((f.calls.dispatch or 0)==0,'replacement resets stability');f:tick(.25,6);check(f.calls.dispatch==1 and f.calls.source==2 and f.calls.serial==2,'replacement dispatch uses latest source/serial')
+ f=fixture();f:queue();f:tick(.25);f:tick(30);check(f.player.pending and (f.calls.dispatch or 0)==0,'player request retains both queue halves beyond former expiry');check(f:contains('No expiry (current session)'),'session retention displayed')
+ f=fixture();f:queue();f:tick(.25);f:press('Cancel queued request##nls_cancel_overview');f.unlocked=true;f:tick(.25,9);check(not f.player.pending and (f.calls.dispatch or 0)==0,'user cancellation clears both halves')
+-f=fixture();f:queue();f:tick(.25);f:press('Deferred Save (preview): ON##nls_setting_deferredEnabled');f.unlocked=true;f:tick(.25,9);check(not f.player.enabled and not f.player.pending and (f.calls.dispatch or 0)==0,'disable clears both halves')
++f=fixture();f:queue();f:tick(.25);f:press('Deferred Save: ON##nls_setting_deferredEnabled');f.unlocked=true;f:tick(.25,9);check(not f.player.enabled and not f.player.pending and (f.calls.dispatch or 0)==0,'disable clears both halves')
+ f=fixture();f.unlocked=true;f:press('Queue dry-run test##nls_queue');f:tick(.25,12);check((f.calls.dispatch or 0)==0 and f:contains('Pending (dry run)'),'dry run remains queued without dispatch');f:tick(30);check((f.calls.dispatch or 0)==0 and f:contains('Expired without save'),'dry run expires without dispatch')
+ f=fixture();f:queue();f:tick(.25);f:press('Queue dry-run test##nls_queue');check(f:contains('Dry run skipped: game request pending'),'dry run cannot replace real request');f.unlocked=true;f:tick(.25,14);check(f.calls.dispatch==1,'real request retained despite preview attempt')
+ f=fixture();f:queue();f:tick(.25);f.playerPresent=false;f:tick(.25);f.playerPresent=true;f.unlocked=true;f:tick(.25,12);check((f.calls.dispatch or 0)==0 and not f.player.pending,'player loss cancels stale request rather than adopting it')
+--- v1.0.0-rc.1/docs/NeverLockSavesReborn/validation/test_release_contract.py
++++ v1.0.0/docs/NeverLockSavesReborn/validation/test_release_contract.py
+@@ -1,7 +1,7 @@
+ """Current shipped inventory, test-plan coverage, saved-byte pins and frozen game code."""
+ import hashlib,json,re,sys
+ from pathlib import Path
+-r=Path(sys.argv[1]);version='1.0.0-rc.1';checks=0
++r=Path(sys.argv[1]);version='1.0.0';checks=0
+ def check(value,label):
+  global checks
+  checks+=1;assert value,label
+@@ -21,10 +21,9 @@
+  check(len(data)==row['size']and hashlib.sha256(data).hexdigest()==row['sha256'],'current manifest exact '+row['path'])
+ for row in baseline['runtime_files']:
+  p=r/row['path']
+- if p.name=='init.lua':
+-  digest=hashlib.sha256(p.read_text().replace(version,'<release-version>').encode()).hexdigest()
+-  check(digest==baseline['init_normalized_sha256'],'only version labels changed in working init')
+- else:check(hashlib.sha256(p.read_bytes()).hexdigest()==row['sha256'],'user-tested runtime frozen '+row['path'])
++ presentation=baseline.get('presentation_only_files',{}).get(row['path'])
++ expected=presentation['expected_sha256'] if presentation else row['sha256']
++ check(hashlib.sha256(p.read_bytes()).hexdigest()==expected,'working runtime frozen except exact presentation edits '+row['path'])
+ plan=json.loads((r/'docs/NeverLockSavesReborn/validation/RELEASE-TEST-PLAN.json').read_text())
+ names=[c['check']for c in plan['checks']]
+ check(len(names)==len(set(names)),'unique active check names')
+--- v1.0.0-rc.1/docs/NeverLockSavesReborn/validation/test_runtime_polish_independent_organized_events.lua
++++ v1.0.0/docs/NeverLockSavesReborn/validation/test_runtime_polish_independent_organized_events.lua
+@@ -145,8 +145,8 @@
+   h:press('Cancel queued request##nls_cancel_overview')
+   eq(h.player.pending,false,'single automatic request cancelled')
+   eq(h.player.auto,true,'autosave remains enabled after single cancellation')
+-  eq(h.native['Smart Autosave (preview)'].value,true,'automatic option still on')
+-  eq(h.native['Deferred Save (preview)'].value,false,'manual queue option still off')
++  eq(h.native['Smart Autosave'].value,true,'automatic option still on')
++  eq(h.native['Deferred Save'].value,false,'manual queue option still off')
+ end
+ 
+ -- Fresh export observes present evidence now, not the previous periodic sample.
+--- v1.0.0-rc.1/docs/NeverLockSavesReborn/validation/test_runtime_polish_organized.lua
++++ v1.0.0/docs/NeverLockSavesReborn/validation/test_runtime_polish_organized.lua
+@@ -124,7 +124,7 @@
+   h:press('Cancel queued request##nls_cancel_overview')
+   check(not h.player.pending,'shared cancel clears automatic request')
+   check(h.player.auto==true,'single cancellation keeps automatic lane enabled')
+-  check(h.native['Smart Autosave (preview)'].value==true,'autosave option remains enabled')
++  check(h.native['Smart Autosave'].value==true,'autosave option remains enabled')
+ end
+ -- On-demand report samples current values rather than old overlay samples.
+ do
+--- v1.0.0-rc.1/docs/NeverLockSavesReborn/validation/test_stable_menu_labels.lua
++++ v1.0.0/docs/NeverLockSavesReborn/validation/test_stable_menu_labels.lua
+@@ -0,0 +1,22 @@
++local root=assert(arg[1]);local mod=root..'/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/'
++package.path=mod..'?.lua;'..package.path
++local catalog=require('settings_ui');local n=0
++local function check(v,label)n=n+1;assert(v,label)end
++local expected={'Vanilla','Immersion','Unrestricted','Smart'}
++for i,name in ipairs(expected)do check(catalog.modeNames[i]==name,'stable mode label '..i)end
++local defaults=require('profiles').defaults()
++for _,option in ipairs(catalog.options)do
++ check(not option.label:lower():find('experimental',1,true),'no experimental menu label')
++ check(not option.label:lower():find('preview',1,true),'no preview menu label')
++ check(catalog.valid(option.key,defaults[option.key]),'unchanged valid persisted default '..option.key)
++end
++check(catalog.get('deferredEnabled').label=='Deferred Save','stable deferred switch')
++check(catalog.get('autosaveEnabled').label=='Smart Autosave','stable autosave switch')
++check(defaults.mode==1 and defaults.deferredEnabled==false and defaults.autosaveEnabled==false,'no default-policy change')
++for _,name in ipairs({'settings_ui.lua','overlay_ui.lua','init.lua'})do
++ local f=assert(io.open(mod..name,'rb'));local source=f:read('*a');f:close()
++ check(not source:lower():find('(experimental)',1,true),'no experimental display suffix in '..name)
++ check(not source:lower():find('(preview)',1,true),'no preview display suffix in '..name)
++ if name=='overlay_ui.lua'then check(source:find(' | Stable',1,true)~=nil,'stable menu header')end
++end
++print('PASS stable labels: '..n..' assertions; menu text and unchanged config defaults')
+--- v1.0.0-rc.1/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
++++ v1.0.0/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds
+@@ -1,4 +1,4 @@
+-// v1.0.0-combat-queue-ui.1 Developer Preview. Deferred/autosave lanes are opt-in.
++// v1.0.0 Stable. Deferred/autosave lanes are opt-in.
+ // Engine native saving-unlocked state is the release gate; this does not
+ // guarantee that a quest or phone conversation serializes correctly.
+ @addField(PlayerPuppet) public let nlsDeferredEnabled: Bool = false;
+@@ -445,7 +445,7 @@
+ public final func NLSRebornGetNotificationCategory() -> Int32 { return NLSRebornPolicy.NotificationContext(this.GetGame()); }
+ 
+ public class NLSRebornPolicy {
+-  public static func Version() -> String { return "1.0.0-combat-queue-ui.1"; }
++  public static func Version() -> String { return "1.0.0"; }
+   public static func NotificationContext(game: GameInstance) -> Int32 {
+     let player: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(game).GetLocalPlayerControlledGameObject() as PlayerPuppet;
+     if !IsDefined(player) { return 0; };
+--- v1.0.0-rc.1/tools/NLSRInstallAudit/README.md
++++ v1.0.0/tools/NLSRInstallAudit/README.md
+@@ -1,6 +1,6 @@
+ # Read-only installation auditor
+ 
+-This kit audits the 1.0.0-rc.1 runtime files against its pinned runtime_inventory.json. Run python audit_installation.py --game-root <game-installation-directory>. It does not install, repair or edit files. It never reads game-save contents.
++This kit audits the 1.0.0 runtime files against its pinned runtime_inventory.json. Run python audit_installation.py --game-root <game-installation-directory>. It does not install, repair or edit files. It never reads game-save contents.
+ 
+ Exit 0 means an exact observed runtime match; 1 means drift or a review candidate; 2 means incomplete/unsafe/unreadable input. Dependencies are observed as presence only. File identity, scan budgets, reparse/symlink safeguards, before/after stability, inventory pinning and redacted discovery names remain enforced.
+ 
+--- v1.0.0-rc.1/tools/NLSRInstallAudit/audit_installation.py
++++ v1.0.0/tools/NLSRInstallAudit/audit_installation.py
+@@ -10,8 +10,8 @@
+ import stat
+ import sys
+ 
+-RELEASE = '1.0.0-rc.1'
+-INVENTORY_SHA256 = 'e8731641588e0b64befea570a478e4f43a29aa498c4ddda6c98aa6ddbf092b29'
++RELEASE = '1.0.0'
++INVENTORY_SHA256 = '5859fdcf0c1a6f24ad3f0afab19f373348ca599c6d1f34f0de2cc1f6f012a472'
+ LUA_ROOT = 'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn'
+ REDS_ROOT = 'r6/scripts/NeverLockSavesReborn'
+ MAX_FILE = 2 * 1024 * 1024
+--- v1.0.0-rc.1/tools/NLSRInstallAudit/runtime_inventory.json
++++ v1.0.0/tools/NLSRInstallAudit/runtime_inventory.json
+@@ -1,6 +1,6 @@
+ {
+   "schema": 1,
+-  "release": "1.0.0-rc.1",
++  "release": "1.0.0",
+   "scope": "runtime_files_only",
+   "runtime_files": [
+     {
+@@ -45,8 +45,8 @@
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua",
+-      "size": 70436,
+-      "sha256": "f590eddb795855e4895168d7041030c4b341627b66fa4be6dc189a440a070dcd"
++      "size": 70301,
++      "sha256": "b734fdeedf3f791c519c7ac1ca216aba22daa5bd7c02bedbf8a6514256ca8b4f"
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/native_settings_ui.lua",
+@@ -55,8 +55,8 @@
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/overlay_ui.lua",
+-      "size": 10410,
+-      "sha256": "1ac969da2a0c28e7277c9dcde04164da0aa073825cae9340f650d54d536629f5"
++      "size": 10399,
++      "sha256": "a8f7e8e7a70a010745c2cc802428790a0ffda1eff91ddaac39d7dbf0613b03fb"
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua",
+@@ -75,8 +75,8 @@
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/settings_ui.lua",
+-      "size": 6544,
+-      "sha256": "95312d9c3f29381585789008713eba5b63a62defb4f6ab68cbdd65224ad5ebc6"
++      "size": 6494,
++      "sha256": "b204f095b5c6f3094523116fbd0ae9c457f25c26e075a23a5862f8868fe4e312"
+     },
+     {
+       "path": "bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/status_message_library.lua",
+@@ -105,8 +105,8 @@
+     },
+     {
+       "path": "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds",
+-      "size": 33849,
+-      "sha256": "3cfcf20da7466b48e0cf055ff77334b7e0c27732d6f734a5105393fb8805633a"
++      "size": 33802,
++      "sha256": "ce4ac9b06e9eb453dfef9bc1ed169fa819c7c9755fc581b4fbce9a92f1152d10"
+     }
+   ]
+ }
+--- v1.0.0-rc.1/tools/NLSRInstallAudit/tests/test_independent.py
++++ v1.0.0/tools/NLSRInstallAudit/tests/test_independent.py
+@@ -90,7 +90,7 @@
+         if expected is not None:
+             self.assertEqual(p.returncode, expected, payload)
+         self.assertEqual({'exact_match':0, 'drift_or_review':1, 'incomplete':2}[payload['audit_status']], p.returncode)
+-        self.assertEqual(payload['release'], '1.0.0-rc.1')
++        self.assertEqual(payload['release'], '1.0.0')
+         return payload
+ 
+     def test_clean_exact_bytes_and_no_input_writes(self):

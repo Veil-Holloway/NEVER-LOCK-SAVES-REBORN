@@ -1,56 +1,31 @@
-# NEVER-LOCK-SAVES-REBORN
+# Never Lock Saves: Reborn 1.0.0
 
-I took Never Lock Saves by RalphModding and started updating and expanding it.. added CET controls.. Native Settings support.. and a bridge so CET and redscript can communicate..
+Reborn adds configurable saving, a deferred save queue and optional Smart Autosave to Cyberpunk 2077. Native game restrictions and introduction protection remain authoritative. This is the stable 1.0.0 release.
 
-**current version is 1.0.0-rc3.. this is a release candidate for testing. actual ingame acceptance is still NOT RUN..** the offline checks passed but save creation.. reloading and quest progression still need to be checked in the game..
+[Download the latest stable release](https://github.com/Veil-Holloway/NEVER-LOCK-SAVES-REBORN/releases/latest). Choose the RUNTIME_ONLY ZIP to install the mod.
 
-## thanks Ralph
+## Features
 
-this started with **Never Lock Saves v2.2.1.0 by RalphModding**.. he gave permission to publish this modified version and release it under MIT.. thank you for the original work and for letting the mod keep going..
+- Four save modes: Vanilla, Immersion, Unrestricted and Smart. Unrestricted is a retained mode name; it does not bypass native locks.
+- One queued player save, retained for the current session until it can run, is replaced/cancelled, or the session ends. Automatic and test requests retain their configured expiry.
+- Optional Smart Autosave triggers for exploration intervals, post-combat, vehicle exit, supported quest milestones and entry to V's original Little China apartment area. This is not coverage of every safehouse.
+- CET controls, optional Native Settings integration and explicit named settings presets.
+- Read-only Dark Future integration with separate notification switches for vehicle sleep, addiction, starvation and dehydration.
+- Neutral notifications: Saving game while pending, Game saved after a matching successful game callback, and a clear failure notice when the game reports failure. No selectable personalities or bracketed developer text.
+- Local diagnostics, an optional Guardian request ledger, and on-demand support reports. No reports are uploaded automatically.
 
-[original Never Lock Saves on Nexus](https://www.nexusmods.com/cyberpunk2077/mods/9662)
+## Install
 
-credit stays with Ralph for the original.. Reborn changes are by Veil Ashen Holloway.. [MIT license](LICENSE) and [permission record](PERMISSION.md)..
+Cyber Engine Tweaks and redscript are required for the Lua and REDscript halves. Install their own dependencies separately. Native Settings and Dark Future are optional. No framework binaries or game saves are bundled. Exact compatibility with every game/framework version combination is not claimed.
 
-## what it does
+Use the RUNTIME_ONLY ZIP. Close the game and copy its bin/ and r6/ folders into the game root, or install it through your mod manager. Replace matching files; keep one Reborn installation. Keep existing config.json and profile-settings.json. See INSTALL.md for update, rollback and removal.
 
-**Vanilla** keeps the normal save behavior..
+## Status
 
-**Immersion** keeps normal requests and uses the existing checkpoint fallback when one of the four supported Dark future contexts is positively observed.. compatibility still needs actual testing..
+The user reports the preceding notification-polish.1 build works and has authorized stable publication. This stable release preserves that game code, with version and menu-label changes only. The release-readiness changes fix tests and the separate installation auditor. Experimental and preview menu labels have been removed. Read VALIDATION.md for fresh offline results and the limits of that evidence. A successful game callback is not an independent reload-integrity check.
 
-**Unrestricted** attempts checkpoint requests after the introduction.. its experimental.. a request doesnt mean the game accepted it or wrote a usable save..
+For problems, see SUPPORT.md. For tests and release preparation, see CONTRIBUTING.md and PUBLISH-CHECKLIST.md. Game-save backup/recovery and automatic character profiles are outside this release's scope.
 
-**smart mode** respects normal save locks.. with Deferred Save enabled it remembers one request and waits until normal saving unlocks.. optional combat exceptions require combat-only lock reasons.. mounted combat also needs the vehicle switch.. quest and scene locks dont become combat exceptions..
+## Credits and license
 
-theres also..
-
-- a one-item deferred queue.. configurable expiry and cooldown.. cancellation and a dry run that never requests a save.. queued manual requests become checkpoints rather than named manual saves..
-- optional smart autosaves for exploration.. after combat.. vehicle exit.. verified quest milestones and entering V's original apartment area.. each trigger has its own switch..
-- professional sarcastic and unhinged notification tones.. contextual messages and optional queue status messages..
-- read-only Dark future checks for vehicle sleep.. addiction.. starvation and dehydration.. the four message switches dont change Dark futures settings or survival systems..
-- named settings presets you apply manually.. settings recovery.. CET and Native Settings synchronization..
-- Save Guardian request tracking.. local support reports and an installation checker.. submitted never gets passed off as written or reloaded..
-- a separate optional Windows/Python backup and recovery tool in the full package.. it runs with the game closed and restores to a new separate destination..
-
-automatic character profiles.. every owned safehouse and automatic live backups are still outside the first release..
-
-## install
-
-you need **Cyber Engine Tweaks and redscript** for the two runtime halves.. **Native Settings** is optional for its menu.. **Dark Future** is optional for its integration.. install any dependencies those frameworks require separately.. no framework binaries are bundled and no exact supported version combination is claimed yet..
-
-1. close the game.. keep external save copies and your existing Reborn settings..
-2. download `Never_Lock_Saves_Reborn_v1.0.0-rc3_RUNTIME_ONLY.zip` from [Releases](https://github.com/rbucknell484-ai/NEVER-LOCK-SAVES-REBORN/releases) or the [packages folder](packages/)..
-3. install with Vortex.. enable one Reborn installation and Deploy.. or copy the complete `bin/` and `r6/` trees to the game root..
-4. launch.. check fresh logs and confirm the panel says `1.0.0-rc3`.. stop at compilation errors before testing saves..
-
-## testing and issues
-
-RC3 corrects smart interaction requests skipping the queue.. and includes RC2's autosave-system type correction.. the 60 integrated and 60 extracted-package offline groups passed for these same runtime/source bytes.. those use controlled boundaries.. they are not game tests..
-
-start with an ordinary save.. confirm a new save exists.. reload it and continue gameplay.. then test Smart with Deferred Save ON during an interaction.. wait for native unlock and exactly one checkpoint request before checking save creation and reload separately..
-
-use the [testing checklist](docs/NeverLockSavesReborn/TESTING-CHECKLIST-RC3.md) and record each result.. current ingame cases start NOT RUN..
-
-for an [issue](https://github.com/rbucknell484-ai/NEVER-LOCK-SAVES-REBORN/issues).. include version.. game/framework versions.. relevant mods.. steps.. expected and actual behavior.. fresh logs and a reviewed support report.. dont post private paths or personal information..
-
-public downloads add the MIT and current credit/testing notes.. all 16 runtime files match the tested RC3 candidate.. use the checksum sidecars for these public ZIPs..
+Based on Never Lock Saves v2.2.1.0 by RalphModding. Reborn modifications and maintenance: Veil Ashen Holloway. See ATTRIBUTION.md, PERMISSION.md and LICENSE for the recorded MIT permission and original-mod link.

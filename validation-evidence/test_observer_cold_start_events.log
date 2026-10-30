@@ -1,0 +1,1 @@
+PASS observer cold-start lifecycle: 190 assertions; cold start, warm load, reloads, callbacks and missing/throwing boundaries pass. Actual Lua modules; external CET/game doubles; no native compilation or save proof.

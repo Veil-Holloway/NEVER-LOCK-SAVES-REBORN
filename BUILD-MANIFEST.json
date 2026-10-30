@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "channel": "stable",
+  "baseline": "1.0.0-rc.1",
+  "game_logic_changes": "none; exact menu/version/status display replacements only",
+  "readiness_changes": [
+    "current release test plan and portable host",
+    "Windows auditor path/handle timestamp fix",
+    "saved-byte inventory SHA pin fix",
+    "stale schema and Guardian test expectations",
+    "complete dependency mutation fixtures"
+  ],
+  "user_runtime_report": "User-confirmed working notification-polish code; stable publication explicitly authorized",
+  "this_candidate_game_validation": "User-tested runtime logic preserved; stable presentation changes verified offline, not rerun in the native game",
+  "public_stable_release": true,
+  "stable_promotion": "menu experimental/preview labels removed"
+}

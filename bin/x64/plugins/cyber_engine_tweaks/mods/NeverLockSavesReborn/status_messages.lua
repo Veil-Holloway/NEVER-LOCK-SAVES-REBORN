@@ -26,7 +26,7 @@ end
 
 function M.new(seed)
   local rng=integer(seed,1,2147483646) and seed or 1
-  local enabled,tone,session=false,0,0
+  local enabled,session=false,0
   local pending,count,sequence={},0,0
   local history,historyOrder,highWater={},{},0
   local bags={}
@@ -87,11 +87,11 @@ function M.new(seed)
     nextBag.index=nextBag.index+1;nextBag.last=index
     return index,nextBag,nextRng
   end
-  function api:configure(value,voice)
-    if type(value)~='boolean' or not integer(voice,0,2) then return false,'invalid_configuration' end
-    if value~=enabled or voice~=tone then
+  function api:configure(value)
+    if type(value)~='boolean' then return false,'invalid_configuration' end
+    if value~=enabled then
       discard();epoch=epoch+1
-      enabled=value;tone=voice
+      enabled=value
     end
     return true
   end
@@ -134,6 +134,13 @@ function M.new(seed)
     pending[serial]={kind=kind,session=current,serial=serial,created=now,sequence=sequence}
     return true
   end
+  -- Dismiss only this request's stale pending notice after correlated completion.
+  function api:complete(current,serial)
+    if session~=current or not integer(serial,1,MAX) then return false end
+    if not pending[serial] then return false end
+    pending[serial]=nil;count=count-1;epoch=epoch+1
+    return true
+  end
   function api:drain(now,body,emit)
     if draining then return 'busy' end
     if not enabled then return 'disabled' end
@@ -147,8 +154,8 @@ function M.new(seed)
       if not event or priority[candidate.kind]>priority[event.kind] or
           (priority[candidate.kind]==priority[event.kind] and candidate.sequence<event.sequence) then event=candidate end
     end
-    local key=event.kind..'/'..tone..'/'..body
-    local loaded,pool=pcall(library.get,event.kind,tone,body)
+    local key=event.kind..'/0/'..body
+    local loaded,pool=pcall(library.get,event.kind,body)
     lastAttempt=now
     if not loaded or type(pool)~='table' or #pool~=20 then failed=increment(failed);return 'emitter_failed' end
     local index,nextBag,nextRng=choice(key)
@@ -165,7 +172,7 @@ function M.new(seed)
     return 'emitter_accepted'
   end
   function api:status()
-    return {enabled=enabled,tone=tone,session=session,pending=count,pending_capacity=PENDING_CAPACITY,
+    return {enabled=enabled,session=session,pending=count,pending_capacity=PENDING_CAPACITY,
       tracked_requests=#historyOrder,history_capacity=HISTORY_CAPACITY,serial_high_water=highWater,
       accepted=accepted,failed=failed,dropped=dropped,suppressed=suppressed,
       last_pool=lastPool,last_kind=lastKind,rng_state=rng,

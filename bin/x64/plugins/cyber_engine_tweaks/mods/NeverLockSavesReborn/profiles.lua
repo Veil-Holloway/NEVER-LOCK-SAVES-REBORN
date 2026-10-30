@@ -1,14 +1,14 @@
 -- Explicit named settings presets. Identity is manual: never auto-select a character.
 -- File operations are supplied by config_store and an existence boundary callback.
 local M={}
-local defaults={mode=1,allowCombat=false,allowVehicle=false,tone=1,
+local defaults={mode=1,allowCombat=false,allowVehicle=false,
   notificationsEnabled=true,diagnosticDetails=true,deferredEnabled=false,
   guardianEnabled=false,statusNotificationsEnabled=false,autosaveApartmentEntry=false,
   dfNotifyVehicleSleep=true,dfNotifyAddiction=true,
   dfNotifyStarvation=true,dfNotifyDehydration=true,deferredTTL=30,deferredCooldownSeconds=0,
   autosaveEnabled=false,autosaveExploration=true,autosavePostCombat=true,
   autosaveVehicleExit=true,autosaveQuestMilestone=false,autosaveIntervalSeconds=300,autosaveCooldownSeconds=60}
-local ranges={mode={0,3},tone={0,2},deferredTTL={1,120},deferredCooldownSeconds={0,600},
+local ranges={mode={0,3},deferredTTL={1,120},deferredCooldownSeconds={0,600},
   autosaveIntervalSeconds={60,1800},autosaveCooldownSeconds={30,600}}
 local function plain(value) return type(value)=='table' and getmetatable(value)==nil end
 local function integer(value,low,high)
@@ -23,12 +23,15 @@ function M.validate(settings)
   if not plain(settings) then return nil,'invalid_settings' end
   local result=copy(defaults)
   for key,value in pairs(settings) do
+    -- Legacy tone is discarded on load and on the next bank write.
+    if key~='tone' then
     if defaults[key]==nil then return nil,'invalid_settings' end
     local range=ranges[key]
     if range then
       if not integer(value,range[1],range[2]) then return nil,'invalid_settings' end
     elseif type(value)~='boolean' then return nil,'invalid_settings' end
     result[key]=value
+    end
   end
   return result
 end

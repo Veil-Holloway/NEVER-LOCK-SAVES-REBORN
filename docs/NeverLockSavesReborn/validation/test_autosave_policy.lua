@@ -273,6 +273,30 @@ for _,field in ipairs({'playerReady','introComplete','bridgeReady','paused','com
   eq(policy.status(s).pendingReason,'none')
 end
 
+-- Repeated unchanged blockers are idempotent: one transition, no per-frame reset storm.
+do
+  local s,p=fixture(); local before=policy.status(s)
+  p.phoneKnown=false
+  tick(s,p)
+  local first=policy.status(s)
+  for _=1,1000 do tick(s,p) end
+  local after=policy.status(s)
+  eq(after.resets,first.resets,'unchanged phone blocker does not increment resets each frame')
+  eq(after.blockedTransitions,first.blockedTransitions,'unchanged phone blocker records one transition')
+  eq(after.blockedReason,'phone unknown','blocker remains diagnosable')
+  p.phoneKnown=true;p.phoneActive=false
+  tick(s,p)
+  eq(policy.status(s).blockedReason,'none','valid sample clears blocker')
+  eq(policy.status(s).reason,'session baseline','recovery establishes fresh edge baseline')
+end
+do
+  local s,p=fixture();p.phoneKnown=false;tick(s,p);local one=policy.status(s).blockedTransitions
+  p.phoneKnown=true;p.phoneActive=false;tick(s,p)
+  p.vehicleKnown=false;tick(s,p)
+  eq(policy.status(s).blockedTransitions,one+1,'different blocker records a new transition')
+  eq(policy.status(s).blockedReason,'vehicle unknown')
+end
+
 -- Pauses, stalls, invalid times and session changes never accrue a catchup burst.
 for _,delta in ipairs({1.001,10,-1,0/0,math.huge}) do
   local s,p=pendingEvent(); local calls=0

@@ -1,0 +1,7 @@
+{
+  "positive_exit_code": 0,
+  "positive_output": "PASS status messages: 10566 assertions; 18 pools, 360 entries, pure Lua only; UI acceptance is not save evidence.",
+  "negative_controls_detected": 11,
+  "negative_controls": 11,
+  "passed": true
+}

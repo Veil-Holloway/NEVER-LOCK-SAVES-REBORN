@@ -1,0 +1,42 @@
+{
+  "assertions": 58,
+  "failed": 0,
+  "boundary_errors": 0,
+  "failures": [],
+  "errors": [],
+  "passed": true,
+  "scope": "Regression for compiler-rejected negative field defaults and unknown readers.\n\nInspects current runtime REDscript member declarations and executes the actual\ndiagnostic getters through the existing strict bounded evaluator. This is source\ncontract/boundary evidence, NOT native REDscript compilation or gameplay proof.\nMutation controls run only in memory and never modify the release source.",
+  "source_sha256": {
+    "r6/scripts/NeverLockSavesReborn/DarkFutureMessages.reds": "5ac505da3df8a983e42eef0cbc6270db51016d0679d67712dd5bcdb455409104",
+    "r6/scripts/NeverLockSavesReborn/DarkFutureSavePolicy.reds": "f707dbbbfe3147fae24290c1832f6274614118daa3e4724ee94d3a6bd18bad37",
+    "r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds": "ce4ac9b06e9eb453dfef9bc1ed169fa819c7c9755fc581b4fbce9a92f1152d10"
+  },
+  "negative_control": false,
+  "controls": [
+    {
+      "name": "restore_negative_default_combat",
+      "detected_for_intended_reason": true,
+      "failed": 1,
+      "boundary_errors": 0
+    },
+    {
+      "name": "remove_serial_guard_combat",
+      "detected_for_intended_reason": true,
+      "failed": 2,
+      "boundary_errors": 0
+    },
+    {
+      "name": "restore_negative_default_mounted",
+      "detected_for_intended_reason": true,
+      "failed": 1,
+      "boundary_errors": 0
+    },
+    {
+      "name": "remove_serial_guard_mounted",
+      "detected_for_intended_reason": true,
+      "failed": 2,
+      "boundary_errors": 0
+    }
+  ],
+  "controls_detected": 4
+}

@@ -1,0 +1,7 @@
+{
+  "source_sha256": "ce4ac9b06e9eb453dfef9bc1ed169fa819c7c9755fc581b4fbce9a92f1152d10",
+  "scope": "bounded actual-source evaluation; external service doubles; not compiler/game evidence",
+  "assertions": 27673,
+  "failed": 0,
+  "first_failures": []
+}

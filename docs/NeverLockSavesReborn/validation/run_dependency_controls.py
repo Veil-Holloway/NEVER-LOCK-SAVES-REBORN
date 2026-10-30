@@ -44,7 +44,8 @@ def main():
   if source.count(before.encode())!=1:raise RuntimeError('Missing/ambiguous mutation seam: '+name)
   with tempfile.TemporaryDirectory(prefix='nlsr-dep-mutant-') as td:
    root=Path(td)
-   for f in ['dependency_versions.lua','support_report.lua','profiles.lua']:shutil.copyfile(module_dir/f,root/f)
+   # Include the report's current public dependency, not a stale pre-UI fixture.
+   for f in ['dependency_versions.lua','support_report.lua','profiles.lua','settings_ui.lua']:shutil.copyfile(module_dir/f,root/f)
    (root/file).write_bytes(source.replace(before.encode(),after.encode()))
    r=run(kind,root);text=r.stdout+r.stderr;(out/(name+'.log')).write_text(text)
    passed=r.returncode!=0 and marker in text

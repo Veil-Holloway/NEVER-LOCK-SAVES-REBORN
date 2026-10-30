@@ -1,0 +1,7 @@
+{
+  "result": "PASS",
+  "assertions": 12256,
+  "core_sha256": "ce4ac9b06e9eb453dfef9bc1ed169fa819c7c9755fc581b4fbce9a92f1152d10",
+  "df_sha256": "5ac505da3df8a983e42eef0cbc6270db51016d0679d67712dd5bcdb455409104",
+  "scope": "Constrained actual-source execution with explicit integer/CName/ternary lowering and external game doubles. No REDscript compiler, game, save-write or reload evidence."
+}

@@ -43,21 +43,8 @@ def main():
     df_path = args.release / "r6/scripts/NeverLockSavesReborn/DarkFutureMessages.reds"
     source = main_path.read_text()
     df = df_path.read_text()
-    core_pools, df_pools = pools(source), pools(df)
-    equal(len(core_pools), 54, "core gender/tone pools")
-    equal(len(df_pools), 24, "DF gender/tone pools")
-    for key, values in list(core_pools.items()) + list(df_pools.items()):
-        equal(set(values), set(range(20)), f"complete slots {key}")
-        equal(len(set(values.values())), 20, f"unique messages {key}")
-    fixture = json.loads(Path(__file__).with_name("fixtures").joinpath("rc5_pools.json").read_text())
-    old_pools = {tuple(item["key"]): {int(i): text for i, text in item["entries"].items()} for item in fixture["pools"]}
-    equal(len(old_pools), 48, "original RC5 pools")
-    for key, entries in old_pools.items():
-        # NLSR-003 intentionally rewrote ordinary phone and generic intro text.
-        # Other original pools should remain byte-text identical.
-        if key[0] not in (5, 7):
-            equal(core_pools[key], entries, f"preserved non-phone/non-intro RC5 pool {key}")
-
+    equal('NLSRebornGetTone' in source + df, False, 'no tone bridge')
+    equal('nlsRC2Index_' in source + df, False, 'no obsolete rotation banks')
     settings = Obj(tone=0, mode=1, notifications=True, context=0, phone=0, combat=False,
                    quest_available=True,
                    mounted=False, facts={"q000_started": 0, "q000_done": 1, "q001_started": 0,
@@ -85,7 +72,7 @@ def main():
     policy = Obj()
     ns["NLSRebornPolicy"] = policy
     lowered = re.sub(r'\bn("(?:\\.|[^"\\])*")', r'\1', source)
-    for name in ("ShuffleSlot", "NotificationContext", "NotificationCategoryName", "CheckpointMessage", "GetImmersionSaveContext"):
+    for name in ("NotificationContext", "NotificationCategoryName", "CheckpointMessage", "GetImmersionSaveContext"):
         setattr(policy, name, subset.compile_subset(lowered, name, ns))
     ensure = subset.compile_subset(lowered, "NLSRebornEnsureDFStateInitialized", ns, instance=True)
     player.NLSRebornEnsureDFStateInitialized = lambda: ensure(player)
@@ -96,16 +83,6 @@ def main():
     lowered_df = df.replace('checkpoint ? "Checkpoint request: " : "Save request: "',
                             '("Checkpoint request: " if checkpoint else "Save request: ")')
     df_message = subset.compile_subset(lowered_df, "Message", ns)
-
-    # The exact integer algorithm: permutations and adjacent cycle boundaries.
-    for seed in range(32):
-        previous = None
-        for cycle in range(64):
-            selected = [policy.ShuffleSlot(cycle * 20 + turn, seed) for turn in range(20)]
-            equal(set(selected), set(range(20)), "shuffle permutation")
-            if previous is not None:
-                equal(selected[0] != previous, True, "cycle boundary non-repeat")
-            previous = selected[-1]
 
     # Actual context function: intro/call/combat/mounted/crouch precedence.
     for started, done, q001, corpo in itertools.product((0, 1), repeat=4):
@@ -118,65 +95,34 @@ def main():
                         5 if phone == 1 else 3 if combat and mounted else 1 if combat else 2 if mounted else 4 if crouch else 0)
             equal(policy.NotificationContext(game), expected, "context priority")
 
-    # Run every delivered gender/tone pool via actual selection code, maintaining
-    # the independent per-pool counter across four cycles and disabled calls.
+    # Every body receives identical neutral wording, including unknown bodies.
     actual_context = policy.NotificationContext
-    policy.NotificationContext = lambda g: settings.context
-    settings.facts["q000_done"] = 1
-    for family, inventory, message in (("core", core_pools, lambda: policy.CheckpointMessage(game, -1)),
-                                        ("df", df_pools, lambda: df_message(game, settings.context, False))):
-        for key, expected in inventory.items():
-            settings.context, settings.tone, player.nlsRebornVoice = key
-            player.nlsRebornShuffleSeed = 17
-            field = ("nlsRC2Index_" if family == "core" else "nlsDFIndex_") + "_".join(map(str, key))
-            setattr(player, field, 0)
-            prefix = "Save request: " if family == "df" else ""
-            previous = None
-            for cycle in range(4):
-                texts = [message() for _ in range(20)]
-                equal(set(texts), {prefix + text for text in expected.values()}, f"selected full pool {family} {key}")
-                equal(len(set(texts)), 20, "no cycle repeats")
-                if previous is not None:
-                    equal(texts[0] != previous, True, "message cycle boundary")
-                previous = texts[-1]
-            equal(getattr(player, field), 80, "independent counter")
+    settings.notifications = True
+    expected_core = {12: 'Saving is unavailable during the introduction call.',
+        7: 'Saving is unavailable during the introduction.', 5: 'Saving game during a phone call...',
+        3: 'Saving game during vehicle combat...', 1: 'Saving game during combat...',
+        2: 'Saving game while in a vehicle...', 4: 'Saving game while in stealth...',
+        0: 'Saving game...', 6: 'Saving game...'}
+    for context, expected in expected_core.items():
+        policy.NotificationContext = lambda g, c=context: c
+        for body in (-1, 0, 1, 2, 3):
+            player.nlsRebornVoice = body
+            equal(policy.CheckpointMessage(game, -1), expected, 'body-neutral core context')
             settings.notifications = False
-            equal(message(), "", "notification off")
-            equal(getattr(player, field), 80, "disabled does not advance")
+            equal(policy.CheckpointMessage(game, -1), '', 'core master switch')
             settings.notifications = True
     policy.NotificationContext = actual_context
-
-    # Neutral introduction fallback has three independent 20-message tone pools.
-    policy.NotificationContext = lambda g: settings.context
-    player.nlsRebornVoice = 0
-    for context, field_prefix in ((7, "nlsNeutralPrologue"), (12, "nlsNeutralIntroCall")):
-        settings.context = context
-        for tone in range(3):
-            settings.tone = tone
-            field = field_prefix + str(tone)
-            setattr(player, field, 0)
-            previous = None
-            for cycle in range(4):
-                texts = [policy.CheckpointMessage(game, -1) for _ in range(20)]
-                equal(len(set(texts)), 20, "neutral intro complete cycle")
-                if previous is not None:
-                    equal(texts[0] != previous, True, "neutral intro boundary")
-                previous = texts[-1]
-            equal(getattr(player, field), 80, "independent neutral intro counter")
-            settings.notifications = False
-            equal(policy.CheckpointMessage(game, -1), "", "neutral disabled notification")
-            equal(getattr(player, field), 80, "neutral disabled non-advancement")
-            settings.notifications = True
-    policy.NotificationContext = actual_context
-
-    # Unknown body retains neutral fallback rather than male/female wording.
-    player.nlsRebornVoice = 0
-    for context in (8, 9, 10, 11):
-        for tone in range(3):
-            settings.tone = tone
-            text = df_message(game, context, True)
-            equal(text.startswith("Checkpoint request: "), True, "neutral DF request prefix")
-            equal("ma'am" not in text and "sir" not in text, True, "neutral DF body fallback")
+    expected_df = {8: 'Vehicle sleep is active.', 9: 'Addiction is active.',
+        10: 'You are starving.', 11: 'You are dehydrated.', 0: ''}
+    for context, expected in expected_df.items():
+        for checkpoint in (False, True):
+            for body in (-1, 0, 1, 2, 3):
+                player.nlsRebornVoice = body
+                prefix = 'Saving game. '
+                equal(df_message(game, context, checkpoint), prefix + expected, 'body-neutral DF context')
+                settings.notifications = False
+                equal(df_message(game, context, checkpoint), '', 'DF master switch')
+                settings.notifications = True
 
     # All tri-state combinations and notification masks. Switches may affect
     # selection only; the actual save context remains unchanged.
@@ -209,9 +155,6 @@ def main():
     settings.quest_available = True
 
     print(json.dumps({"result": "PASS", "assertions": checks,
-                      "core_gender_tone_pools": len(core_pools), "core_entries": sum(map(len, core_pools.values())),
-                      "df_gender_tone_pools": len(df_pools), "df_entries": sum(map(len, df_pools.values())),
-                      "neutral_introduction_tone_pools": 3, "neutral_introduction_entries": 60,
                       "core_sha256": hashlib.sha256(main_path.read_bytes()).hexdigest(),
                       "df_sha256": hashlib.sha256(df_path.read_bytes()).hexdigest(),
                       "scope": "Constrained actual-source execution with explicit integer/CName/ternary lowering and external game doubles. No REDscript compiler, game, save-write or reload evidence."}, indent=2))

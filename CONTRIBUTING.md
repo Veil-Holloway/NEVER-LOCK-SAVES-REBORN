@@ -1,17 +1,13 @@
-# Contribution and release preparation
+# Development and verification
 
-RC2 corrects one native autosave type annotation reported by the user's compiler. Other save-policy behavior is preserved; retain the source-contract and preservation checks.
-Read `docs/NeverLockSavesReborn/RELEASE-CONTRACT-1.0.0-rc1.md` before proposing work.
+Current contract: preserve the four modes, native/introduction guards, event-driven one-item player queue, independent automatic/test expiry, phone-manager gating, completion matching, read-only Dark Future readers and message-only switches. Never use quest-fact writes or game-save edits as a workaround.
 
-Keep changes focused. Preserve all four modes, introduction protection, one-item
-queue, optional settings synchronization, Dark Future read-only readers and
-message-only switches. Never infer written/reloaded success from submission,
-edit quest facts as a workaround or modify game-save bytes.
+The canonical release suite is docs/NeverLockSavesReborn/validation/run_release_checks.py with RELEASE-TEST-PLAN.json. Run:
 
-Run the packaged offline runner as described in README.md. Include the command,
-exit status and evidence boundary. Native/game/Windows acceptance is separate.
-Do not bundle user settings, reports, saves, logs with personal data, framework
-binaries or bytecode caches. Preserve source attribution. Upstream redistribution
-permission is unresolved; this candidate does not grant an MIT license to the
-whole derived package. Repository creation and public release remain separate
-user-directed actions.
+    python docs/NeverLockSavesReborn/validation/run_release_checks.py --release . --output ../reborn-checks --lupa
+
+The optional Python host requires the Lupa package with its lua53 module. Alternatively use --lua followed by a Lua 5.3-compatible executable path. Nested checks inherit the explicitly selected command; no sitecustomize patch or machine-specific launcher is needed. Lua 5.3 execution is not CET LuaJIT or native REDscript compilation.
+
+All active checks must return zero. Mutation controls must fail at their intended assertions, not merely because imports/hosts are missing. Output includes exact commands, exit codes, logs and explicit retired checks. Original version-frozen plans and old evidence remain in prior immutable developer archives; they are not the current release contract. TEST-DISPOSITION.json documents their replacements and the three retired backup/recovery checks. Removed checks are not counted as passes.
+
+Keep runtime changes minimal and preserve license/attribution. Do not bundle user configs, personal reports/logs, game saves, framework binaries or bytecode caches. PERMISSION.md supersedes the historical permission-pending notes. Public publication and repository changes remain separate user-directed actions.

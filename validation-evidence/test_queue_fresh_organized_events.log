@@ -1,0 +1,2 @@
+PASS 116 fresh queue assertions; actual deferred_save.lua and init.lua; external Game/CET/REDscript boundary simulations only
+PASS 125 total organized-queue lifecycle assertions with actual Lua coordinator

@@ -22,8 +22,8 @@ local function contains(pool,text)for _,entry in ipairs(pool)do if entry==text t
 -- Each applicable pool has twenty unique entries, two full cycles and no repeat
 -- across its boundary. Expected membership comes from the published library,
 -- not the engine's private bag/index representation.
-for _,kind in ipairs(kinds)do for tone=0,2 do for body=0,2 do
-  local s=state(1009,tone);local pool=L.get(kind,tone,body)
+for _,kind in ipairs(kinds)do for tone=0,0 do for body=0,2 do
+  local s=state(1009,tone);local pool=L.get(kind,body)
   eq(#pool,20,'twenty entries per event/tone/body pool')
   local distinct={};for _,text in ipairs(pool)do check(not distinct[text],'pool unique');distinct[text]=true end
   local seen,previous={},nil
@@ -67,7 +67,7 @@ for _,terminal in ipairs({'submitted','expired','cancelled','error'})do
   local output={}
   s:drain(.25,0,function(text)output[#output+1]=text;return true end)
   eq(#output,1,'one coalesced status')
-  check(contains(L.get(terminal,0,0),output[1]),'terminal pool selected')
+  check(contains(L.get(terminal,0),output[1]),'terminal pool selected')
   eq(s:enqueue('queued',1,5,3),false,'late queue cannot reverse terminal')
   eq(s:drain(3,0,function()error('stale queue event must be gone')end),'idle','no deferred stale queue')
 end
@@ -114,6 +114,6 @@ do
   eq(reason,'capacity_priority','priority refusal explicit')
   eq(s:status().pending,16,'higher priority pending count preserved')
   local text;s:drain(0,0,function(value)text=value;return true end)
-  check(contains(L.get('error',0,0),text),'preserved error selected after low-priority refusal')
+  check(contains(L.get('error',0),text),'preserved error selected after low-priority refusal')
 end
 print('PASS independent status public contract: '..n..' assertions; selection and UI handoff only')

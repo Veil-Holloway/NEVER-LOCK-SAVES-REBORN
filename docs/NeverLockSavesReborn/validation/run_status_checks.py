@@ -33,7 +33,7 @@ controls=[
  ('capacity_priority','if worst and priority[kind]<priority[worst.kind] then','if false then','low-priority intake cannot displace full high-priority buffer'),
  ('cross_session','current~=session','false','other session cannot be adopted'),
  ('reentrant_commit','if epoch~=generation or not enabled or pending[event.serial]~=event or session~=event.session then','if false then','disable during emit prevents unpublished commit'),
- ('shared_body_progress',"local key=event.kind..'/'..tone..'/'..body","local key=event.kind..'/'..tone..'/0'",'body pool progress is independent'),
+ ('shared_body_progress',"local key=event.kind..'/0/'..body","local key=event.kind..'/0/0'",'body pool progress is independent'),
 ]
 rows=[]
 with tempfile.TemporaryDirectory(prefix='nlsr-status-controls-') as tmp:

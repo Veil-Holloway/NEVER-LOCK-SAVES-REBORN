@@ -1,0 +1,55 @@
+# Exact changes from v1.0.0-rc.1
+
+The stable promotion changes only presentation in four runtime files. Save behavior is preserved. Updated test expectations, the menu regression, version inventories, release documents and freshly sanitized offline evidence are included below. This index includes itself and READINESS.diff; the ZIP manifest identifies every packaged file. Repository publication also adds .github/workflows/release-checks.yml and retires the already-removed backup companion from active main. Earlier commits, release tags and assets remain available.
+
+- `BASELINE-RUNTIME.json`
+- `BUILD-MANIFEST.json`
+- `CHANGED-FILES.md`
+- `CHANGELOG.md`
+- `DESCRIPTION.txt`
+- `INSTALL.md`
+- `PUBLIC-DELIVERY.json`
+- `PUBLISH-CHECKLIST.md`
+- `READINESS.diff`
+- `README.md`
+- `RELEASE-NOTES.md`
+- `ROADMAP.md`
+- `RUNTIME_MANIFEST.json`
+- `SUPPORT.md`
+- `TEST-DISPOSITION.json`
+- `VALIDATION.md`
+- `bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/init.lua`
+- `bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/overlay_ui.lua`
+- `bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/settings_ui.lua`
+- `docs/NeverLockSavesReborn/README.md`
+- `docs/NeverLockSavesReborn/validation/RELEASE-TEST-PLAN.json`
+- `docs/NeverLockSavesReborn/validation/review_profile_disk_failures.lua`
+- `docs/NeverLockSavesReborn/validation/review_profiles.lua`
+- `docs/NeverLockSavesReborn/validation/test_combat_events_integration.lua`
+- `docs/NeverLockSavesReborn/validation/test_dependency_export_organized.lua`
+- `docs/NeverLockSavesReborn/validation/test_dependency_versions.lua`
+- `docs/NeverLockSavesReborn/validation/test_lua_integration_organized_events.lua`
+- `docs/NeverLockSavesReborn/validation/test_main_settings_recovery_organized_events.lua`
+- `docs/NeverLockSavesReborn/validation/test_notification_polish.py`
+- `docs/NeverLockSavesReborn/validation/test_organized_ui_integration_events.lua`
+- `docs/NeverLockSavesReborn/validation/test_queue_fresh_organized_events.lua`
+- `docs/NeverLockSavesReborn/validation/test_release_contract.py`
+- `docs/NeverLockSavesReborn/validation/test_runtime_polish_independent_organized_events.lua`
+- `docs/NeverLockSavesReborn/validation/test_runtime_polish_organized.lua`
+- `docs/NeverLockSavesReborn/validation/test_stable_menu_labels.lua`
+- `docs/NeverLockSavesReborn/validation/test_status_messages.lua`
+- `docs/NeverLockSavesReborn/validation/test_status_public_independent.lua`
+- `r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds`
+- `tools/NLSRInstallAudit/README.md`
+- `tools/NLSRInstallAudit/audit_installation.py`
+- `tools/NLSRInstallAudit/runtime_inventory.json`
+- `tools/NLSRInstallAudit/tests/test_independent.py`
+- `validation-evidence/RESULTS.json`
+- `validation-evidence/autosave_bridge_independent.log`
+- `validation-evidence/df_reader.log`
+- `validation-evidence/diagnostic_initializers.log`
+- `validation-evidence/installation_auditor.log`
+- `validation-evidence/notification_plain_language.log`
+- `validation-evidence/notifications.log`
+- `validation-evidence/readonly_readers.log`
+- `validation-evidence/stable_menu_labels.log`

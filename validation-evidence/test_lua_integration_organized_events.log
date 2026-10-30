@@ -1,0 +1,14 @@
+PASS: all four modes and RC5 persisted settings bridge through actual init.lua
+PASS: CET controls persist and synchronize Native Settings without callback loops
+PASS: Native Settings callbacks preserve selector offsets and reach CET runtime bridge
+PASS: absent/erroring Dark Future boundary and absent Native Settings preserve bridge and introduction guard
+PASS: missing/malformed/throwing adapters never alter mode, introduction policy, messages, or configuration
+PASS: actual adapter snapshots stay diagnostic-only, log on demand, and reset on player loss
+PASS: missing/stale DF player attachments skip gameplay getters and recover after matching attachment
+PASS: existing sampling cadence, sensor bridge, and activation notice fact retained
+PASS: 16 Immersion notification combinations, legacy config defaults, CET/Native sync, and persistence round trips
+PASS: obsolete dfBlock settings are ignored and never migrated into blocking or notification policy
+PASS: early overlay after character replacement uses fresh introduction and body state in every mode
+PASS: fresh deferred synchronization, invalid config fields, neutral body and completion-gate checks
+RESULT: 548 Lua integration assertions passed
+Scope: executes release Lua with external boundary doubles; no game compilation, saving, or reload evidence.

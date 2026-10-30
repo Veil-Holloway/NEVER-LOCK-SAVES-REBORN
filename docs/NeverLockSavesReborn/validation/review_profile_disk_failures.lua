@@ -46,7 +46,7 @@ for _,kind in ipairs({'encode','open','write','close','rotate','install','instal
  local current=api:get('V')
  eq(type(current),'table','original settings recoverable '..kind)
  eq(current.mode,3,'mode never partially updated '..kind)
- eq(current.tone,2,'tone never partially updated '..kind)
+ eq(current.tone,nil,'obsolete tone omitted from validated preset '..kind)
  eq(current.autosaveEnabled,false,'scheduler never partially enabled '..kind)
  if kind=='install_restore' then
   eq(raw(path),nil,'failed rollback leaves no claimed primary')

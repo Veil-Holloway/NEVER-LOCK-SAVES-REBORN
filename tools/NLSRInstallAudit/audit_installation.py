@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only, bounded RC3 installation observations; standard library only."""
+"""Read-only, bounded Reborn installation observations; standard library only."""
 import argparse
 from datetime import datetime, timezone
 import hashlib
@@ -10,8 +10,8 @@ import re
 import stat
 import sys
 
-RELEASE = '1.0.0-rc3'
-INVENTORY_SHA256 = 'f2247af5195e9d0932a2bbc13fed52f3cafd2e60b65e4e80819fba47b2c8aef2'
+RELEASE = '1.0.0'
+INVENTORY_SHA256 = '5859fdcf0c1a6f24ad3f0afab19f373348ca599c6d1f34f0de2cc1f6f012a472'
 LUA_ROOT = 'bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn'
 REDS_ROOT = 'r6/scripts/NeverLockSavesReborn'
 MAX_FILE = 2 * 1024 * 1024
@@ -46,7 +46,11 @@ def unsafe(st):
 
 
 def identity(st):
-    return (st.st_dev, st.st_ino, st.st_mode, st.st_size, st.st_mtime_ns, st.st_ctime_ns)
+    # Windows lstat/fstat may expose different legacy st_ctime semantics.
+    # Creation time is consistent across both APIs. Check each API's change
+    # time against itself below, so mutation checks are retained, not relaxed.
+    timestamp = getattr(st, 'st_birthtime_ns', st.st_ctime_ns) if os.name == 'nt' else st.st_ctime_ns
+    return (st.st_dev, st.st_ino, st.st_mode, st.st_size, st.st_mtime_ns, timestamp)
 
 
 def path_input(value):
@@ -86,7 +90,8 @@ def stable_read(path, limit, tail=False):
         data = handle.read(limit + 1)
         after_fd = os.fstat(handle.fileno())
     after_path = checked_stat(path)
-    if len(data) > limit or identity(before) != identity(after_fd) or identity(before) != identity(after_path):
+    if (len(data) > limit or identity(before) != identity(after_fd) or identity(before) != identity(after_path)
+            or opened.st_ctime_ns != after_fd.st_ctime_ns or before.st_ctime_ns != after_path.st_ctime_ns):
         raise AuditError('file_changed_during_read')
     expected = min(limit, before.st_size) if tail else before.st_size
     if len(data) != expected:
@@ -111,7 +116,7 @@ def load_inventory():
     if value.get('schema') != 1 or value.get('release') != RELEASE:
         raise AuditError('invalid_inventory')
     rows = value.get('runtime_files')
-    if not isinstance(rows, list) or len(rows) != 16:
+    if not isinstance(rows, list) or len(rows) != 21:
         raise AuditError('invalid_inventory')
     paths = set()
     for row in rows:
@@ -366,7 +371,8 @@ class Auditor:
                            'failed': len(re.findall(rb'\bfailed\b', data, re.I)),
                            'rc1_label': data.lower().count(b'1.0.0-rc1'),
                            'rc2_label': data.lower().count(b'1.0.0-rc2'),
-                           'rc3_label': data.lower().count(b'1.0.0-rc3')})
+                           'rc3_label': data.lower().count(b'1.0.0-rc3'),
+                           'rc4_label': data.lower().count(b'1.0.0-rc4')})
         except (OSError, AuditError) as exc:
             row['status'] = 'incomplete'
             self.issue(exc.code if isinstance(exc, AuditError) else 'io_error', kind + '_log', incomplete=True)
@@ -380,7 +386,7 @@ class Parser(argparse.ArgumentParser):
 def main(argv=None):
     report = base_report()
     try:
-        parser = Parser(description='Read-only RC3 runtime byte audit. Prints JSON; does not install, repair, run the game or certify save safety.')
+        parser = Parser(description='Read-only RC4 runtime byte audit. Prints JSON; does not install, repair, run the game or certify save safety.')
         parser.add_argument('--game-root', required=True, metavar='DIRECTORY', help='Cyberpunk installation directory; never the save directory')
         parser.add_argument('--version', action='append', default=[], metavar='COMPONENT=VALUE',
                             help='User-reported label: game,cet,redscript,red4ext,codeware,native_settings,dark_future; repeat per component')

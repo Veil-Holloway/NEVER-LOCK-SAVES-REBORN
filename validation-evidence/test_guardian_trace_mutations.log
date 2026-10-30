@@ -1,0 +1,9 @@
+DETECTED recursive_dispatch | nested dispatch must wait
+DETECTED stuck_executing | preflight refusal returns to Waiting
+DETECTED uncorrelated_promoted | success hint stays uncorrelated
+DETECTED clock_regression | backwards clock is unknown
+DETECTED host_preflight_not_recorded | actual-init preflight refusal not stuck Executing
+DETECTED generic_wait_reason | actual-init specific Guardian combat wait
+DETECTED unvalidated_age_export | untrusted age rejected
+DETECTED lost_callback_session | existing hint transported with event session
+PASS 8/8 Guardian trace injected-negative controls; no runtime game evidence

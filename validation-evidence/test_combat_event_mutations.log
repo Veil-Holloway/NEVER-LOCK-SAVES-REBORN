@@ -1,0 +1,9 @@
+DETECTED deadline_reintroduced | ...s/NeverLockSavesReborn/validation/test_combat_events.lua:4: two-hour fight retains request
+DETECTED event_wake_lost | ...s/NeverLockSavesReborn/validation/test_combat_events.lua:4: combat event immediately wakes eligibility
+DETECTED foreign_session_allowed | ...s/NeverLockSavesReborn/validation/test_combat_events.lua:4: foreign session ignored
+DETECTED death_detach_ignored | ...s/NeverLockSavesReborn/validation/test_combat_events.lua:4: death invalidates
+DETECTED cancelled_intent_resurrected | ...s/NeverLockSavesReborn/validation/test_combat_events.lua:4: preflight wait never revives cancelled intent
+DETECTED stabilization_skipped | ...s/NeverLockSavesReborn/validation/test_combat_events.lua:4: active combat does not grant eligibility
+DETECTED native_lock_ignored | ...everLockSavesReborn/validation/combat_events_fixture.lua:6: post-combat native lock retains request without entering dispatch
+DETECTED vehicle_exit_required | ...everLockSavesReborn/validation/combat_events_fixture.lua:6: save released after combat while mounted when allowed
+PASS 8/8 injected-negative event/retention controls detected

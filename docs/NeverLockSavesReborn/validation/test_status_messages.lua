@@ -7,6 +7,10 @@ local n=0
 local function check(v,label)n=n+1;assert(v,label)end
 local function eq(a,b,label)check(a==b,(label or 'value')..': '..tostring(a)..' != '..tostring(b))end
 local kinds={'queued','auto_queued','submitted','expired','cancelled','error'}
+local function isError(text)
+ for _,message in ipairs(L.get('error',0))do if message==text then return true end end
+ return false
+end
 local function ready(seed,tone)
  local s=M.new(seed or 12345);assert(s:configure(true,tone or 0));s:reset(1);return s
 end
@@ -18,30 +22,31 @@ local function accepted(s,kind,serial,time,body)
  return message
 end
 local inventory=L.inventory()
-eq(inventory.pools,54,'event/tone/body pool inventory');eq(inventory.entries,1080,'entry inventory');eq(inventory.distinct_texts,360,'neutral body variants counted honestly')
+eq(inventory.pools,18,'event/body pool inventory');eq(inventory.entries,360,'entry inventory');eq(inventory.distinct_texts,120,'neutral body variants counted honestly')
 for _,kind in ipairs(kinds)do
- for tone=0,2 do for body=0,2 do
-  local pool=L.get(kind,tone,body);eq(#pool,20,'twenty entries per applicable pool')
+ for tone=0,0 do for body=0,2 do
+  local pool=L.get(kind,body);eq(#pool,20,'twenty entries per applicable pool')
   local seen={}
   for _,message in ipairs(pool)do
    check(type(message)=='string' and #message<=190,'bounded message text')
    check(not seen[message],'unique entries in pool');seen[message]=true
-   check(message:lower():find('request',1,true)~=nil,'every status identifies request scope')
+   check(message:lower():find('sav',1,true)~=nil,'every status identifies saving')
    for _,bad in ipairs({'saved successfully','save is complete','progress is safe','save was written','successfully reloaded'})do
     check(not message:lower():find(bad,1,true),'no unsupported completion claim')
    end
-   if kind=='submitted' or kind=='error' then check(message:lower():find('unconfirmed',1,true)~=nil,'uncertainty explicit')end
+   check(not message:find('[%[%]%(%){}]'),'no bracketed developer text')
+   for _,word in ipairs({'dispatch','callback','serialization','unconfirmed','native','checkpoint','evidence','lifecycle'})do check(not message:lower():find(word,1,true),'no developer jargon')end
    if tone==2 then check(message:lower():find('fuck',1,true) or message:lower():find('shit',1,true) or message:lower():find('damn',1,true),'profane tone remains profane')end
   end
  end end
 end
-eq(L.get('arbitrary',0,0),nil,'unsupported event rejected')
+eq(L.get('arbitrary',0),nil,'unsupported event rejected')
 local s=M.new(44);eq(s:status().enabled,false,'default OFF');s:reset(1)
 eq(s:enqueue('queued',1,1,0),false,'disabled intake ignored')
 local calls=0;eq(s:drain(0,0,function()calls=calls+1;return true end),'disabled','disabled drain inert')
 eq(calls,0,'disabled emits nothing');eq(s:status().accepted,0,'disabled accepted count unchanged')
 local original=s:status().rng_state;s:configure(false,2);eq(s:status().rng_state,original,'disabled tone change does not shuffle')
-eq(s:configure('true',0),false,'strict Boolean config');eq(s:configure(true,3),false,'strict tone config')
+eq(s:configure('true',0),false,'strict Boolean config');eq(s:configure(true,3),true,'obsolete tone argument ignored')
 eq(s:configure(true,0),true,'explicit opt-in')
 eq(s:enqueue('queued',1,0,0),false,'dry run serial excluded')
 eq(s:enqueue('queued',0,1,0),false,'unknown session excluded')
@@ -53,7 +58,7 @@ eq(s:enqueue('submitted',1,1,0),true,'terminal replaces pending queue')
 eq(s:status().pending,1,'coalesced single pending event')
 local text
 s:drain(0,0,function(v)text=v;return true end)
-check(text:lower():find('submitted',1,true) or text:lower():find('sent',1,true) or text:lower():find('dispatched',1,true),'coalesced terminal selected')
+check(text:lower():find('saving',1,true) or text:lower():find('being saved',1,true) or text:lower():find('save has started',1,true),'coalesced terminal selected')
 eq(s:enqueue('queued',1,1,3),false,'late queue cannot regress terminal')
 eq(s:enqueue('error',1,1,3),false,'terminal request never produces second terminal')
 local a,b=ready(91),ready(91)
@@ -94,13 +99,13 @@ eq(bounded:status().pending,16,'pending work bounded');check(bounded:status().dr
 eq(bounded:enqueue('queued',1,1,0),false,'evicted old serial cannot replay')
 local priority=ready();priority:enqueue('queued',1,1,0);priority:enqueue('error',1,2,0)
 local priorityText;priority:drain(0,0,function(v)priorityText=v;return true end)
-check(priorityText:lower():find('error',1,true),'error priority over queue notice')
+check(isError(priorityText),'error priority over queue notice')
 local important=ready()
 for serial=1,16 do important:enqueue('error',1,serial,0)end
 eq(important:enqueue('queued',1,17,0),false,'low-priority intake cannot displace full high-priority buffer')
 local errors=0
 for index=1,16 do
- important:drain(index*0.5,0,function(v)if v:lower():find('error',1,true)then errors=errors+1 end;return true end)
+ important:drain(index*0.5,0,function(v)if isError(v)then errors=errors+1 end;return true end)
 end
 eq(errors,4,'all available throttled slots preserve higher-priority errors')
 local reset=ready();reset:enqueue('queued',1,1,0);reset:reset(2)
@@ -111,7 +116,7 @@ eq(reentrant:drain(0,0,function()eq(reentrant:drain(0,0,function()error('reentra
 eq(reentrant:status().rng_state,before,'interrupted selection never advances RNG');eq(reentrant:status().accepted,0,'interrupted sequence not committed')
 local all=ready(123)
 local serial,time=0,0
-for _,kind in ipairs(kinds)do for tone=0,2 do for body=0,2 do
+for _,kind in ipairs(kinds)do for tone=0,0 do for body=0,2 do
  all:configure(true,tone)
  local previous
  for cycle=1,3 do
@@ -127,4 +132,4 @@ for _,kind in ipairs(kinds)do for tone=0,2 do for body=0,2 do
 end end end
 local copy=L.get('queued',0,0);copy[1]='modified outside module'
 check(L.get('queued',0,0)[1]~='modified outside module','library consumers cannot mutate source pools')
-print('PASS status messages: '..n..' assertions; 54 pools, 1080 entries, pure Lua only; UI acceptance is not save evidence.')
+print('PASS status messages: '..n..' assertions; 18 pools, 360 entries, pure Lua only; UI acceptance is not save evidence.')

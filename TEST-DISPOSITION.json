@@ -1,0 +1,258 @@
+{
+  "release": "1.0.0",
+  "previous_current_failures": [
+    {
+      "check": "backup_recovery",
+      "disposition": "RETIRED",
+      "resolution": "Removed backup companion is outside approved scope."
+    },
+    {
+      "check": "retention_journal_review",
+      "disposition": "RETIRED",
+      "resolution": "Removed backup retention journal is outside approved scope."
+    },
+    {
+      "check": "retention_protected_review",
+      "disposition": "RETIRED",
+      "resolution": "Removed backup retention journal is outside approved scope."
+    },
+    {
+      "check": "dependency_report",
+      "disposition": "FIXED_TEST",
+      "resolution": "Schema expectation updated from 1 to current 2; production report unchanged."
+    },
+    {
+      "check": "dependency_mutation_controls",
+      "disposition": "FIXED_TEST",
+      "resolution": "Mutation fixtures include settings_ui so the intended report guard assertions execute."
+    },
+    {
+      "check": "test_guardian_integration_organized_events",
+      "disposition": "FIXED_TEST",
+      "resolution": "Queue source 2 identifies generic quicksave; no unsupported pause/gameplay subtype is inferred."
+    },
+    {
+      "check": "installation_auditor",
+      "disposition": "FIXED_TOOL",
+      "resolution": "Windows cross-API timestamp comparison and saved-byte inventory SHA pin corrected; regression and fail-closed controls retained."
+    }
+  ],
+  "historical_runners": "Prior archives retain historical runners/results. Not included as the current publication gate.",
+  "historical_failures": [
+    {
+      "check": "observer_cold_start",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "diagnostic3_source_scope",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "diagnostic2_source_scope",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "guardian_integration",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "lua_integration",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "queue_lifecycle",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "intro_routing",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "smart_policy_independent",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "preserved_scope",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "autosave_init_independent",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "runtime_settings",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "runtime_polish_independent",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "dependency_export_independent",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "dependency_scope",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "rc1_source_freeze",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "checkpoint_native_result",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "checkpoint_native_mutations",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "vehicle_diag_source_freeze",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "vehicle_diag_scope_controls",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "smart_queue_routes",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "unrestricted_routes",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "rc4_source_freeze",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "rc4_scope_controls",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "rc3_source_freeze",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "rc3_scope_controls",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "rc2_source_freeze",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "rc2_scope_controls",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "rc1_scope_controls",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "installation_auditor",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "Windows cross-API timestamp comparison and saved-byte inventory SHA pin corrected; regression and fail-closed controls retained."
+    },
+    {
+      "check": "dependency_report",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "Schema expectation updated from 1 to current 2; production report unchanged."
+    },
+    {
+      "check": "dependency_mutation_controls",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "Mutation fixtures include settings_ui so the intended report guard assertions execute."
+    },
+    {
+      "check": "main_config_scope",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "release_contract and BASELINE-RUNTIME.json pin working runtime, rather than obsolete release hashes"
+    },
+    {
+      "check": "main_config_independent",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "main_config_recovery",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "runtime_polish",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "observer_cold_start",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "autosave_init_independent",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "test_organized_ui_integration",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "test_guardian_integration_organized",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "test_queue_fresh_organized",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "test_runtime_polish_independent_organized",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "test_lua_integration_organized",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    },
+    {
+      "check": "test_main_settings_recovery_organized",
+      "disposition": "SUPERSEDED_VERSION_CONTRACT",
+      "replacement": "current event-aware integration, release_contract and current policy/mutation checks"
+    }
+  ]
+}

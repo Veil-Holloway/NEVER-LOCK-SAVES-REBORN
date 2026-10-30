@@ -1,0 +1,6 @@
+{
+  "scope": "Bounded actual-REDscript-source execution against controlled game boundaries.\nNot REDscript compilation or native game execution. No save files are created.\n",
+  "assertions": 1811,
+  "failures": [],
+  "passed": true
+}

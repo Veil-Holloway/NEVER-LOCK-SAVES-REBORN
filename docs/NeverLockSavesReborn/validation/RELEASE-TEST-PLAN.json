@@ -1,0 +1,650 @@
+{
+  "scope": "Current shipping contract only; fresh offline module/source/filesystem tests. No live compiler/CET/game/save/reload certification.",
+  "checks": [
+    {
+      "check": "all_runtime_lua_syntax",
+      "command": [
+        "{lua}",
+        "{validation}/check_release_syntax.lua",
+        "{runtime_lua}"
+      ],
+      "origin": "complete current runtime inventory including completion tracker"
+    },
+    {
+      "check": "test_observer_cold_start_events",
+      "command": [
+        "{lua}",
+        "{validation}/test_observer_cold_start_events.lua",
+        "{root}"
+      ],
+      "origin": "explicit event-retention / external-boundary migration; original suite preserved"
+    },
+    {
+      "check": "config_recovery",
+      "command": [
+        "{lua}",
+        "{validation}/test_config_store.lua",
+        "{root}",
+        "{fixture}"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "diagnostic_initializers",
+      "command": [
+        "{python}",
+        "{validation}/test_diagnostic_initializers.py",
+        "{root}"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "guardian_ledger",
+      "command": [
+        "{lua}",
+        "{validation}/test_guardian.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "guardian_observers",
+      "command": [
+        "{lua}",
+        "{validation}/test_guardian_bridge.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian_bridge.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/guardian.lua"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "df_adapter",
+      "command": [
+        "{lua}",
+        "{validation}/test_dark_future.lua",
+        "{root}"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "df_reader",
+      "command": [
+        "{python}",
+        "{validation}/test_df_reader.py",
+        "--release",
+        "{root}",
+        "--self-check"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "notifications",
+      "command": [
+        "{python}",
+        "{validation}/test_notifications.py",
+        "--release",
+        "{root}"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "autosave_bridge_independent",
+      "command": [
+        "{python}",
+        "{validation}/test_autosave_source.py",
+        "{root}"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "autosave_scheduler",
+      "command": [
+        "{lua}",
+        "{validation}/test_autosave_policy.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "autosave_scheduler_independent",
+      "command": [
+        "{lua}",
+        "{validation}/test_scheduler_independent.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "support_report",
+      "command": [
+        "{lua}",
+        "{validation}/test_support_report.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "profiles_independent",
+      "command": [
+        "{lua}",
+        "{validation}/review_profiles.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/profiles.lua"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "support_report_independent",
+      "command": [
+        "{lua}",
+        "{validation}/review_support_report.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "quest_milestone_events",
+      "command": [
+        "{lua}",
+        "{validation}/test_quest_milestones.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "test_init_priority_events",
+      "command": [
+        "{lua}",
+        "{validation}/test_init_priority_events.lua",
+        "{root}"
+      ],
+      "origin": "explicit event-retention / external-boundary migration; original suite preserved"
+    },
+    {
+      "check": "quest_scheduler_independent",
+      "command": [
+        "{lua}",
+        "{validation}/review_quest_milestones.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "quest_reentry_independent",
+      "command": [
+        "{lua}",
+        "{validation}/review_reentrant_boundaries.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "quest_bridge_source_independent",
+      "command": [
+        "{python}",
+        "{validation}/review_quest_source.py",
+        "{root}/r6/scripts/NeverLockSavesReborn/NeverLockSavesReborn.reds"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "quest_mutation_controls",
+      "command": [
+        "{python}",
+        "{validation}/run_quest_checks.py",
+        "--module",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/quest_milestones.lua",
+        "--output",
+        "{output}/quest_mutation_controls",
+        "--lua",
+        "{lua}"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "scheduler_mutation_controls",
+      "command": [
+        "{python}",
+        "{validation}/run_scheduler_controls.py",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua",
+        "--lua",
+        "{lua}"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "status_messages",
+      "command": [
+        "{lua}",
+        "{validation}/test_status_messages.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "status_mutation_controls",
+      "command": [
+        "{python}",
+        "{validation}/run_status_checks.py",
+        "--module-dir",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "--output",
+        "{output}/status_mutation_controls",
+        "--lua",
+        "{lua}"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "apartment_policy",
+      "command": [
+        "{lua}",
+        "{validation}/test_apartment_policy.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "apartment_mutation_controls",
+      "command": [
+        "{python}",
+        "{validation}/run_apartment_checks.py",
+        "--module",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/autosave_policy.lua",
+        "--output",
+        "{output}/apartment_mutation_controls",
+        "--lua",
+        "{lua}"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "observer_diagnostics",
+      "command": [
+        "{lua}",
+        "{validation}/test_observer_diagnostics.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "support_observers",
+      "command": [
+        "{lua}",
+        "{validation}/test_report_observers.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "status_independent",
+      "command": [
+        "{lua}",
+        "{validation}/test_status_public_independent.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "autosave_type_contract",
+      "command": [
+        "{python}",
+        "{validation}/check_autosave_type_contract.py",
+        "{root}"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "checkpoint_report",
+      "command": [
+        "{lua}",
+        "{validation}/test_checkpoint_report.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "dependency_versions",
+      "command": [
+        "{lua}",
+        "{validation}/test_dependency_versions.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/dependency_versions.lua"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "dependency_report",
+      "command": [
+        "{lua}",
+        "{validation}/test_dependency_report.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "dependency_mutation_controls",
+      "command": [
+        "{python}",
+        "{validation}/run_dependency_controls.py",
+        "--module-dir",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "--output",
+        "{output}/dependency_mutation_controls",
+        "--lua",
+        "{lua}"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "readonly_readers",
+      "command": [
+        "{python}",
+        "{validation}/test_diagnostic_readers.py",
+        "{root}",
+        "--self-check"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "profiles_disk",
+      "command": [
+        "{lua}",
+        "{validation}/test_profiles.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "{fixture}",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/config_store.lua"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "profiles_disk_faults_independent",
+      "command": [
+        "{lua}",
+        "{validation}/review_profile_disk_failures.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn/config_store.lua",
+        "{fixture}"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "schema_recovery",
+      "command": [
+        "{lua}",
+        "{validation}/test_schema_recovery.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn",
+        "{fixture}"
+      ],
+      "origin": "unchanged diagnostic.3 regression"
+    },
+    {
+      "check": "test_organized_ui",
+      "command": [
+        "{lua}",
+        "{validation}/test_organized_ui.lua",
+        "{root}"
+      ],
+      "origin": "new or UI-migrated actual-module regression"
+    },
+    {
+      "check": "test_organized_ui_integration_events",
+      "command": [
+        "{lua}",
+        "{validation}/test_organized_ui_integration_events.lua",
+        "{root}"
+      ],
+      "origin": "explicit event-retention / external-boundary migration; original suite preserved"
+    },
+    {
+      "check": "test_guardian_integration_organized_events",
+      "command": [
+        "{lua}",
+        "{validation}/test_guardian_integration_organized_events.lua",
+        "{root}"
+      ],
+      "origin": "explicit event-retention / external-boundary migration; original suite preserved"
+    },
+    {
+      "check": "test_queue_fresh_organized_events",
+      "command": [
+        "{lua}",
+        "{validation}/test_queue_fresh_organized_events.lua",
+        "{root}"
+      ],
+      "origin": "explicit event-retention / external-boundary migration; original suite preserved"
+    },
+    {
+      "check": "test_runtime_polish_organized",
+      "command": [
+        "{lua}",
+        "{validation}/test_runtime_polish_organized.lua",
+        "{root}"
+      ],
+      "origin": "new or UI-migrated actual-module regression"
+    },
+    {
+      "check": "test_runtime_polish_independent_organized_events",
+      "command": [
+        "{lua}",
+        "{validation}/test_runtime_polish_independent_organized_events.lua",
+        "{root}"
+      ],
+      "origin": "explicit event-retention / external-boundary migration; original suite preserved"
+    },
+    {
+      "check": "test_dependency_export_organized",
+      "command": [
+        "{lua}",
+        "{validation}/test_dependency_export_organized.lua",
+        "{root}"
+      ],
+      "origin": "new or UI-migrated actual-module regression"
+    },
+    {
+      "check": "test_lua_integration_organized_events",
+      "command": [
+        "{lua}",
+        "{validation}/test_lua_integration_organized_events.lua",
+        "{root}"
+      ],
+      "origin": "explicit event-retention / external-boundary migration; original suite preserved"
+    },
+    {
+      "check": "test_main_settings_recovery_organized_events",
+      "command": [
+        "{lua}",
+        "{validation}/test_main_settings_recovery_organized_events.lua",
+        "{root}",
+        "{fixture}"
+      ],
+      "origin": "explicit event-retention / external-boundary migration; original suite preserved"
+    },
+    {
+      "check": "test_combat_queue_ui_source",
+      "command": [
+        "{python}",
+        "{validation}/test_combat_queue_ui_source.py",
+        "{root}"
+      ],
+      "origin": "new policy and negative controls"
+    },
+    {
+      "check": "test_combat_queue_ui_mutations",
+      "command": [
+        "{python}",
+        "{validation}/test_combat_queue_ui_mutations.py",
+        "{root}"
+      ],
+      "origin": "new policy and negative controls"
+    },
+    {
+      "check": "installation_auditor",
+      "command": [
+        "{python}",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "{root}/tools/NLSRInstallAudit/tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "origin": "existing 89-test suite; version/count/hash pins updated only"
+    },
+    {
+      "check": "test_combat_events",
+      "command": [
+        "{lua}",
+        "{validation}/test_combat_events.lua",
+        "{root}"
+      ],
+      "origin": "new actual-module event-queue regression"
+    },
+    {
+      "check": "test_combat_events_integration",
+      "command": [
+        "{lua}",
+        "{validation}/test_combat_events_integration.lua",
+        "{root}"
+      ],
+      "origin": "new actual-module event-queue regression"
+    },
+    {
+      "check": "test_combat_event_mutations",
+      "command": [
+        "{python}",
+        "{validation}/test_combat_event_mutations.py",
+        "{root}"
+      ],
+      "origin": "eight injected-negative event/retention controls"
+    },
+    {
+      "check": "test_guardian_trace",
+      "command": [
+        "{lua}",
+        "{validation}/test_guardian_trace.lua",
+        "{root}"
+      ],
+      "origin": "retained latest-version regression"
+    },
+    {
+      "check": "test_guardian_trace_integration",
+      "command": [
+        "{lua}",
+        "{validation}/test_guardian_trace_integration.lua",
+        "{root}"
+      ],
+      "origin": "retained latest-version regression"
+    },
+    {
+      "check": "test_guardian_trace_mutations",
+      "command": [
+        "{python}",
+        "{validation}/test_guardian_trace_mutations.py",
+        "{root}"
+      ],
+      "origin": "retained latest-version regression"
+    },
+    {
+      "check": "scheduler_state_focus",
+      "command": [
+        "{lua}",
+        "{validation}/test_scheduler_state_fix.lua",
+        "{root}"
+      ],
+      "origin": "retained latest-version regression"
+    },
+    {
+      "check": "scheduler_state_mutations",
+      "command": [
+        "{python}",
+        "{validation}/test_scheduler_state_mutations.py",
+        "{root}"
+      ],
+      "origin": "retained latest-version regression"
+    },
+    {
+      "check": "phone_bridge_fix",
+      "command": [
+        "{python}",
+        "{validation}/test_phone_bridge_fix.py",
+        "{root}"
+      ],
+      "origin": "retained latest-version regression"
+    },
+    {
+      "check": "completion_tracker",
+      "command": [
+        "{lua}",
+        "{validation}/test_completion_evidence.lua",
+        "{root}"
+      ],
+      "origin": "retained latest-version regression"
+    },
+    {
+      "check": "completion_notifications",
+      "command": [
+        "{lua}",
+        "{validation}/test_completion_notice.lua",
+        "{root}"
+      ],
+      "origin": "retained latest-version regression"
+    },
+    {
+      "check": "notification_plain_language",
+      "command": [
+        "{python}",
+        "{validation}/test_notification_polish.py",
+        "{root}"
+      ],
+      "origin": "current presentation and frozen policy boundary"
+    },
+    {
+      "check": "neutral_config_migration",
+      "command": [
+        "{lua}",
+        "{validation}/test_neutral_migration.lua",
+        "{root}/bin/x64/plugins/cyber_engine_tweaks/mods/NeverLockSavesReborn"
+      ],
+      "origin": "legacy tone compatibility"
+    },
+    {
+      "check": "release_contract",
+      "command": [
+        "{python}",
+        "{validation}/test_release_contract.py",
+        "{root}"
+      ],
+      "origin": "complete inventory, pinned saved bytes, exact frozen game logic and current test contract"
+    },
+    {
+      "check": "stable_menu_labels",
+      "command": [
+        "{lua}",
+        "{validation}/test_stable_menu_labels.lua",
+        "{root}"
+      ],
+      "origin": "stable menu label and config-contract regression"
+    }
+  ],
+  "retired_checks": [
+    {
+      "check": "backup_recovery",
+      "disposition": "RETIRED",
+      "reason": "Scope-freeze explicitly removed the closed-game backup/retention/recovery companion. No shipping implementation exists; not applicable to Reborn."
+    },
+    {
+      "check": "retention_journal_review",
+      "disposition": "RETIRED",
+      "reason": "Scope-freeze explicitly removed the closed-game backup/retention/recovery companion. No shipping implementation exists; not applicable to Reborn."
+    },
+    {
+      "check": "retention_protected_review",
+      "disposition": "RETIRED",
+      "reason": "Scope-freeze explicitly removed the closed-game backup/retention/recovery companion. No shipping implementation exists; not applicable to Reborn."
+    }
+  ],
+  "release": "1.0.0"
+}

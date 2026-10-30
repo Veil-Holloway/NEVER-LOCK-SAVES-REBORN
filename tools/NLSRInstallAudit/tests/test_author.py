@@ -1,4 +1,4 @@
-"""Real-filesystem public CLI checks for the integrated RC3 installation auditor."""
+"""Real-filesystem public CLI checks for the integrated RC4 installation auditor."""
 import hashlib
 import json
 import os
@@ -61,7 +61,7 @@ class AuditCli(unittest.TestCase):
         code, report = self.run_audit()
         self.assertEqual(code, 0)
         self.assertEqual(report['audit_status'], 'exact_match')
-        self.assertEqual(len(report['runtime']['files']), 16)
+        self.assertEqual(len(report['runtime']['files']), 21)
         self.assertTrue(all(r['status'] == 'match' for r in report['runtime']['files']))
         self.assertTrue(all(s['status'] == 'complete' for s in report['scans']))
         self.assertEqual(report['archive']['status'], 'not_supported_embedded_tool')
@@ -192,7 +192,7 @@ class AuditCli(unittest.TestCase):
     def test_log_tail_counts_digest_and_privacy(self):
         path = self.parent / 'PRIVATE_GAME.log'
         prefix = b'PRIVATE_LOG_CONTENT\nerror\n' * 10000
-        tail = b'warning failed 1.0.0-rc1 1.0.0-rc2 1.0.0-RC3 ERROR\n'
+        tail = b'warning failed 1.0.0-rc1 1.0.0-rc2 1.0.0-RC3 1.0.0-RC4 ERROR\n'
         path.write_bytes(prefix + tail)
         code, report = self.run_audit('--cet-log', path)
         self.assertEqual(code, 0)
@@ -203,6 +203,7 @@ class AuditCli(unittest.TestCase):
         self.assertEqual(log['marker_counts']['rc1_label'], 1)
         self.assertEqual(log['marker_counts']['rc2_label'], 1)
         self.assertEqual(log['marker_counts']['rc3_label'], 1)
+        self.assertEqual(log['marker_counts']['rc4_label'], 1)
         self.assertEqual(log['marker_counts']['warning'], 1)
         self.assertNotIn('PRIVATE_LOG_CONTENT', json.dumps(report))
         self.assertEqual(log['current_compilation'], 'unknown')

@@ -1,0 +1,1 @@
+PASS guardian trace / dispatch re-entry: 827 assertions; actual Lua, simulated host only

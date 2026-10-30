@@ -1,0 +1,1 @@
+PASS schema-aware recovery: 78 assertions; actual config_store/profile IO; JSON/failure boundary doubles
